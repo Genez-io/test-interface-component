@@ -1,0 +1,189 @@
+import React, { useState, useEffect } from "react";
+import { Row, Col, Form } from "react-bootstrap";
+import Select from "react-select";
+import Editor from "@monaco-editor/react";
+import { typeOptions } from "./Utils";
+import { useMonaco } from "@monaco-editor/react";
+
+const Paramenter: React.FC<{
+  name: string;
+  updateFunction: (name: string, value: any, type: any) => void;
+  customStyles: any;
+  valueProp: any;
+  typeProp?: any;
+  isFullAST: boolean;
+  isPrimitive?: any;
+  astData?: any;
+  paramValue?: any;
+  setAstData?: any;
+  methodName?: any;
+}> = ({
+  name,
+  updateFunction,
+  customStyles,
+  valueProp,
+  typeProp,
+  isFullAST,
+  isPrimitive,
+  astData,
+  paramValue,
+  setAstData,
+  methodName,
+}) => {
+  const [type, setType] = useState<any>(typeProp);
+  const [value, setValue] = useState<any>(
+    isFullAST
+      ? isPrimitive === "Primitive"
+        ? paramValue
+        : isPrimitive === "Object"
+          ? formatObject(paramValue)
+          : JSON.stringify(paramValue)
+      : valueProp,
+  );
+
+  useMonaco()?.editor.defineTheme("genezio-dark", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [],
+    colors: { "editor.background": "#141332" },
+  });
+
+  useEffect(() => {
+    updateFunction(name, value, type);
+  }, []);
+
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    const container = document.getElementById(`container-${name}`);
+    editor.onDidContentSizeChange(() => {
+      const contentHeight = Math.min(1000, editor.getContentHeight());
+      if (container) {
+        container.style.height = `${contentHeight}px`;
+        editor.layout();
+      }
+    });
+  };
+
+  function formatObject(obj: any, indent: number = 0): string {
+    const indentStr = " ".repeat(indent);
+    if (Array.isArray(obj)) {
+      const formattedArray = obj.map((item) => formatObject(item, indent + 4)).join(",\n");
+      return `[\n${formattedArray}\n${indentStr}]`;
+    }
+    if (typeof obj !== "object" || obj === null) {
+      return JSON.stringify(obj);
+    }
+    let result = "{\n";
+    const keys = Object.keys(obj);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const value = obj[key];
+      const formattedValue = typeof value === "object" ? formatObject(value, indent + 4) : JSON.stringify(value);
+      result += `${indentStr}    "${key}": ${formattedValue}`;
+      if (i < keys.length - 1) {
+        result += ",";
+      }
+      result += "\n";
+    }
+
+    result += `${indentStr}}`;
+    return result;
+  }
+
+  return (
+    <Row>
+      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
+      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
+      <Col lg={2} className="d-flex align-items-center border-bottom border-start border-muted">
+        {name}
+      </Col>
+      <Col lg={isFullAST ? 9 : 7} className="pt-2 pb-2 border-bottom border-start border-muted">
+        {(isFullAST && type === "Primitive") || (!isFullAST && type.value === "Primitive") ? (
+          <Form.Control
+            type="text"
+            className="form-control"
+            placeholder="Value"
+            as="input"
+            value={value}
+            defaultValue={value}
+            onChange={(v: any) => {
+              if (isFullAST) {
+                setAstData((prevAstData: any) => {
+                  return {
+                    ...prevAstData,
+                    [methodName]: {
+                      ...prevAstData[methodName],
+                      [name]: {
+                        ...prevAstData[methodName][name],
+                        value: v.target.value,
+                      },
+                    },
+                  };
+                });
+              }
+
+              setValue(v.target.value);
+              updateFunction(name, v.target.value, type);
+            }}
+          />
+        ) : (
+          <div id={`container-${name}`} style={{ height: "100%" }}>
+            <Editor
+              defaultLanguage="json"
+              defaultValue={
+                isFullAST ? (type === "Array" ? "[]" : formatObject(paramValue)) : type.value === "Array" ? "[]" : "{}"
+              }
+              theme={localStorage.getItem("darkMode") === "true" ? "genezio-dark" : "light"}
+              width="100%"
+              value={value}
+              options={{
+                minimap: {
+                  enabled: false,
+                },
+                tabSize: 2,
+                scrollBeyondLastLine: false,
+                showFoldingControls: "always",
+              }}
+              onChange={(v: any) => {
+                if (isFullAST) {
+                  setAstData({
+                    ...astData, // Spread the existing state
+                    [methodName]: {
+                      [name]: { label: name, value: JSON.parse(v) },
+                    },
+                  });
+                }
+                setValue(v);
+                updateFunction(name, v, type);
+              }}
+              onMount={(editor, monaco) => handleEditorDidMount(editor, monaco)}
+            />
+          </div>
+        )}
+      </Col>
+
+      {!isFullAST && (
+        <Col lg={2} className="d-flex align-items-center border-bottom border-start border-muted">
+          <div className="SelectBox w-100">
+            <Select
+              defaultValue={typeOptions[0]}
+              onChange={(t) => {
+                setType(t);
+                updateFunction(name, value, t);
+              }}
+              options={typeOptions}
+              placeholder="Type"
+              classNamePrefix="selectform"
+              value={type}
+              styles={customStyles}
+              menuPortalTarget={document.body}
+            />
+          </div>
+        </Col>
+      )}
+      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
+      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
+    </Row>
+  );
+};
+
+export default Paramenter;
