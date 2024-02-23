@@ -3,7 +3,7 @@ import { Row, Col, Alert } from "react-bootstrap";
 import Parameter from "./Parameter";
 import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles } from "./Utils";
 import { faker } from "@faker-js/faker";
-import CopyButton from "../ProjectAuthentication/CopyButton";
+import CopyButton from "./CopyButton";
 
 interface ParametersProps {
   activeTab: number;

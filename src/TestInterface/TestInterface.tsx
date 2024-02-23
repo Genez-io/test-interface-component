@@ -2,17 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { Row, Col, Card, Breadcrumb, Button, Spinner, Alert } from "react-bootstrap";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { getProjectById, getLogs, getCurrentCollaboratorDetails } from "../../network/ApiAxios";
+import { getProjectById, getLogs, getCurrentCollaboratorDetails } from "./ApiAxios";
 import Parameters from "./Parameters";
 import StatusBar from "./StatusBar";
 import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
-import GenezioSpinner from "../../components/Utilities/Spinner/GenezioSpinner";
+import GenezioSpinner from "./GenezioSpinner";
 import LeftCard from "./LeftCard";
 import { environmentOptions, ClassType, dropdownOption, Project, TabType, isJsonString, Method, Param } from "./Utils";
-import TestInterfaceModal from "../../components/AdvancedUI/Modals/TestInterfaceModal";
-import { CollaboratorDetails } from "../../models/CollaborationModels";
+import TestInterfaceModal from "./TestInterfaceModal";
+import { CollaboratorDetails } from "./CollaborationModels";
 
 // Messages Types For Logs
 const MESSAGES_TYPES = ["START", "ALL", "ERROR", "REPORT", "INFO", "DEBUG", "WARNING", "END"];
@@ -466,7 +466,7 @@ const TestInterface = () => {
   };
 
   return (
-    <div className="pt-3 pb-3">
+    <div className="pt-3 pb-3 ps-3 pe-3">
       {/* <-- breadcrumb --> */}
       <div className="breadcrumb-header justify-content-between">
         <div className="left-content">

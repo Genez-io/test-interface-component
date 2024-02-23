@@ -1,42 +1,146 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.table_dropdown_wrapper::after {
+  content: none !important;
+  display: none !important; 
+} 
+ 
+/* .wrapper-iframe:hover {
+  filter: brightness(0.5);
+} */   
+
+.overlay {  
+  position: absolute; 
+  top: 0;  
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.5s ease;
+  background-color: #6f42c1;
+}
+
+.wrapper-iframe:hover .overlay {
+  opacity: 0.9;
+}
+
+.text-iframe-wrapper {
+  color: white;
+  font-size: 80px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.login-btn-github {
+  font-size: 0.85rem;
+  width: 217px !important;
+  border: 1px solid #dadce0;
+  border-radius: 20px;
+  height: 34px !important;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-between;
+  color: #3c4043 !important;
+  padding: 0.5rem 0.6rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.login-btn-github:hover {
+  background-color: #171515;
+  color: white !important;
 }
 
-.card {
-  padding: 2em;
+.login-btn-github i {
+  font-size: 1.1rem !important;
+  /* margin-left: 1em; */
+}
+.login-btn-github span {
+  margin-right: 1.8em;
+  font-weight: 500;
 }
 
-.read-the-docs {
-  color: #888;
+.custom-domain-input-box {
+  border: 1px solid #cccccc !important;
+}
+
+.frontend-deply-btn-how-to-deploy {
+  background-color: #f6f3fa;
+  border: 1px solid #6f42c1;
+  color: #6f42c1;
+  border-radius: 2px;
+  transition: 0.4s ease-in-out;
+}
+
+.frontend-deply-btn-how-to-deploy:hover {
+  background-color: #6f42c1 !important;
+  color: #f6f3fa;
+}
+
+.accordion-button {
+  background: transparent !important;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.env-vars-btn {
+  cursor: pointer;
+  color: rgba(51, 51, 51, 1) !important;
+  background-color: transparent !important;
+  padding: 5px 20px 5px 20px;
+}
+
+.env-vars-btn.btn-primary {
+  background-color: transparent !important;
+  border: 1px solid rgba(229, 229, 229, 1) !important;
+}
+
+.env-vars-btn:hover {
+  background-color: rgba(229, 229, 229, 1) !important;
+  color: rgba(51, 51, 51, 1) !important;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  background-color: #999;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.step-number-success {
+  background-color: #28a745;
+}
+
+.connector {
+  position: absolute;
+  top: 30px;
+  left: 15px;
+  width: 1px;
+  height: 100%;
+}
+
+.line {
+  width: 100%;
+  height: 100%;
+  border-left: 1px dashed #999;
+}
+
+.line-success {
+  border-left: 1px solid #28a745;
+}
+
+.hideDropdownArrow > .dropdown-toggle::after {
+  content: none;
 }

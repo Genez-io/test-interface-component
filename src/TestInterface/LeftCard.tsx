@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Col, Card, Row } from "react-bootstrap";
-import GenezioSpinner from "../../components/Utilities/Spinner/GenezioSpinner";
+import GenezioSpinner from "./GenezioSpinner";
 import ClassesSidebar from "./ClassesSidebar";
 import Select from "react-select";
 import { colourStyles } from "./Utils";
