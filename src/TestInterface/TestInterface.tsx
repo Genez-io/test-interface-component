@@ -2,22 +2,42 @@ import { useState, useEffect, useRef } from "react";
 import { Row, Col, Card, Breadcrumb, Button, Spinner, Alert } from "react-bootstrap";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { getProjectById, getLogs, getCurrentCollaboratorDetails } from "./ApiAxios";
 import Parameters from "./Parameters";
 import StatusBar from "./StatusBar";
 import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
-import GenezioSpinner from "./GenezioSpinner";
 import LeftCard from "./LeftCard";
 import { environmentOptions, ClassType, dropdownOption, Project, TabType, isJsonString, Method, Param } from "./Utils";
-import TestInterfaceModal from "./TestInterfaceModal";
-import { CollaboratorDetails } from "./CollaborationModels";
 
-// Messages Types For Logs
-const MESSAGES_TYPES = ["START", "ALL", "ERROR", "REPORT", "INFO", "DEBUG", "WARNING", "END"];
+interface TestInterfaceProps {
+  axios: {
+    getProjectById: (projectId: string) => Promise<any>;
+    getLogs: (classId: string, startTime: any, endTime: any, searchTerm: string, nextToken?: any) => Promise<any>;
+    getCurrentCollaboratorDetails: (projectId: string) => Promise<any>;
+  };
+  parameteres: React.FC<any>;
+  statusBar: React.FC<{
+    environment: string;
+    success: boolean;
+    port: number;
+    url: string;
+    updatePort: (port: any) => any;
+  }>;
+  genezioSpinner: () => JSX.Element;
+  testInterfaceModal: React.FC<any>;
+  collaboratorDetails: any;
+}
 
-const TestInterface = () => {
+const TestInterface = (props: TestInterfaceProps) => {
+  // Messages Types For Logs
+  const MESSAGES_TYPES = ["START", "ALL", "ERROR2", "REPORT", "INFO", "DEBUG", "WARNING", "END"];
+
+  interface CollaboratorDetails {
+    email: string;
+    role: string;
+  }
+
   const searchParams = useSearchParams()[0];
   const [port, setPort] = useState<any>(searchParams.get("port"));
   const { projectId, envId } = useParams<{ projectId?: string; envId?: string }>();
@@ -94,7 +114,7 @@ const TestInterface = () => {
     const runAsyncProd = async () => {
       setClasses([]);
       setLoadingRefresh(true);
-      const res: any = await getProjectById(projectId ?? "");
+      const res: any = await props.axios.getProjectById(projectId ?? "");
       if (res.data && res.data.status === "ok") {
         setProject({
           name: res.data.project.name,
@@ -176,7 +196,7 @@ const TestInterface = () => {
     if (startTime) {
       const intervalId = setInterval(() => {
         const runAsync = async () => {
-          const response = await getLogs(
+          const response = await props.axios.getLogs(
             classes?.filter((classObj) => {
               return classObj?.name === tabs[activeTab]?.className;
             })[0]?.id,
@@ -457,7 +477,7 @@ const TestInterface = () => {
 
   const fetchCurrentCollaboratorDetails = async () => {
     if (environment.value !== "Local") {
-      const res: any = await getCurrentCollaboratorDetails(projectId || "");
+      const res: any = await props.axios.getCurrentCollaboratorDetails(projectId || "");
 
       if (res.status === 200 && res.data.status === "ok") {
         setCurrentCollaboratorDetails(res.data);
@@ -524,7 +544,7 @@ const TestInterface = () => {
       {/* <!-- /breadcrumb --> */}
 
       {/* <!-- Modal --> */}
-      <TestInterfaceModal modal={modal} name={project?.name} onHide={() => setModal(false)} />
+      <props.testInterfaceModal modal={modal} name={project?.name} onHide={() => setModal(false)} />
       {/* <!-- /Modal --> */}
 
       {/* <!-- Main Content --> */}
@@ -695,7 +715,7 @@ const TestInterface = () => {
                       {dataTabs === "Response" ? (
                         <div className="pt-4 pb-2 w-100">
                           {loading ? (
-                            <GenezioSpinner />
+                            <props.genezioSpinner />
                           ) : pretty && activeTab !== -1 && isJsonString(tabs[activeTab].response) ? (
                             <ReactJson
                               src={JSON.parse(tabs[activeTab].response)}
