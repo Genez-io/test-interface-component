@@ -1,6 +1,5 @@
 import React from "react";
-import TreeView from "@mui/lab/TreeView";
-import TreeItem from "@mui/lab/TreeItem";
+import { TreeView, TreeItem } from "@mui/x-tree-view";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Method, ClassType } from "./Utils";
@@ -13,6 +12,7 @@ const ClassesSidebar: React.FC<{
 }> = ({ classes, updateMethod, className, functionName }) => {
   const allNodeIds = classes?.map((classItem) => classItem?.name); // Get all node IDs
 
+  console.log(classes);
   return (
     <span id="treeview3" className="tree">
       <TreeView

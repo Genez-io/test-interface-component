@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import "./App.css";
 import "./index.scss";
 // import awesome font
@@ -22,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path={`/test-interface/:projectId`} element={<TestInterface />} />
           <Route path={`/test-interface/:projectId/:envId`} element={<TestInterface />} />
-          <Route path="*" element={<Navigate to="/test-interface" />} />
+          <Route path="*" element={<Navigate to="/test-interface/local?port=8083" />} />
         </Routes>
       </React.Suspense>
     </BrowserRouter>
