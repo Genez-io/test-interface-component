@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const instance = axios.create({ baseURL: import.meta.env.REACT_APP_API_BASE_URL });
+// const instance = axios.create({ baseURL: process.env.REACT_APP_API_BASE_URL });
+const instance = axios.create({ baseURL: "https://dev.api.genez.io" });
 
 instance.interceptors.request.use(async (config) => {
   const token = localStorage.getItem("apiToken");
   config.headers.Authorization = token ? `Bearer ${token}` : "";
   config.headers["Content-Type"] = "application/json";
-  config.headers["Accept-Version"] = `genezio-webapp/${import.meta.env.REACT_APP_VERSION}`;
+  config.headers["Accept-Version"] = `genezio-webapp/${"$npm_package_version"}`;
   return config;
 });
 

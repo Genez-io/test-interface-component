@@ -2,13 +2,52 @@ import { useState, useEffect, useRef } from "react";
 import { Row, Col, Card, Breadcrumb, Button, Spinner, Alert } from "react-bootstrap";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import Parameters from "./Parameters";
-import StatusBar from "./StatusBar";
 import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
-import LeftCard from "./LeftCard";
-import { environmentOptions, ClassType, dropdownOption, Project, TabType, isJsonString, Method, Param } from "./Utils";
+type dropdownOption = {
+  value: string;
+  label: string;
+};
+
+interface Param {
+  name: string;
+  type: string | dropdownOption;
+  value?: string;
+}
+interface Method {
+  name: string;
+  type: string;
+  params: Param[];
+}
+
+interface ClassType {
+  name: string;
+  id: string;
+  cloudUrl: string;
+  ast: {
+    methods: Method[];
+  };
+}
+
+interface Project {
+  name: string;
+  region: string;
+}
+
+interface TabType {
+  tab: string;
+  className: string;
+  method: Method;
+  response: string;
+  time: number;
+  status: number;
+}
+
+interface CollaboratorDetails {
+  email: string;
+  role: string;
+}
 
 interface TestInterfaceProps {
   axios: {
@@ -26,17 +65,15 @@ interface TestInterfaceProps {
   }>;
   genezioSpinner: () => JSX.Element;
   testInterfaceModal: React.FC<any>;
-  collaboratorDetails: any;
+  environmentOptions: dropdownOption[];
+  isJsonString: (s: string) => boolean;
+  leftCard: React.FC<any>;
+  parameters: React.FC<any>;
 }
 
 const TestInterface = (props: TestInterfaceProps) => {
   // Messages Types For Logs
   const MESSAGES_TYPES = ["START", "ALL", "ERROR2", "REPORT", "INFO", "DEBUG", "WARNING", "END"];
-
-  interface CollaboratorDetails {
-    email: string;
-    role: string;
-  }
 
   const searchParams = useSearchParams()[0];
   const [port, setPort] = useState<any>(searchParams.get("port"));
@@ -51,7 +88,7 @@ const TestInterface = (props: TestInterfaceProps) => {
   });
 
   const [environment, setEnvironment] = useState<dropdownOption>(
-    cameFromProduction ? environmentOptions[0] : environmentOptions[1],
+    cameFromProduction ? props.environmentOptions[0] : props.environmentOptions[1],
   );
 
   useEffect(() => {
@@ -347,7 +384,7 @@ const TestInterface = (props: TestInterfaceProps) => {
         return;
       }
       const stringResponse: string = JSON.stringify(data.result, undefined, 4);
-      setPretty(isJsonString(stringResponse));
+      setPretty(props.isJsonString(stringResponse));
       if (tabs[activeTab].method.type === "cron") {
         copyTabs[activeTab].response = "Cron method triggered successfully";
       } else {
@@ -550,8 +587,8 @@ const TestInterface = (props: TestInterfaceProps) => {
       {/* <!-- Main Content --> */}
       <Row>
         {/* <!-- Left Card (Classes Sidebar) --> */}
-        <LeftCard
-          environmentOptions={environmentOptions}
+        <props.leftCard
+          environmentOptions={props.environmentOptions}
           environment={environment}
           projectId={projectId}
           classes={classes}
@@ -571,7 +608,7 @@ const TestInterface = (props: TestInterfaceProps) => {
             {/* <!-- Status Bar and Calling Button --> */}
             <Row>
               <Col lg={10}>
-                <StatusBar
+                <props.statusBar
                   success={connected}
                   port={port}
                   environment={environment?.value || "Local"}
@@ -624,7 +661,7 @@ const TestInterface = (props: TestInterfaceProps) => {
                 {/* <!-- /Tabs --> */}
 
                 {/* <!-- Parameters --> */}
-                <Parameters
+                <props.parameters
                   classes={classes}
                   activeTab={activeTab}
                   tabs={tabs}
@@ -695,7 +732,7 @@ const TestInterface = (props: TestInterfaceProps) => {
                       <Button
                         variant="light"
                         onClick={() => setPretty(true)}
-                        disabled={activeTab === -1 || !isJsonString(tabs[activeTab].response)}
+                        disabled={activeTab === -1 || !props.isJsonString(tabs[activeTab].response)}
                         active={pretty}
                       >
                         Pretty
@@ -716,7 +753,7 @@ const TestInterface = (props: TestInterfaceProps) => {
                         <div className="pt-4 pb-2 w-100">
                           {loading ? (
                             <props.genezioSpinner />
-                          ) : pretty && activeTab !== -1 && isJsonString(tabs[activeTab].response) ? (
+                          ) : pretty && activeTab !== -1 && props.isJsonString(tabs[activeTab].response) ? (
                             <ReactJson
                               src={JSON.parse(tabs[activeTab].response)}
                               displayDataTypes={true}

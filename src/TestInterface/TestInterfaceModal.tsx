@@ -26,10 +26,7 @@ const TestInterfaceModal: React.FC<TestInterfaceModalProps> = ({ modal, name, on
           </p>
           <p className="mg-b-20 mg-x-20">
             If you want to test the project running on port 8083, clik the link provided in your terminal, or click{" "}
-            <a
-              style={{ color: "#6F42C1" }}
-              href={`${import.meta.env.REACT_APP_BASE_URL}/test-interface/local?port=8083`}
-            >
+            <a style={{ color: "#6F42C1" }} href={`http://localhost:5173/test-interface/local?port=8083`}>
               here
             </a>
           </p>

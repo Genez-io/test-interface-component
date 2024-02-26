@@ -1,0 +1,62 @@
+import { build, context } from "esbuild";
+import { watch } from "chokidar";
+import liveServer from "live-server";
+
+// const builder = await context({
+//   bundle: true,
+//   // Defines env variables for bundled JavaScript; here `process.env.NODE_ENV`
+//   // is propagated with a fallback.
+//   define: {
+//     "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
+//   },
+//   entryPoints: ["src/dev.tsx"],
+//   // // Uses incremental compilation (see `chokidar.on`).
+//   // incremental: true,
+//   // Removes whitespace, etc. depending on `NODE_ENV=...`.
+//   minify: process.env.NODE_ENV === "production",
+//   outfile: "public/script.js",
+//   // outdir: "public",
+//   sourcemap: true,
+// });
+
+// await builder.watch();
+// let { host, port } = await builder.serve();
+(async () => {
+  const builder = await context({
+    bundle: true,
+    // Defines env variables for bundled JavaScript; here `process.env.NODE_ENV`
+    // is propagated with a fallback.
+    define: {
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
+    },
+    entryPoints: ["src/dev.tsx"],
+    // // Uses incremental compilation (see `chokidar.on`).
+    // incremental: true,
+    // Removes whitespace, etc. depending on `NODE_ENV=...`.
+    minify: process.env.NODE_ENV === "production",
+    outfile: "public/script.js",
+    // outdir: "public",
+    sourcemap: true,
+  });
+  // // `chokidar` watcher source changes.
+  watch("src/**/*.{ts,tsx}", {
+    interval: 0, // No delay
+  })
+    // Rebuilds esbuild (incrementally -- see `build.incremental`).
+    .on("all", () => {
+      builder.rebuild();
+    });
+  // `liveServer` local server for hot reload.
+  liveServer.start({
+    // Opens the local server on start.
+    open: true,
+    // Uses `PORT=...` or 8080 as a fallback.
+    port: +process.env.PORT || 8080,
+    // Uses `public` as the local server folder.
+    root: "public",
+  });
+  // await builder.watch();
+  // let { host, port } = await builder.serve({
+  //   servedir: "public",
+  // });
+})();

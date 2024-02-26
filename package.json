@@ -3,12 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "src/main.tsx",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "devServe": "node src/serve.js",
+    "esbuild": "node build.js && tsc --emitDeclarationOnly --outDir dist"
   },
   "dependencies": {
     "@coreui/react": "^4.3.1",
@@ -50,7 +58,6 @@
     "@types/react-lottie": "^1.2.6",
     "@types/react-syntax-highlighter": "^15.5.8",
     "apexcharts": "^3.35.5",
-    "autoprefixer": "^10.4.8",
     "bootstrap": "^5.2.0",
     "chart.js": "^3.9.1",
     "depcheck": "^1.4.3",
@@ -109,7 +116,6 @@
     "styled-components": "^5.3.5",
     "sweetalert2": "^11.4.29",
     "swiper": "^8.3.2",
-    "typescript": "^4.8.2",
     "validator": "^13.7.0",
     "web-vitals": "^3.0.0"
   },
@@ -129,7 +135,12 @@
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
     "browser-sync": "^2.27.10",
+    "chokidar": "^3.6.0",
+    "esbuild": "^0.20.1",
+    "esbuild-plugin-svgr": "^2.1.0",
+    "esbuild-sass-plugin": "^3.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
@@ -141,9 +152,12 @@
     "gulp-sourcemaps": "^3.0.0",
     "husky": "^8.0.3",
     "lint-staged": "14.0.1",
+    "live-server": "^1.2.2",
+    "postcss": "^8.4.35",
     "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
     "sass": "^1.71.1",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.3",
     "vite": "^5.1.4"
   },
   "prettier": {
