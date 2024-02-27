@@ -1,6 +1,6 @@
 import React from "react";
 import Lottie from "react-lottie";
-import Spinner from "../../assets/json/GenezioSpinner.json";
+import Spinner from "../assets/json/GenezioSpinner.json";
 
 const GenezioSpinner = () => (
   <Lottie

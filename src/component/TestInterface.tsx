@@ -1,4 +1,3 @@
-import React from "react";
 // import "./App.css";
 import "./index.scss";
 // import awesome font
@@ -13,12 +12,12 @@ import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
 
 // import { getProjectById, getLogs, getCurrentCollaboratorDetails } from "./TestInterface/ApiAxios";
-// import Parameters from "./TestInterface/Parameters";
-// import StatusBar from "./TestInterface/StatusBar";
-// import GenezioSpinner from "./TestInterface/GenezioSpinner";
-// import TestInterfaceModal from "./TestInterface/TestInterfaceModal";
+import Parameters from "./types/Parameters";
+import StatusBar from "./types/StatusBar";
+import GenezioSpinner from "./types/GenezioSpinner";
+import TestInterfaceModal from "./types/TestInterfaceModal";
 // import { environmentOptions, isJsonString } from "./TestInterface/Utils";
-// import LeftCard from "./TestInterface/LeftCard";
+import LeftCard from "./types/LeftCard";
 // import { CollaboratorDetails } from "TestInterface/CollaborationModels";
 
 type dropdownOption = {
@@ -71,19 +70,18 @@ export interface TestInterfaceProps {
     getLogs: (classId: string, startTime: any, endTime: any, searchTerm: string, nextToken?: any) => Promise<any>;
     getCurrentCollaboratorDetails: (projectId: string) => Promise<any>;
   };
-  statusBar: React.FC<{
-    environment: string;
-    success: boolean;
-    port: number;
-    url: string;
-    updatePort: (port: any) => any;
-  }>;
-  genezioSpinner: () => JSX.Element;
-  testInterfaceModal: React.FC<any>;
+  statusBar: typeof StatusBar;
+  // statusBar: any;
+  genezioSpinner: typeof GenezioSpinner;
+  testInterfaceModal: typeof TestInterfaceModal;
+  // testInterfaceModal: React.FC<any>;
+  // testInterfaceModal: any;
   environmentOptions: readonly dropdownOption[];
   isJsonString: (s: string) => boolean;
-  leftCard: React.FC<any>;
-  parameters: React.FC<any>;
+  // leftCard: React.FC<any>;
+  // parameters: React.FC<any>;
+  leftCard: typeof LeftCard;
+  parameters: typeof Parameters;
 }
 
 export const TestInterface = (props: TestInterfaceProps) => {
