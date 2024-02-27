@@ -1,38 +1,35 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
+    "allowJs": false,
+    "strict": true,
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
     "noImplicitAny": true,
-
-    /* Linting */
-    "strict": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "paths": {"react": ["node_modules/@types/react"]},
-
-    "allowJs": true, // Allow JavaScript files to be compiled
-    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
-    "baseUrl": "src",
-    "declaration": true, // Generate corresponding .d.ts file
-    "esModuleInterop": true, // Disables namespace imports (import * as fs from "fs") and enables CJS/AMD/UMD style imports (import fs from "fs")
-    "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file.
-    "incremental": true, // Enable incremental compilation by reading/writing information from prior compilations to a file on disk
-    "outDir": "./dist",
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "declaration": true,
+     "esModuleInterop": true ,
+     "declarationMap": true,
+    "baseUrl": ".",
+     "paths": {
+      "genezio-test-interface-component": [ "src/component/index.ts" ]
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "src/component/index.d.ts"
+    ],
     "sourceMap": true, // Generate corrresponding .map file
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "references": [{ "path": "./tsconfig.node.json" }],
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx", "src/dev.tsx"]
-}
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]}

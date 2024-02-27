@@ -1,22 +1,35 @@
 {
   "name": "genezio-test-interface-component",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "./dist/genezio-test-interface-component.umd.cjs",
+  "module": "./dist/genezio-test-interface-component.es.js",
   "types": "dist/index.d.ts",
   "author": "",
   "license": "ISC",
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/genezio-test-interface-component.es.js",
+      "require": "./dist/genezio-test-interface-component.umd.cjs"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0 || >=18.x",
+    "react-dom": "^18.2.0 || >=18.x"
+  },
+  
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "devServe": "node src/serve.js",
-    "esbuild": "node build.js && tsc --emitDeclarationOnly --outDir dist"
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
+    "lint:fix": "eslint --fix 'src/**/*.{jsx,ts,tsx}'",
+    "format": "prettier --write src//**/*.{ts,tsx,css} --config ./.prettierrc"
   },
   "dependencies": {
     "@coreui/react": "^4.3.1",
@@ -65,6 +78,7 @@
     "draftjs-to-html": "^0.9.1",
     "echarts": "^5.3.3",
     "echarts-for-react": "^3.0.2",
+    "eslint-plugin-react": "^7.33.2",
     "firebase": "^9.9.3",
     "font-awesome": "^4.7.0",
     "hh-mm-ss": "^1.2.0",
@@ -117,6 +131,9 @@
     "sweetalert2": "^11.4.29",
     "swiper": "^8.3.2",
     "validator": "^13.7.0",
+    "vite-plugin-dts": "^3.7.3",
+    "vite-plugin-linter": "^2.1.1",
+    "vite-tsconfig-paths": "^4.3.1",
     "web-vitals": "^3.0.0"
   },
   "devDependencies": {
@@ -132,8 +149,8 @@
     "@types/react-slick": "^0.23.10",
     "@types/react-table": "^7.7.14",
     "@types/validator": "^13.7.6",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "browser-sync": "^2.27.10",
@@ -144,6 +161,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
     "gulp": "^4.0.2",
     "gulp-beautify": "^3.0.0",
     "gulp-cssbeautify": "^3.0.1",
@@ -154,7 +172,8 @@
     "lint-staged": "14.0.1",
     "live-server": "^1.2.2",
     "postcss": "^8.4.35",
-    "prettier": "^3.1.0",
+    "prettier": "^3.2.5",
+    "react-hooks": "^1.0.1",
     "rimraf": "^5.0.5",
     "sass": "^1.71.1",
     "typescript": "^5.3.3",
