@@ -6,7 +6,6 @@
   "main": "./dist/genezio-test-interface-component.umd.cjs",
   "module": "./dist/genezio-test-interface-component.es.js",
   "types": "dist/index.d.ts",
-  "author": "",
   "license": "ISC",
   "files": [
     "dist"
@@ -24,7 +23,19 @@
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint --fix 'src/**/*.{jsx,ts,tsx}'",
-    "format": "prettier --write src//**/*.{ts,tsx,css} --config ./.prettierrc"
+    "format": "prettier --write src//**/*.{ts,tsx,css} --config ./.prettierrc",
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "npm run lint",
+      "npm run format"
+    ]
   },
   "peerDependencies": {
     "react": "^18.2.0 || >=18.x",
@@ -171,6 +182,11 @@
     "vite-plugin-linter": "^2.1.1",
     "vite-tsconfig-paths": "^4.3.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Genez-io/test-interface-component"
+  },
+  "author": "genezio",
   "prettier": {
     "tabWidth": 2,
     "printWidth": 120
