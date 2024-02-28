@@ -1,24 +1,19 @@
-// import "./App.css";
+import "./App.css";
 import "./index.scss";
-// import awesome font
-// import "font-awesome/css/font-awesome.min.css";
+import "font-awesome/css/font-awesome.min.css";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Row, Col, Card, Breadcrumb, Button, Spinner, Alert } from "react-bootstrap";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useParams } from "react-router-dom";
 import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
 
-// import { getProjectById, getLogs, getCurrentCollaboratorDetails } from "./TestInterface/ApiAxios";
 import Parameters from "./types/Parameters";
 import StatusBar from "./types/StatusBar";
 import GenezioSpinner from "./types/GenezioSpinner";
 import TestInterfaceModal from "./types/TestInterfaceModal";
-// import { environmentOptions, isJsonString } from "./TestInterface/Utils";
 import LeftCard from "./types/LeftCard";
-// import { CollaboratorDetails } from "TestInterface/CollaborationModels";
 
 type dropdownOption = {
   value: string;

@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { TestInterface } from "./TestInterface";
 import { getProjectById, getLogs, getCurrentCollaboratorDetails } from "./types/ApiAxios";
@@ -8,7 +7,6 @@ import GenezioSpinner from "./types/GenezioSpinner";
 import TestInterfaceModal from "./types/TestInterfaceModal";
 import { environmentOptions, isJsonString } from "./types/Utils";
 import LeftCard from "./types/LeftCard";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 const props = {
   axios: {
@@ -39,6 +37,7 @@ root.render(
     isJsonString={props.isJsonString}
     leftCard={props.leftCard}
     parameters={props.parameters}
+    projectId={props.projectId}
   />,
   //   <BrowserRouter>
   //     {/* <React.Suspense
