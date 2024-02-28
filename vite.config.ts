@@ -31,5 +31,6 @@ export default defineConfig((configEnv) => ({
     rollupOptions: {
       external: [...Object.keys(packageJson.peerDependencies)],
     },
+    outDir: "../NpmTestInterfacePackage/dist",
   },
 }));

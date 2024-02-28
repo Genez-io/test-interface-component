@@ -2,7 +2,7 @@
 import "./index.scss";
 // import awesome font
 // import "font-awesome/css/font-awesome.min.css";
-
+import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Row, Col, Card, Breadcrumb, Button, Spinner, Alert } from "react-bootstrap";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
@@ -82,15 +82,20 @@ export interface TestInterfaceProps {
   // parameters: React.FC<any>;
   leftCard: typeof LeftCard;
   parameters: typeof Parameters;
+  projectId?: string;
+  envId?: string;
 }
 
-export const TestInterface = (props: TestInterfaceProps) => {
+export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterfaceProps) => {
   // Messages Types For Logs
   const MESSAGES_TYPES = ["START", "ALL", "ERROR2", "REPORT", "INFO", "DEBUG", "WARNING", "END"];
   // const searchParams = useSearchParams()[0];
   const searchParams = new URLSearchParams(window.location.search);
+
   const [port, setPort] = useState<any>(searchParams.get("port"));
-  const { projectId, envId } = useParams<{ projectId?: string; envId?: string }>();
+  console.log(port);
+  const projectId = props.projectId;
+  const envId = props.envId;
   const cameFromProduction: boolean = projectId != undefined && projectId !== "local";
   console.log(projectId);
   // const navigate = useNavigate();

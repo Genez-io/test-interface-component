@@ -23,6 +23,7 @@ const props = {
   isJsonString: isJsonString,
   leftCard: LeftCard,
   parameters: Parameters,
+  projectId: "local",
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
