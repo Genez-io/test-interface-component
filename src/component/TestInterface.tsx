@@ -79,6 +79,7 @@ export interface TestInterfaceProps {
   parameters: typeof Parameters;
   projectId?: string;
   envId?: string;
+  port?: number;
 }
 
 export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterfaceProps) => {
@@ -87,13 +88,12 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   // const searchParams = useSearchParams()[0];
   const searchParams = new URLSearchParams(window.location.search);
 
-  const [port, setPort] = useState<any>(searchParams.get("port"));
-  console.log(port);
+  const [port, setPort] = useState<any>(
+    searchParams.get("port") ? searchParams.get("port") : props.port ? props.port : null,
+  );
   const projectId = props.projectId;
   const envId = props.envId;
   const cameFromProduction: boolean = projectId != undefined && projectId !== "local";
-  console.log(projectId);
-  // const navigate = useNavigate();
   const navigate = (path: string) => {
     window.location.href = path; // This will navigate to the specified path
   };
@@ -237,7 +237,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
         setActiveTab(storageActiveTab);
         setConnected(true);
       } catch (error) {
-        setPort(null);
         setConnected(false);
         setClasses([]);
       }

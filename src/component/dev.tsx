@@ -8,6 +8,7 @@ import TestInterfaceModal from "./types/TestInterfaceModal";
 import { environmentOptions, isJsonString } from "./types/Utils";
 import LeftCard from "./types/LeftCard";
 
+const port = parseInt(window.location.port);
 const props = {
   axios: {
     getProjectById: getProjectById,
@@ -22,6 +23,7 @@ const props = {
   leftCard: LeftCard,
   parameters: Parameters,
   projectId: "local",
+  port: port,
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
@@ -38,6 +40,7 @@ root.render(
     leftCard={props.leftCard}
     parameters={props.parameters}
     projectId={props.projectId}
+    port={props.port}
   />,
   //   <BrowserRouter>
   //     {/* <React.Suspense
