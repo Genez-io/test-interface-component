@@ -1,7 +1,7 @@
 {
   "name": "@genezio/test-interface-component",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "main": "./dist/test-interface-component.umd.cjs",
   "module": "./dist/test-interface-component.es.js",
