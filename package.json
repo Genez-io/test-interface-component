@@ -1,10 +1,10 @@
 {
-  "name": "genezio-test-interface-component",
+  "name": "@genezio/test-interface-component",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.1",
   "type": "module",
-  "main": "./dist/genezio-test-interface-component.umd.cjs",
-  "module": "./dist/genezio-test-interface-component.es.js",
+  "main": "./dist/test-interface-component.umd.cjs",
+  "module": "./dist/test-interface-component.es.js",
   "types": "dist/index.d.ts",
   "license": "ISC",
   "files": [
@@ -12,8 +12,8 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/genezio-test-interface-component.es.js",
-      "require": "./dist/genezio-test-interface-component.umd.cjs"
+      "import": "./dist/test-interface-component.es.js",
+      "require": "./dist/test-interface-component.umd.cjs"
     },
     "./dist/style.css": "./dist/style.css"
   },

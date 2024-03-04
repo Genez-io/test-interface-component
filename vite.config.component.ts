@@ -23,9 +23,9 @@ export default defineConfig((configEnv) => ({
   build: {
     lib: {
       entry: resolve("src", "component/index.ts"),
-      name: "genezio-test-interface-component",
+      name: "test-interface-component",
       formats: ["es", "umd"],
-      fileName: (format) => `genezio-test-interface-component.${format}.js`,
+      fileName: (format) => `test-interface-component.${format}.js`,
     },
 
     rollupOptions: {
