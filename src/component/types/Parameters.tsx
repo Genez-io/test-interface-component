@@ -300,22 +300,17 @@ const Parameters: React.FC<ParametersProps> = ({
         ) : (
           <>
             <Row>
-              <Col lg={0.5} className="pt-2 pb-2 border-bottom border-top border-2 border-muted" />
-              <Col lg={0.5} className="pt-2 pb-2 border-bottom border-top border-2 border-muted" />
-              <Col lg={2} className="pt-2 pb-2 border-bottom border-start border-top border-muted">
-                NAME
+              <Col lg={2} className="border-bottom border-top border-muted px-4">
+                <div className="border-start py-2 px-4">NAME</div>
               </Col>
-              <Col lg={isFullAST ? 9 : 7} className="pt-2 pb-2 border-bottom border-start border-top border-muted">
+              <Col lg={isFullAST ? 10 : 7} className="pt-2 pb-2 border-bottom border-start border-top border-muted">
                 VALUE
               </Col>
               {!isFullAST && (
-                <Col lg={2} className="pt-2 pb-2 border-bottom border-start border-top border-muted">
+                <Col lg={3} className="pt-2 pb-2 border-bottom border-start border-top border-muted">
                   TYPE
                 </Col>
               )}
-
-              <Col lg={0.5} className="pt-2 pb-2 border-bottom border-top border-2 border-muted" />
-              <Col lg={0.5} className="pt-2 pb-2 border-bottom border-top border-2 border-muted" />
             </Row>
             {activeTab !== -1 &&
               tabs[activeTab].method.params &&
