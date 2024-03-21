@@ -9,72 +9,36 @@ import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
 
-import Parameters from "./types/Parameters";
-import StatusBar from "./types/StatusBar";
-import GenezioSpinner from "./types/GenezioSpinner";
-import TestInterfaceModal from "./types/TestInterfaceModal";
-import LeftCard from "./types/LeftCard";
-
-type dropdownOption = {
-  value: string;
-  label: string;
-};
-
-interface Param {
-  name: string;
-  type: string | dropdownOption;
-  value?: string;
-}
-interface Method {
-  name: string;
-  type: string;
-  params: Param[];
-}
-
-interface ClassType {
-  name: string;
-  id: string;
-  cloudUrl: string;
-  ast: {
-    methods: Method[];
-  };
-}
-
-interface Project {
-  name: string;
-  region: string;
-}
-
-interface TabType {
-  tab: string;
-  className: string;
-  method: Method;
-  response: string;
-  time: number;
-  status: number;
-}
-
-interface CollaboratorDetails {
-  email: string;
-  role: string;
-}
+import { Parameters } from "./types/Parameters";
+import { StatusBar } from "./types/StatusBar";
+import { GenezioSpinner } from "./types/GenezioSpinner";
+import { TestInterfaceModal } from "./types/TestInterfaceModal";
+import { LeftCard } from "./types/LeftCard";
+import {
+  ClassType,
+  Method,
+  Param,
+  Project,
+  TabType,
+  dropdownOption,
+  environmentOptions,
+  isJsonString,
+} from "./types/Utils";
+import { CollaboratorDetails } from "./types/CollaborationModels";
+import { getCurrentCollaboratorDetails, getLogs, getProjectById } from "./types/ApiAxios";
 
 export interface TestInterfaceProps {
   axios: {
-    getProjectById: (projectId: string) => Promise<any>;
-    getLogs: (classId: string, startTime: any, endTime: any, searchTerm: string, nextToken?: any) => Promise<any>;
-    getCurrentCollaboratorDetails: (projectId: string) => Promise<any>;
+    getProjectById: typeof getProjectById;
+    getLogs: typeof getLogs;
+    getCurrentCollaboratorDetails: typeof getCurrentCollaboratorDetails;
   };
   statusBar: typeof StatusBar;
   // statusBar: any;
   genezioSpinner: typeof GenezioSpinner;
   testInterfaceModal: typeof TestInterfaceModal;
-  // testInterfaceModal: React.FC<any>;
-  // testInterfaceModal: any;
-  environmentOptions: readonly dropdownOption[];
-  isJsonString: (s: string) => boolean;
-  // leftCard: React.FC<any>;
-  // parameters: React.FC<any>;
+  environmentOptions: typeof environmentOptions;
+  isJsonString: typeof isJsonString;
   leftCard: typeof LeftCard;
   parameters: typeof Parameters;
   projectId?: string;

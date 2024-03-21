@@ -4,7 +4,7 @@ interface CopyButtonProps {
   text: string;
 }
 
-const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
+export const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -45,5 +45,3 @@ const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
     </button>
   );
 };
-
-export default CopyButton;

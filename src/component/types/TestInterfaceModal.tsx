@@ -7,7 +7,7 @@ interface TestInterfaceModalProps {
   onHide: () => void;
 }
 
-const TestInterfaceModal: React.FC<TestInterfaceModalProps> = ({ modal, name, onHide }) => {
+export const TestInterfaceModal: React.FC<TestInterfaceModalProps> = ({ modal, name, onHide }) => {
   return (
     <Modal show={modal}>
       <Modal.Header>
@@ -44,5 +44,3 @@ const TestInterfaceModal: React.FC<TestInterfaceModalProps> = ({ modal, name, on
     </Modal>
   );
 };
-
-export default TestInterfaceModal;

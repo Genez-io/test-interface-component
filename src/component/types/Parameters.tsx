@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Row, Col, Alert } from "react-bootstrap";
-import Parameter from "./Parameter";
+import { Parameter } from "./Parameter";
 import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles } from "./Utils";
 import { faker } from "@faker-js/faker";
-import CopyButton from "./CopyButton";
+import { CopyButton } from "./CopyButton";
 
 interface ParametersProps {
   activeTab: number;
@@ -57,7 +57,7 @@ function setElem(obj: any, path: string, value: any, methodName?: any) {
   schema[pList[len - 1]] = value;
 }
 
-const Parameters: React.FC<ParametersProps> = ({
+export const Parameters: React.FC<ParametersProps> = ({
   activeTab,
   tabs,
   updateParam,
@@ -379,5 +379,3 @@ const Parameters: React.FC<ParametersProps> = ({
     </>
   );
 };
-
-export default Parameters;

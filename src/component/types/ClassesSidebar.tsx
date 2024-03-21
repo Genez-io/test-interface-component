@@ -4,7 +4,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Method, ClassType } from "./Utils";
 
-const ClassesSidebar: React.FC<{
+export const ClassesSidebar: React.FC<{
   classes: ClassType[];
   className: string;
   functionName: string;
@@ -42,5 +42,3 @@ const ClassesSidebar: React.FC<{
     </span>
   );
 };
-
-export default ClassesSidebar;

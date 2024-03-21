@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row, Form, Button } from "react-bootstrap";
 
-const StatusBar: React.FC<{
+export const StatusBar: React.FC<{
   environment: string;
   success: boolean;
   port: number;
@@ -102,5 +102,3 @@ const StatusBar: React.FC<{
     </div>
   );
 };
-
-export default StatusBar;

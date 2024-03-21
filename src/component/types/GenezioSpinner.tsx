@@ -1,8 +1,7 @@
-import React from "react";
 import Lottie from "react-lottie";
 import Spinner from "../assets/json/GenezioSpinner.json";
 
-const GenezioSpinner = () => (
+export const GenezioSpinner = () => (
   <Lottie
     options={{
       loop: true,
@@ -18,5 +17,3 @@ const GenezioSpinner = () => (
     style={{ marginTop: "10px" }}
   />
 );
-
-export default GenezioSpinner;

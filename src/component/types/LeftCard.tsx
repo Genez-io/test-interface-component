@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Col, Card, Row } from "react-bootstrap";
-import GenezioSpinner from "./GenezioSpinner";
-import ClassesSidebar from "./ClassesSidebar";
+import { GenezioSpinner } from "./GenezioSpinner";
+import { ClassesSidebar } from "./ClassesSidebar";
 import Select from "react-select";
 import { colourStyles } from "./Utils";
 
@@ -19,7 +19,7 @@ interface LeftCardProps {
   setEnvironment: any;
 }
 
-const LeftCard: React.FC<LeftCardProps> = ({
+export const LeftCard: React.FC<LeftCardProps> = ({
   environmentOptions,
   environment,
   projectId,
@@ -84,5 +84,3 @@ const LeftCard: React.FC<LeftCardProps> = ({
     </Col>
   );
 };
-
-export default LeftCard;

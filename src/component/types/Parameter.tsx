@@ -5,7 +5,7 @@ import Editor from "@monaco-editor/react";
 import { typeOptions } from "./Utils";
 import { useMonaco } from "@monaco-editor/react";
 
-const Paramenter: React.FC<{
+export const Parameter: React.FC<{
   name: string;
   updateFunction: (name: string, value: any, type: any) => void;
   customStyles: any;
@@ -185,5 +185,3 @@ const Paramenter: React.FC<{
     </Row>
   );
 };
-
-export default Paramenter;
