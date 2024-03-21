@@ -91,12 +91,10 @@ export const Parameter: React.FC<{
 
   return (
     <Row>
-      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
-      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
-      <Col lg={2} className="d-flex align-items-center border-bottom border-start border-muted">
-        {name}
+      <Col lg={2} className="d-flex border-bottom px-4 border-muted">
+        <div className="border-start py-3 px-4">{name}</div>
       </Col>
-      <Col lg={isFullAST ? 9 : 7} className="pt-2 pb-2 border-bottom border-start border-muted">
+      <Col lg={isFullAST ? 10 : 7} className="pt-2 pb-2 border-bottom border-start border-muted">
         {(isFullAST && type === "Primitive") || (!isFullAST && type.value === "Primitive") ? (
           <Form.Control
             type="text"
@@ -162,7 +160,7 @@ export const Parameter: React.FC<{
       </Col>
 
       {!isFullAST && (
-        <Col lg={2} className="d-flex align-items-center border-bottom border-start border-muted">
+        <Col lg={3} className="d-flex align-items-center border-bottom border-start border-muted">
           <div className="SelectBox w-100">
             <Select
               defaultValue={typeOptions[0]}
@@ -180,8 +178,6 @@ export const Parameter: React.FC<{
           </div>
         </Col>
       )}
-      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
-      <Col lg={0.5} className="pt-2 pb-2 border-bottom border-2 border-muted" />
     </Row>
   );
 };
