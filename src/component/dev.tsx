@@ -28,7 +28,6 @@ const props = {
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
-// console.log("before render");
 root.render(
   <TestInterface
     axios={props.axios}
@@ -42,32 +41,4 @@ root.render(
     projectId={props.projectId}
     port={props.port}
   />,
-  //   <BrowserRouter>
-  //     {/* <React.Suspense
-  //       fallback={
-  //         <div className="loader-img">
-  //           <GenezioSpinner />
-  //           <div></div>
-  //         </div>
-  //       }
-  //     > */}
-  //     <Routes>
-  //       <Route
-  //         path="/test-interface/"
-  //         element={
-  //           <App
-  //             axios={props.axios}
-  //             statusBar={props.statusBar}
-  //             genezioSpinner={props.genezioSpinner}
-  //             testInterfaceModal={props.testInterfaceModal}
-  //             environmentOptions={props.environmentOptions}
-  //             isJsonString={props.isJsonString}
-  //             leftCard={props.leftCard}
-  //             parameters={props.parameters}
-  //           />
-  //         }
-  //       />
-  //       <Route path="*" element={<Navigate to="/test-interface/" />} />
-  //     </Routes>
-  //   </BrowserRouter>,
 );
