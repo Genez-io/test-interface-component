@@ -318,7 +318,11 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       if (param.value === "true") return true;
       if (param.value === "false") return false;
       if (isNaN(Number(param.value))) {
-        return param.value;
+        try {
+          return JSON.parse(param.value ? param.value : "");
+        } catch (error) {
+          return param.value;
+        }
       } else {
         return Number(param.value);
       }
