@@ -508,62 +508,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
 
   return (
     <div className="pt-3 pb-3 ps-3 pe-3">
-      {/* <-- breadcrumb --> */}
-      <div className="breadcrumb-header justify-content-between">
-        <div className="left-content">
-          {(cameFromProduction && (
-            <Breadcrumb className="breadcrumb">
-              <Breadcrumb.Item
-                className="breadcrumb-item"
-                onClick={() => navigate("/")}
-                aria-current="page"
-                style={{ paddingTop: "1px" }} // hack don;t change it
-              >
-                All Projects
-              </Breadcrumb.Item>
-              <Breadcrumb.Item
-                className="breadcrumb-item"
-                aria-current="page"
-                onClick={() => navigate(`/project/${projectId}/${envId}/backend`)}
-              >
-                Project: {project.name || <Spinner variant="primary" animation="border" size="sm" />}
-                {" | Region: "}
-                {project.region || <Spinner variant="primary" animation="border" size="sm" />}
-              </Breadcrumb.Item>
-              <Breadcrumb.Item
-                className="breadcrumb-item"
-                aria-current="page"
-                onClick={() => navigate(`/project/${projectId}/${envId}/backend`)}
-              >
-                {"Environment: "}
-                {activeEnv.name || (
-                  <>
-                    <Spinner variant="primary" animation="border" size="sm" />
-                  </>
-                )}
-              </Breadcrumb.Item>
-              <Breadcrumb.Item className="breadcrumb-item" aria-current="page" active>
-                Testing
-              </Breadcrumb.Item>
-            </Breadcrumb>
-          )) || (
-            <Breadcrumb className="breadcrumb">
-              <Breadcrumb.Item
-                className="breadcrumb-item"
-                aria-current="page"
-                style={{ paddingTop: "1px" }} // hack don;t change it
-              >
-                Local Testing
-              </Breadcrumb.Item>
-              <Breadcrumb.Item className="breadcrumb-item" aria-current="page" active>
-                {project.name || <Spinner variant="primary" animation="border" size="sm" />}
-              </Breadcrumb.Item>
-            </Breadcrumb>
-          )}
-        </div>
-      </div>
-      {/* <!-- /breadcrumb --> */}
-
       {/* <!-- Modal --> */}
       <props.testInterfaceModal modal={modal} name={project?.name} onHide={() => setModal(false)} />
       {/* <!-- /Modal --> */}
