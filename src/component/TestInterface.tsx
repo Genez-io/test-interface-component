@@ -129,6 +129,16 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   }, []);
 
   useEffect(() => {
+    if (cameFromProduction && activeEnv.name && !environment?.label) {
+      const newEnvironment = {
+        value: "Production",
+        label: activeEnv.name,
+      };
+      setEnvironment(newEnvironment);
+    }
+  }, [activeEnv, environment]);
+
+  useEffect(() => {
     const runAsyncProd = async () => {
       setClasses([]);
       setLoadingRefresh(true);
@@ -515,20 +525,24 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       {/* <!-- Main Content --> */}
       <Row>
         {/* <!-- Left Card (Classes Sidebar) --> */}
-        <props.leftCard
-          environmentOptions={props.environmentOptions}
-          environment={environment}
-          projectId={projectId}
-          classes={classes}
-          updateMethod={updateMethod}
-          activeTab={activeTab}
-          tabs={tabs}
-          loadingRefresh={loadingRefresh}
-          setRefresh={() => setRefresh(!refresh)}
-          setEnvironment={(t: any) => {
-            setEnvironment(t ?? { value: "Local", label: "Local" });
-          }}
-        />
+        {cameFromProduction && !environment.label ? (
+          <props.genezioSpinner />
+        ) : (
+          <props.leftCard
+            environmentOptions={props.environmentOptions}
+            environment={environment}
+            projectId={projectId}
+            classes={classes}
+            updateMethod={updateMethod}
+            activeTab={activeTab}
+            tabs={tabs}
+            loadingRefresh={loadingRefresh}
+            setRefresh={() => setRefresh(!refresh)}
+            setEnvironment={(t: any) => {
+              setEnvironment(t ?? { value: "Local", label: "Local" });
+            }}
+          />
+        )}
         {/* <!-- /Left Card (Classes Sidebar) --> */}
         {/* <!-- Right Card (Tabs and Calling Functions) --> */}
         <Col xl={9} md={12}>

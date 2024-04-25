@@ -17,13 +17,12 @@ export const primitiveTypes: readonly string[] = [
 
 export type dropdownOption = {
   value: string;
-  label: string;
+  label?: string;
 };
 
-export const environmentOptions: readonly dropdownOption[] = [
+export const environmentOptions: dropdownOption[] = [
   {
     value: "Production",
-    label: "Production",
   },
   {
     value: "Local",
