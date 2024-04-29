@@ -104,6 +104,9 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   const [reqTab, setReqTab] = useState<any>("");
   const [reqClass, setReqClass] = useState<any>("");
   const [logsLoading, setLogsLoading] = useState<any>(false);
+  const [currentEnvironmentOptions, setCurrentEnvironmentOptions] = useState<dropdownOption[]>(
+    props.environmentOptions,
+  );
 
   const sendButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -135,6 +138,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
         label: activeEnv.name,
       };
       setEnvironment(newEnvironment);
+      setCurrentEnvironmentOptions([newEnvironment, currentEnvironmentOptions[1]]);
     }
   }, [activeEnv, environment]);
 
@@ -529,7 +533,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
           <props.genezioSpinner />
         ) : (
           <props.leftCard
-            environmentOptions={props.environmentOptions}
+            environmentOptions={currentEnvironmentOptions}
             environment={environment}
             projectId={projectId}
             classes={classes}
