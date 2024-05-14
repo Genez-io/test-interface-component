@@ -285,14 +285,14 @@ export const Parameters: React.FC<ParametersProps> = ({
                 <span className="text-muted">
                   {isLocalEnviroment
                     ? url + "/" + tabs[activeTab].method.name
-                    : url + tabs[activeTab]?.className + "/" + tabs[activeTab].method.name}
+                    : url.replace(/\/+$/, "") + "/" + tabs[activeTab]?.className + "/" + tabs[activeTab].method.name}
                 </span>{" "}
               </h6>
               <CopyButton
                 text={
                   isLocalEnviroment
                     ? url + "/" + tabs[activeTab].method.name
-                    : url + tabs[activeTab]?.className + "/" + tabs[activeTab].method.name
+                    : url.replace(/\/+$/, "") + "/" + tabs[activeTab]?.className + "/" + tabs[activeTab].method.name
                 }
               />
             </div>
