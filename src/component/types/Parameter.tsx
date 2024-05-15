@@ -74,12 +74,24 @@ export const Parameter: React.FC<{
     }
     let result = "{\n";
     const keys = Object.keys(obj);
+    let gnzContextPresent = false;
+    // for (let i = 0; i < keys.length; i++) {
+    //   const key = keys[i];
+    //   const value = obj[key];
+    //   if (typeof value === "boolean" && key === "isGnzContext") {
+    //     gnzContextPresent = true;
+    //     break;
+    //   }
+    // }
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const value = obj[key];
+      // if (typeof value === "boolean" && key === "isGnzContext") {
+      //   continue;
+      // }
       const formattedValue = typeof value === "object" ? formatObject(value, indent + 4) : JSON.stringify(value);
       result += `${indentStr}    "${key}": ${formattedValue}`;
-      if (i < keys.length - 1) {
+      if (i < (gnzContextPresent ? keys.length - 2 : keys.length - 1)) {
         result += ",";
       }
       result += "\n";
