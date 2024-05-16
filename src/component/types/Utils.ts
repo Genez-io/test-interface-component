@@ -48,7 +48,8 @@ export const typeOptions: readonly dropdownOption[] = [
 export interface Param {
   name: string;
   type: string | dropdownOption;
-  value?: string;
+  value?: any;
+  isGnzContext?: boolean;
 }
 
 export interface Method {
