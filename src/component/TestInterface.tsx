@@ -434,10 +434,10 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
 
         if (isFullAST ? type === "Object" || type === "Array" : type.value === "Object" || type.value === "Array") {
           try {
-            param.value = JSON.parse(value);
             if (isGnzContext) {
               param.isGnzContext = isGnzContext;
             }
+            param.value = JSON.parse(value);
           } catch (e) {}
         }
       }
