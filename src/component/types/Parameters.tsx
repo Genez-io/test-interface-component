@@ -141,12 +141,6 @@ export const Parameters: React.FC<ParametersProps> = ({
 
     // check if param is primitive
     if (isPrimitive(paramType.type as AstNodeType)) {
-      if ((paramType.type as AstNodeType) === AstNodeType.BooleanLiteral && paramName === "isGnzContext") {
-        return {
-          value: true,
-          label: acc + paramName,
-        };
-      }
       return {
         value: mapPrimitiveToValue(paramType.type as AstNodeType),
         label: acc + paramName,

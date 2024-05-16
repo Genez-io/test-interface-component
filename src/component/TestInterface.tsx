@@ -333,8 +333,14 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       if (param.value === "false") return false;
       if (isNaN(Number(param.value))) {
         try {
+          if (param.isGnzContext) {
+            return { ...JSON.parse(param.value ? param.value : ""), isGnzContext: true };
+          }
           return JSON.parse(param.value ? param.value : "");
         } catch (error) {
+          if (param.isGnzContext && typeof param.value === "object") {
+            return { ...param.value, isGnzContext: true };
+          }
           return param.value;
         }
       } else {
@@ -420,7 +426,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   const filteredClass: any = classes?.filter((x: any) => x.name === currentClass?.className)[0];
   const isFullAST = filteredClass?.ast.version === "2" ? true : false;
 
-  const updateParam = (name: string, value: string, type: any) => {
+  const updateParam = (name: string, value: string, type: any, isGnzContext?: boolean) => {
     tabs[activeTab].method.params.forEach((param: Param) => {
       if (param.name === name) {
         param.value = value;
@@ -429,6 +435,9 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
         if (isFullAST ? type === "Object" || type === "Array" : type.value === "Object" || type.value === "Array") {
           try {
             param.value = JSON.parse(value);
+            if (isGnzContext) {
+              param.isGnzContext = isGnzContext;
+            }
           } catch (e) {}
         }
       }

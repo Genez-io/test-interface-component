@@ -7,7 +7,7 @@ import { useMonaco } from "@monaco-editor/react";
 
 export const Parameter: React.FC<{
   name: string;
-  updateFunction: (name: string, value: any, type: any) => void;
+  updateFunction: (name: string, value: any, type: any, isGnzContext?: boolean) => void;
   customStyles: any;
   valueProp: any;
   typeProp?: any;
@@ -40,6 +40,7 @@ export const Parameter: React.FC<{
           : JSON.stringify(paramValue)
       : valueProp,
   );
+  const [isGnzContext] = useState<boolean>(isGnzContextObject(paramValue));
 
   useMonaco()?.editor.defineTheme("genezio-dark", {
     base: "vs-dark",
@@ -49,8 +50,8 @@ export const Parameter: React.FC<{
   });
 
   useEffect(() => {
-    updateFunction(name, value, type);
-  }, []);
+    updateFunction(name, value, type, isGnzContext);
+  }, [isGnzContext, type, value]);
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     const container = document.getElementById(`container-${name}`);
@@ -75,20 +76,20 @@ export const Parameter: React.FC<{
     let result = "{\n";
     const keys = Object.keys(obj);
     let gnzContextPresent = false;
-    // for (let i = 0; i < keys.length; i++) {
-    //   const key = keys[i];
-    //   const value = obj[key];
-    //   if (typeof value === "boolean" && key === "isGnzContext") {
-    //     gnzContextPresent = true;
-    //     break;
-    //   }
-    // }
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const value = obj[key];
-      // if (typeof value === "boolean" && key === "isGnzContext") {
-      //   continue;
-      // }
+      if (typeof value === "boolean" && key === "isGnzContext") {
+        gnzContextPresent = true;
+        break;
+      }
+    }
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const value = obj[key];
+      if (typeof value === "boolean" && key === "isGnzContext") {
+        continue;
+      }
       const formattedValue = typeof value === "object" ? formatObject(value, indent + 4) : JSON.stringify(value);
       result += `${indentStr}    "${key}": ${formattedValue}`;
       if (i < (gnzContextPresent ? keys.length - 2 : keys.length - 1)) {
@@ -99,6 +100,15 @@ export const Parameter: React.FC<{
 
     result += `${indentStr}}`;
     return result;
+  }
+
+  function isGnzContextObject(paramValue: any): boolean {
+    if (isFullAST) {
+      if (paramValue && isPrimitive === "Object") return paramValue.isGnzContext;
+    } else {
+      if (valueProp) return valueProp.isGnzContext;
+    }
+    return false;
   }
 
   return (
