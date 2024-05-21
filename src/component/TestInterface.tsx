@@ -175,7 +175,9 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       if (port == null) {
         tpmPort = 8083;
       }
+
       const workspaceUrl = getWorkspaceUrl();
+
       setLoadingRefresh(true);
       try {
         const response = await fetch(
@@ -324,19 +326,10 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
 
   const getWorkspaceUrl = (): string | undefined => {
     let workspaceUrl: string | undefined;
-    if (process.env?.["GITPOD_WORKSPACE_URL"]) {
-      const gitPodWorkspaceUrl = process.env["GITPOD_WORKSPACE_URL"];
-      const insertPortIndex = gitPodWorkspaceUrl.indexOf("https://") + "https://".length;
-      workspaceUrl =
-        gitPodWorkspaceUrl.slice(0, insertPortIndex) +
-        `${port ? port : 8083}-` +
-        gitPodWorkspaceUrl.slice(insertPortIndex);
-    }
-    if (process.env?.["CODESPACE_NAME"] && process.env?.["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]) {
-      const codespaceName = process.env["CODESPACE_NAME"];
-      const portForwardingDomain = process.env["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"];
-      workspaceUrl = `https://${codespaceName}-${port ? port : 8083}.${portForwardingDomain}`;
-    }
+    const fullUrl = window.location.href;
+    const strippedUrl = fullUrl.endsWith("/explore") ? fullUrl.slice(0, -8) : fullUrl.slice(0, -1);
+    if (!strippedUrl.includes("localhost") && !strippedUrl.includes("127.0.0.1") && port == null)
+      workspaceUrl = strippedUrl;
     return workspaceUrl;
   };
 
