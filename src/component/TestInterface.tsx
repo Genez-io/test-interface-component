@@ -175,17 +175,21 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       if (port == null) {
         tpmPort = 8083;
       }
+      const workspaceUrl = getWorkspaceUrl();
       setLoadingRefresh(true);
       try {
-        const response = await fetch(`${localUrl}${tpmPort}/get-ast-summary`, {
-          keepalive: true,
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          workspaceUrl ? `${workspaceUrl}/get-ast-summary` : `${localUrl}${tpmPort}/get-ast-summary`,
+          {
+            keepalive: true,
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            mode: "cors",
+            cache: "no-cache",
           },
-          mode: "cors",
-          cache: "no-cache",
-        });
+        );
         const res = await response.json();
         if (cameFromProduction && res.name !== project.name) {
           setConnected(false);
@@ -318,22 +322,27 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: storageTabs }));
   };
 
+  const getWorkspaceUrl = (): string | undefined => {
+    let workspaceUrl: string | undefined;
+    if (process.env?.["GITPOD_WORKSPACE_URL"]) {
+      const gitPodWorkspaceUrl = process.env["GITPOD_WORKSPACE_URL"];
+      const insertPortIndex = gitPodWorkspaceUrl.indexOf("https://") + "https://".length;
+      workspaceUrl =
+        gitPodWorkspaceUrl.slice(0, insertPortIndex) +
+        `${port ? port : 8083}-` +
+        gitPodWorkspaceUrl.slice(insertPortIndex);
+    }
+    if (process.env?.["CODESPACE_NAME"] && process.env?.["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]) {
+      const codespaceName = process.env["CODESPACE_NAME"];
+      const portForwardingDomain = process.env["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"];
+      workspaceUrl = `https://${codespaceName}-${port ? port : 8083}.${portForwardingDomain}`;
+    }
+    return workspaceUrl;
+  };
+
   const getUrl = (): string => {
     if (environment?.value === "Local") {
-      let workspaceUrl: string | undefined;
-      if (process.env?.["GITPOD_WORKSPACE_URL"]) {
-        const gitPodWorkspaceUrl = process.env["GITPOD_WORKSPACE_URL"];
-        const insertPortIndex = gitPodWorkspaceUrl.indexOf("https://") + "https://".length;
-        workspaceUrl =
-          gitPodWorkspaceUrl.slice(0, insertPortIndex) +
-          `${port ? port : 8083}-` +
-          gitPodWorkspaceUrl.slice(insertPortIndex);
-      }
-      if (process.env?.["CODESPACE_NAME"] && process.env?.["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]) {
-        const codespaceName = process.env["CODESPACE_NAME"];
-        const portForwardingDomain = process.env["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"];
-        workspaceUrl = `https://${codespaceName}-${port ? port : 8083}.${portForwardingDomain}`;
-      }
+      const workspaceUrl = getWorkspaceUrl();
       return workspaceUrl
         ? `${workspaceUrl}/${tabs[activeTab].className}`
         : `${localUrl}${port ? port : 8083}/${tabs[activeTab].className}`;
