@@ -320,7 +320,23 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
 
   const getUrl = (): string => {
     if (environment?.value === "Local") {
-      return `${localUrl}${port ? port : 8083}/${tabs[activeTab].className}`;
+      let workspaceUrl: string | undefined;
+      if (process.env?.["GITPOD_WORKSPACE_URL"]) {
+        const gitPodWorkspaceUrl = process.env["GITPOD_WORKSPACE_URL"];
+        const insertPortIndex = gitPodWorkspaceUrl.indexOf("https://") + "https://".length;
+        workspaceUrl =
+          gitPodWorkspaceUrl.slice(0, insertPortIndex) +
+          `${port ? port : 8083}-` +
+          gitPodWorkspaceUrl.slice(insertPortIndex);
+      }
+      if (process.env?.["CODESPACE_NAME"] && process.env?.["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]) {
+        const codespaceName = process.env["CODESPACE_NAME"];
+        const portForwardingDomain = process.env["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"];
+        workspaceUrl = `https://${codespaceName}-${port ? port : 8083}.${portForwardingDomain}`;
+      }
+      return workspaceUrl
+        ? `${workspaceUrl}/${tabs[activeTab].className}`
+        : `${localUrl}${port ? port : 8083}/${tabs[activeTab].className}`;
     } else {
       return classes?.find((x: ClassType) => x.name === tabs[activeTab].className)?.cloudUrl ?? "";
     }
