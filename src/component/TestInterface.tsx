@@ -657,6 +657,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                     <Col lg={3} style={{ paddingLeft: "0" }} className="pb-3 pt-1">
                       {dataTabsOptions.map((option, idx) => (
                         <span
+                          key={idx}
                           onClick={() => setDataTabs(option)}
                           className="border-primary"
                           style={{

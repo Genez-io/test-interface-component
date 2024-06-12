@@ -63,7 +63,6 @@ export const StatusBar: React.FC<{
                     className="form-control"
                     placeholder="Port"
                     value={value}
-                    defaultValue={value}
                     onChange={(v) => setValue(v.target.value)}
                     size="sm"
                     onKeyDown={(e) => {
