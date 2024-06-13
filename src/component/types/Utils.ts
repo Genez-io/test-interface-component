@@ -67,6 +67,12 @@ export interface ClassType {
   };
 }
 
+export interface FunctionType {
+  name: string;
+  id: string;
+  cloudUrl: string;
+}
+
 export interface Project {
   name: string;
   region: string;

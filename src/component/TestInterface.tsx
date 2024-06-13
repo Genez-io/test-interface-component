@@ -16,6 +16,7 @@ import { TestInterfaceModal } from "./types/TestInterfaceModal";
 import { LeftCard } from "./types/LeftCard";
 import {
   ClassType,
+  FunctionType,
   Method,
   Param,
   Project,
@@ -86,6 +87,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   const dataTabsOptions = ["Response", "Logs"];
 
   const [classes, setClasses] = useState<ClassType[]>([]);
+  const [functions, setFunctions] = useState<FunctionType[]>([]);
   const [activeEnv, setActiveEnv] = useState<any>({});
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -145,6 +147,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   useEffect(() => {
     const runAsyncProd = async () => {
       setClasses([]);
+      setFunctions([]);
       setLoadingRefresh(true);
       const res: any = await props.axios.getProjectById(projectId ?? "");
       if (res.data && res.data.status === "ok") {
