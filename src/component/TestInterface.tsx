@@ -174,6 +174,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     };
     const runAsyncLocal = async () => {
       setClasses([]);
+      setFunctions([]);
       let tpmPort = port;
       if (port == null) {
         tpmPort = 8083;
@@ -195,10 +196,24 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             cache: "no-cache",
           },
         );
+        const responseFunctions = await fetch(
+          workspaceUrl ? `${workspaceUrl}/get-functions` : `${localUrl}${tpmPort}/get-functions`,
+          {
+            keepalive: true,
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            mode: "cors",
+            cache: "no-cache",
+          },
+        );
+        const resFunctions = await responseFunctions.json();
         const res = await response.json();
         if (cameFromProduction && res.name !== project.name) {
           setConnected(false);
           setClasses([]);
+          setFunctions([]);
           setActiveTab(-1);
           setTabs([]);
           setLoadingRefresh(false);
@@ -218,8 +233,14 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             version: res.version,
           },
         }));
+        const mappedFunctions = resFunctions.functions.map((functionItem: any) => ({
+        ...functionItem
+        }))
+        console.log(mappedFunctions)
+        console.log(mappedClasses)
         syncTabs(storageTabs, mappedClasses);
         setClasses(mappedClasses);
+        setFunctions(mappedFunctions);
         setTabs(storageTabs);
         setActiveTab(storageActiveTab);
         setConnected(true);
@@ -291,8 +312,42 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
 
     window.addEventListener("keydown", handleKeyPress);
   }, []);
-
+  
+  // const syncTabsFunctions = (storageTabs: TabType[], functions: FunctionType[]) => {
+  //   storageTabs.forEach((tab: TabType) => {
+  //     const functionItem = functions.find((x: FunctionType) => x.name === tab.className);
+  //     if (functionItem) {
+  //       // const method = 
+  //       if (method) {
+  //         // check for added params in method
+  //         for (let param of method.params) {
+  //           if (!tab.method.params.find((x: Param) => x.name === param.name)) {
+  //             tab.method.params.push({
+  //               name: param.name,
+  //               type: param.type,
+  //               value: "",
+  //             });
+  //           }
+  //         }
+  //         // check for removed params in method
+  //         for (let param of tab.method.params) {
+  //           if (!method.params.find((x: Param) => x.name === param.name)) {
+  //             tab.method.params.splice(tab.method.params.indexOf(param), 1);
+  //           }
+  //         }
+  //         // sort params to match function prototype
+  //         tab.method.params.sort((a: Param, b: Param) => {
+  //           return (
+  //             method.params.findIndex((x: Param) => x.name === a.name) - method.params.findIndex((x: Param) => x.name === b.name)
+  //           );
+  //         });
+  //       }
+  //     }
+  //   });
+  //   localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: storageTabs }));
+  // }
   const syncTabs = (storageTabs: TabType[], classes: ClassType[]) => {
+    console.log(storageTabs)
     storageTabs.forEach((tab: TabType) => {
       const classItem = classes.find((x: ClassType) => x.name === tab.className);
       if (classItem) {
@@ -567,6 +622,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             environment={environment}
             projectId={projectId}
             classes={classes}
+            functions={functions}
             updateMethod={updateMethod}
             activeTab={activeTab}
             tabs={tabs}
@@ -639,6 +695,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                 {/* <!-- Parameters --> */}
                 <props.parameters
                   classes={classes}
+                  functions={functions}
                   activeTab={activeTab}
                   tabs={tabs}
                   url={activeTab === -1 ? "" : getUrl()}

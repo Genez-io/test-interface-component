@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Row, Col, Alert } from "react-bootstrap";
 import { Parameter } from "./Parameter";
-import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles } from "./Utils";
+import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles, serverlessFunctionsParams, headersType } from "./Utils";
 import { faker } from "@faker-js/faker";
 import { CopyButton } from "./CopyButton";
 
@@ -10,10 +10,12 @@ interface ParametersProps {
   tabs: any;
   updateParam: any;
   classes: any;
+  functions:any;
   loadingRefresh: boolean;
   url: string;
   isLocalEnviroment: boolean;
   projectName: string;
+
 }
 
 export enum AstNodeType {
@@ -61,6 +63,7 @@ export const Parameters: React.FC<ParametersProps> = ({
   activeTab,
   tabs,
   updateParam,
+  functions,
   classes,
   loadingRefresh,
   url,
@@ -68,8 +71,13 @@ export const Parameters: React.FC<ParametersProps> = ({
   projectName,
 }) => {
   const currentClass = tabs[activeTab];
-  const filteredClass = classes?.filter((x: any) => x.name === currentClass?.className)[0];
-  const isFullAST = filteredClass?.ast.version === "2" ? true : false;
+  let temporaryFilteredClass: any;
+  temporaryFilteredClass = classes?.filter((x: any) => x.name === currentClass?.className)[0];
+  if(!temporaryFilteredClass){
+    temporaryFilteredClass = functions?.filter((x: any) => x.name === "Serverless Functions")[0];
+  }
+  const filteredClass = temporaryFilteredClass;
+  const isFullAST = currentClass?.className ==="Serverless Functions" ? true : filteredClass?.ast.version === "2" ? true : false;
   const classTypes: any = React.useRef({});
 
   const [astData, setAstData] = useState<any>({});
@@ -106,9 +114,8 @@ export const Parameters: React.FC<ParametersProps> = ({
         classTypesLocal[elem.name] = elem;
       }
     }
-
     classTypes.current = classTypesLocal;
-
+    classTypes.current["Headers"] = headersType;
     const mockData: any = {};
 
     for (var z = 0; z < classes?.length; z++) {
@@ -120,7 +127,6 @@ export const Parameters: React.FC<ParametersProps> = ({
         for (var j = 0; j < method.params?.length; j++) {
           const param: any = method.params[j];
           const { value, label } = mapTypeToOptions("", param.name, param.type);
-
           if (typeof value === "number") {
             methodData[param.name] = { value: value.toString(), label };
           } else {
@@ -130,6 +136,17 @@ export const Parameters: React.FC<ParametersProps> = ({
         setElem(mockData, method.name, methodData);
       }
     }
+    if(functions.length > 0){
+        
+      for(var i = 0; i < functions.length; i++){
+        const functionData: { [paramName: string]: { value: any; label: string } } = {};
+        const { value, label } = mapTypeToOptions("", "headers", { type: AstNodeType.CustomNodeLiteral, rawValue: "Headers" });
+        functionData["headers"] = { value, label };        
+        setElem(mockData, functions[i].name, functionData);
+        
+      }
+    }
+    console.log(mockData)
     setAstData(mockData);
     return mockData;
   };

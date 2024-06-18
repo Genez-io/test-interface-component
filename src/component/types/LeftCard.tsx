@@ -11,6 +11,7 @@ interface LeftCardProps {
   environment: any;
   projectId: any;
   classes: any;
+  functions:any;
   updateMethod: any;
   activeTab: any;
   tabs: any;
@@ -24,6 +25,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
   environment,
   projectId,
   classes,
+  functions,
   updateMethod,
   activeTab,
   tabs,
@@ -73,6 +75,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
             ) : (
               <ClassesSidebar
                 classes={classes}
+                functions={functions}
                 updateMethod={updateMethod}
                 className={activeTab !== -1 ? tabs[activeTab].className : ""}
                 functionName={activeTab !== -1 ? tabs[activeTab].method.name : ""}

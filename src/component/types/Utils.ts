@@ -117,6 +117,40 @@ export const colourStyles: StylesConfig<dropdownOption> = {
   menuPortal: (styles) => ({ ...styles, zIndex: 9999 }),
 };
 
+export const serverlessFunctionsParams = {
+  headers: {
+    name: "headers",
+    type: "Object",
+    optional: false,
+    value: {
+      contentType: "application/json",
+      connection: "keep-alive",
+    },
+  },
+};
+
+export const headersType = {
+  name: "Headers",
+  type: "StructLiteral",
+  typeLiteral: {
+    type: "TypeLiteral",
+    properties: [
+      {
+        name: "contentType",
+        optional: false,
+        type: "StringLiteral",
+      },
+      {
+        name: "connection",
+        optional: false,
+        type: "StringLiteral",
+      },
+    ],
+  },
+};
+
+export const headersMethod = {};
+
 export const mapTypeToOptions = (type: string): dropdownOption => {
   if (!type) {
     return { value: typeOption.Primitive, label: typeOption.Primitive };
