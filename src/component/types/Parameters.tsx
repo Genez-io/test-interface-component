@@ -348,6 +348,10 @@ export const Parameters: React.FC<ParametersProps> = ({
                   currentParamData = astData[tabs[activeTab].method.name][param.name];
                 }
 
+                const storedParameterValue = localStorage.getItem(projectName)
+                  ? JSON.parse(localStorage.getItem(projectName)!)?.tabs[activeTab]?.method?.params[idx]?.value ?? ""
+                  : "";
+
                 return (
                   <Parameter
                     isFullAST={isFullAST}
@@ -358,7 +362,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                     astData={astData}
                     methodName={tabs[activeTab]?.method?.name && tabs[activeTab]?.method?.name}
                     name={param.name}
-                    paramValue={currentParamData?.value}
+                    paramValue={storedParameterValue ? storedParameterValue : currentParamData?.value}
                     updateFunction={updateParam}
                     key={param.name + tabs[activeTab].method.name}
                     customStyles={colourStyles}
