@@ -10,8 +10,7 @@ import { LeftCard } from "./types/LeftCard";
 
 // const port = parseInt(window.location.port);
 
-const port = 8083
-
+const port = 8083;
 
 const props = {
   axios: {
@@ -26,7 +25,10 @@ const props = {
   isJsonString: isJsonString,
   leftCard: LeftCard,
   parameters: Parameters,
-  projectId: "local",
+  projectId: "fad81ffa-5c57-4310-8ca1-d3d470f6e1e3",
+  envId: "067f6d3b-536f-490a-9f4b-c038503f4d95",
+  // projectId: "local",
+  // envId: "067f6d3b-536f-490a-9f4b-c038503f4d95",
   port: port,
 };
 
@@ -43,6 +45,7 @@ root.render(
     leftCard={props.leftCard}
     parameters={props.parameters}
     projectId={props.projectId}
+    envId={props.envId}
     port={props.port}
   />,
 );

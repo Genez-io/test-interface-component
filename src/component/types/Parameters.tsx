@@ -99,7 +99,6 @@ export const Parameters: React.FC<ParametersProps> = ({
     const classTypesLocal: any = {};
     // prevent the function to be called multiple times
     setRun(run + 1);
-
     for (var u = 0; u < classes?.length; u++) {
       const eachClass = classes[u];
 
@@ -349,10 +348,6 @@ export const Parameters: React.FC<ParametersProps> = ({
                   currentParamData = astData[tabs[activeTab].method.name][param.name];
                 }
 
-                const storedParameterValue = localStorage.getItem(projectName)
-                  ? JSON.parse(localStorage.getItem(projectName)!)?.tabs[activeTab]?.method?.params[idx]?.value ?? ""
-                  : "";
-
                 return (
                   <Parameter
                     isFullAST={isFullAST}
@@ -363,7 +358,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                     astData={astData}
                     methodName={tabs[activeTab]?.method?.name && tabs[activeTab]?.method?.name}
                     name={param.name}
-                    paramValue={storedParameterValue ? storedParameterValue : currentParamData?.value}
+                    paramValue={currentParamData?.value}
                     updateFunction={updateParam}
                     key={param.name + tabs[activeTab].method.name}
                     customStyles={colourStyles}

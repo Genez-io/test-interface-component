@@ -160,6 +160,26 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
           ? JSON.parse(storage)
           : { tabs: [], activeTab: -1 };
         const localActiveEnv = res.data.project.projectEnvs.find((env: any) => env.id === envId);
+        const functions = [...localActiveEnv.functions];
+        if (functions && functions.length > 0) {
+          const mappedFunctions = functions.map((functionItem: any) => ({
+            ...functionItem,
+            type: "function",
+            returnType: "",
+            params: serverlessFunctionsParams,
+            requestType: "GET",
+          }));
+          localActiveEnv.classes.push({
+            name: "Serverless Functions",
+            methods: [...mappedFunctions],
+            types: [...serverlessFunctionsTypes],
+            ast: {
+              methods: [...mappedFunctions],
+              types: [...serverlessFunctionsTypes],
+              version: "2",
+            },
+          });
+        }
         syncTabs(storageTabs, localActiveEnv.classes);
         setTabs(storageTabs);
         setActiveTab(storageActiveTab);
@@ -509,7 +529,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     const copyTabs = [...tabs];
     const startTime: number = new Date().getTime();
     try {
-      console.log(body);
       const response = await fetch(url?.value, {
         keepalive: true,
         method: requestType,
@@ -589,6 +608,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   };
 
   const addTab = (className: string, method: Method) => {
+    console.log("method in add tab", method);
     const copyTabs = [...tabs];
     copyTabs.push({
       tab: method.name,
@@ -602,6 +622,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     setTabs(copyTabs);
     setActiveTab(copyTabs.length - 1);
 
+    console.log("fifth local storage set items");
     localStorage.setItem(project.name, JSON.stringify({ activeTab: copyTabs.length - 1, tabs: copyTabs }));
   };
 
