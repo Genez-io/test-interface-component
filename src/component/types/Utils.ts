@@ -45,6 +45,25 @@ export const typeOptions: readonly dropdownOption[] = [
   },
 ];
 
+export const requestTypeOptions: readonly dropdownOption[] = [
+  {
+    value: "GET",
+    label: "GET",
+  },
+  {
+    value: "POST",
+    label: "POST",
+  },
+  {
+    value: "PUT",
+    label: "PUT",
+  },
+  {
+    value: "DELETE",
+    label: "DELETE",
+  },
+];
+
 export interface Param {
   name: string;
   type: string | dropdownOption;
@@ -53,6 +72,8 @@ export interface Param {
 }
 
 export interface Method {
+  cloudUrl?: string;
+  requestType?: string;
   name: string;
   type: string;
   params: Param[];
@@ -117,39 +138,80 @@ export const colourStyles: StylesConfig<dropdownOption> = {
   menuPortal: (styles) => ({ ...styles, zIndex: 9999 }),
 };
 
-export const serverlessFunctionsParams = {
-  headers: {
-    name: "headers",
-    type: "Object",
+export const serverlessFunctionsParams = [
+  {
+    name: "url",
+    type: {
+      type: "StringLiteral",
+    },
     optional: false,
-    value: {
-      contentType: "application/json",
-      connection: "keep-alive",
+  },
+  {
+    name: "headers",
+    type: {
+      type: "CustomNodeLiteral",
+      rawValue: "Headers",
+    },
+    optional: false,
+  },
+  {
+    name: "body",
+    type: {
+      type: "CustomNodeLiteral",
+      rawValue: "Body",
+    },
+    optional: false,
+  },
+];
+
+export const serverlessFunctionsTypes = [
+  {
+    name: "Headers",
+    type: "StructLiteral",
+    path: ".Functions/Headers",
+    typeLiteral: {
+      type: "TypeLiteral",
+      properties: [
+        {
+          name: "content-type",
+          optional: false,
+          type: {
+            type: "StringLiteral",
+          },
+        },
+        {
+          name: "connection",
+          optional: false,
+          type: {
+            type: "StringLiteral",
+          },
+        },
+      ],
     },
   },
-};
-
-export const headersType = {
-  name: "Headers",
-  type: "StructLiteral",
-  typeLiteral: {
-    type: "TypeLiteral",
-    properties: [
-      {
-        name: "contentType",
-        optional: false,
-        type: "StringLiteral",
-      },
-      {
-        name: "connection",
-        optional: false,
-        type: "StringLiteral",
-      },
-    ],
+  {
+    name: "Body",
+    type: "StructLiteral",
+    path: ".Functions/Body",
+    typeLiteral: {
+      type: "TypeLiteral",
+      properties: [
+        {
+          name: "text",
+          optional: false,
+          type: {
+            type: "StringLiteral",
+          },
+        },
+      ],
+    },
   },
-};
+];
 
-export const headersMethod = {};
+export const headersValue = {
+  "content-type": "application/json",
+  connection: "keep-alive",
+};
 
 export const mapTypeToOptions = (type: string): dropdownOption => {
   if (!type) {

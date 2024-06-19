@@ -6,9 +6,12 @@ export const StatusBar: React.FC<{
   success: boolean;
   port: number;
   url: string;
+  tabs: any;
+  activeTab: number;
   updatePort: (port: any) => any;
-}> = ({ environment, success, port, url, updatePort }) => {
+}> = ({ environment, success, port, url, tabs, activeTab, updatePort }) => {
   const [value, setValue] = React.useState<any>("");
+
   return (
     <div className="mx-4 mt-4 mb-4 w-lg-100">
       {success ? (
@@ -22,7 +25,9 @@ export const StatusBar: React.FC<{
         >
           <Row>
             <Col lg={environment === "Local" ? 7 : 12}>
-              {url ? (
+              {tabs[activeTab]?.method.type === "function" ? (
+                <></>
+              ) : url ? (
                 <div>
                   Requests will be sent to <strong>{url}</strong>
                 </div>

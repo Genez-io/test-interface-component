@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 import Select from "react-select";
 import Editor from "@monaco-editor/react";
-import { typeOptions } from "./Utils";
+import { requestTypeOptions, typeOptions } from "./Utils";
 import { useMonaco } from "@monaco-editor/react";
 
 export const Parameter: React.FC<{
   name: string;
   updateFunction: (name: string, value: any, type: any, isGnzContext?: boolean) => void;
+  updateRequestType: (type: any) => void;
   customStyles: any;
   valueProp: any;
   typeProp?: any;
@@ -17,9 +18,12 @@ export const Parameter: React.FC<{
   paramValue?: any;
   setAstData?: any;
   methodName?: any;
+  tabs?: any;
+  activeTab: number;
 }> = ({
   name,
   updateFunction,
+  updateRequestType,
   customStyles,
   valueProp,
   typeProp,
@@ -29,8 +33,13 @@ export const Parameter: React.FC<{
   paramValue,
   setAstData,
   methodName,
+  tabs,
+  activeTab,
 }) => {
   const [type, setType] = useState<any>(typeProp);
+  const [requestType, setRequestType] = useState<any>(
+    requestTypeOptions.find((option) => option.value === tabs[activeTab]?.method.requestType) || requestTypeOptions[0],
+  );
   const [value, setValue] = useState<any>(
     isFullAST
       ? isPrimitive === "Primitive"
@@ -102,6 +111,13 @@ export const Parameter: React.FC<{
     return result;
   }
 
+  function isFunctionUrl() {
+    if (tabs[activeTab]?.method.type === "function" && name === "url") {
+      return true;
+    }
+    return false;
+  }
+
   function isGnzContextObject(paramValue: any): boolean {
     if (isFullAST) {
       if (paramValue && isPrimitive === "Object") return paramValue.isGnzContext;
@@ -116,7 +132,7 @@ export const Parameter: React.FC<{
       <Col lg={2} className="d-flex border-bottom px-4 border-muted">
         <div className="border-start py-3 px-4">{name}</div>
       </Col>
-      <Col lg={isFullAST ? 10 : 7} className="pt-2 pb-2 border-bottom border-start border-muted">
+      <Col lg={isFunctionUrl() ? 7 : isFullAST ? 10 : 7} className="pt-2 pb-2 border-bottom border-start border-muted">
         {(isFullAST && type === "Primitive") || (!isFullAST && type.value === "Primitive") ? (
           <Form.Control
             type="text"
@@ -124,7 +140,6 @@ export const Parameter: React.FC<{
             placeholder="Value"
             as="input"
             value={value}
-            defaultValue={value}
             onChange={(v: any) => {
               if (isFullAST) {
                 setAstData((prevAstData: any) => {
@@ -194,6 +209,28 @@ export const Parameter: React.FC<{
               placeholder="Type"
               classNamePrefix="selectform"
               value={type}
+              styles={customStyles}
+              menuPortalTarget={document.body}
+            />
+          </div>
+        </Col>
+      )}
+      {isFunctionUrl() && (
+        <Col lg={3} className="d-flex align-items-center border-bottom border-start border-muted">
+          <div className="SelectBox w-100">
+            <Select
+              defaultValue={
+                requestTypeOptions.find((option) => option.value === tabs[activeTab]?.method.requestType) ||
+                requestTypeOptions[0]
+              }
+              onChange={(t) => {
+                setRequestType(t);
+                updateRequestType(t.value);
+              }}
+              options={requestTypeOptions}
+              placeholder="Type"
+              classNamePrefix="selectform"
+              value={requestType}
               styles={customStyles}
               menuPortalTarget={document.body}
             />

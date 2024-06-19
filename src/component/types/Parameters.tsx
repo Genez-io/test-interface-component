@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Row, Col, Alert } from "react-bootstrap";
 import { Parameter } from "./Parameter";
-import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles, serverlessFunctionsParams, headersType } from "./Utils";
+import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles, headersValue } from "./Utils";
 import { faker } from "@faker-js/faker";
 import { CopyButton } from "./CopyButton";
 
@@ -10,12 +10,11 @@ interface ParametersProps {
   tabs: any;
   updateParam: any;
   classes: any;
-  functions:any;
   loadingRefresh: boolean;
   url: string;
   isLocalEnviroment: boolean;
   projectName: string;
-
+  updateRequestType: any;
 }
 
 export enum AstNodeType {
@@ -63,21 +62,16 @@ export const Parameters: React.FC<ParametersProps> = ({
   activeTab,
   tabs,
   updateParam,
-  functions,
   classes,
   loadingRefresh,
   url,
   isLocalEnviroment,
   projectName,
+  updateRequestType,
 }) => {
   const currentClass = tabs[activeTab];
-  let temporaryFilteredClass: any;
-  temporaryFilteredClass = classes?.filter((x: any) => x.name === currentClass?.className)[0];
-  if(!temporaryFilteredClass){
-    temporaryFilteredClass = functions?.filter((x: any) => x.name === "Serverless Functions")[0];
-  }
-  const filteredClass = temporaryFilteredClass;
-  const isFullAST = currentClass?.className ==="Serverless Functions" ? true : filteredClass?.ast.version === "2" ? true : false;
+  const filteredClass = classes?.filter((c: any) => c.name === currentClass?.className)[0];
+  const isFullAST = filteredClass?.ast.version === "2" ? true : false;
   const classTypes: any = React.useRef({});
 
   const [astData, setAstData] = useState<any>({});
@@ -115,7 +109,6 @@ export const Parameters: React.FC<ParametersProps> = ({
       }
     }
     classTypes.current = classTypesLocal;
-    classTypes.current["Headers"] = headersType;
     const mockData: any = {};
 
     for (var z = 0; z < classes?.length; z++) {
@@ -126,6 +119,24 @@ export const Parameters: React.FC<ParametersProps> = ({
         const methodData: { [paramName: string]: { value: any; label: string } } = {};
         for (var j = 0; j < method.params?.length; j++) {
           const param: any = method.params[j];
+          if (method.type === "function") {
+            if (param.name === "headers") {
+              methodData["headers"] = {
+                value: headersValue,
+                label: "headers",
+              };
+              setElem(mockData, method.name, methodData);
+              continue;
+            } else if (param.name === "url") {
+              methodData["url"] = {
+                value: method.cloudUrl ?? url,
+                label: "url",
+              };
+              setElem(mockData, method.name, methodData);
+              continue;
+            }
+          }
+
           const { value, label } = mapTypeToOptions("", param.name, param.type);
           if (typeof value === "number") {
             methodData[param.name] = { value: value.toString(), label };
@@ -136,17 +147,6 @@ export const Parameters: React.FC<ParametersProps> = ({
         setElem(mockData, method.name, methodData);
       }
     }
-    if(functions.length > 0){
-        
-      for(var i = 0; i < functions.length; i++){
-        const functionData: { [paramName: string]: { value: any; label: string } } = {};
-        const { value, label } = mapTypeToOptions("", "headers", { type: AstNodeType.CustomNodeLiteral, rawValue: "Headers" });
-        functionData["headers"] = { value, label };        
-        setElem(mockData, functions[i].name, functionData);
-        
-      }
-    }
-    console.log(mockData)
     setAstData(mockData);
     return mockData;
   };
@@ -357,6 +357,9 @@ export const Parameters: React.FC<ParametersProps> = ({
                   <Parameter
                     isFullAST={isFullAST}
                     setAstData={setAstData}
+                    tabs={tabs}
+                    activeTab={activeTab}
+                    updateRequestType={updateRequestType}
                     astData={astData}
                     methodName={tabs[activeTab]?.method?.name && tabs[activeTab]?.method?.name}
                     name={param.name}

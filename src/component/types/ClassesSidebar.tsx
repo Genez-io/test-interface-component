@@ -2,17 +2,15 @@ import React from "react";
 import { TreeView, TreeItem } from "@mui/x-tree-view";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { Method, ClassType, FunctionType, serverlessFunctionsParams } from "./Utils";
+import { Method, ClassType } from "./Utils";
 
 export const ClassesSidebar: React.FC<{
   classes: ClassType[];
-  functions: FunctionType[];
   className: string;
   functionName: string;
   updateMethod: (m: Method, name: string) => any;
-}> = ({ classes,functions, updateMethod, className, functionName }) => {
+}> = ({ classes, updateMethod, className, functionName }) => {
   const allNodeIds = classes?.map((classItem) => classItem?.name); // Get all node IDs
-  allNodeIds.push("functionsServerless");
 
   return (
     <span id="treeview3" className="tree">
@@ -39,19 +37,6 @@ export const ClassesSidebar: React.FC<{
             })}
           </TreeItem>
         ))}
-        <TreeItem nodeId="functionsServerless" label="Serverless Functions" className="text-dark">
-          {functions.map((functionItem) => {
-            return (
-              <TreeItem
-                nodeId={functionItem.name}
-                key={functionItem.name}
-                label={functionItem.name}
-                onClick={() => updateMethod({ name: functionItem.name, type: "function", params: [] }, "Serverless Functions")}
-                className={className === "" && functionName === functionItem.name ? "text-primary" : "text-dark"}
-              />
-            );
-          })}
-         </TreeItem> 
       </TreeView>
     </span>
   );
