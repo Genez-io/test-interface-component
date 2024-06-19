@@ -467,6 +467,88 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     setLoading(false);
   };
 
+  const sendFunctionRequest = async () => {
+    const methodName = tabs[activeTab].className + "." + tabs[activeTab].method.name;
+    const params = tabs[activeTab].method.params.map((param: Param) => {
+      if (param.value === "true")
+        return {
+          value: true,
+          name: param.name,
+        };
+      if (param.value === "false")
+        return {
+          value: false,
+          name: param.name,
+        };
+      if (isNaN(Number(param.value))) {
+        try {
+          return {
+            value: JSON.parse(param.value ? param.value : ""),
+            name: param.name,
+          };
+        } catch (error) {
+          return {
+            value: param.value,
+            name: param.name,
+          };
+        }
+      } else {
+        return {
+          value: Number(param.value),
+          name: param.name,
+        };
+      }
+    });
+    const headers = params.find((param: any) => param.name === "headers");
+    const body = params.find((param: any) => param.name === "body");
+    const url = params.find((param: any) => param.name === "url");
+
+    const requestType = tabs[activeTab].method.requestType;
+
+    setLoading(true);
+    const copyTabs = [...tabs];
+    const startTime: number = new Date().getTime();
+    try {
+      console.log(body);
+      const response = await fetch(url?.value, {
+        keepalive: true,
+        method: requestType,
+        headers: headers?.value,
+        body: requestType === "GET" ? undefined : JSON.stringify(body?.value),
+      });
+
+      copyTabs[activeTab].status = response.status;
+      const responseText = await response.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (error) {
+        data = responseText;
+      }
+
+      const stringResponse: string = JSON.stringify(data, undefined, 4);
+      setPretty(props.isJsonString(stringResponse));
+      copyTabs[activeTab].response = stringResponse;
+    } catch (error) {
+      console.log(error);
+      if (environment?.value === "Local") {
+        copyTabs[activeTab].response = "Error: " + error;
+        copyTabs[activeTab].status = 503;
+        setConnected(false);
+        setPort(null);
+      } else {
+        copyTabs[activeTab].response = "Error: " + error;
+        copyTabs[activeTab].status = 500;
+      }
+    }
+    const endTime: number = new Date().getTime();
+    copyTabs[activeTab].time = endTime - startTime;
+    setTabs(copyTabs);
+    localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: copyTabs }));
+
+    setLoading(false);
+  };
+
   const updateMethod = (method: Method, className: string) => {
     const index = tabs.findIndex((x: TabType) => x.className === className && x.method.name === method.name);
     if (index !== -1) {
@@ -646,7 +728,11 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                     setLogsLoading(true);
                     setDataTabs("Response");
                     setReqClass(tabs[activeTab].className);
-                    sendRequest();
+                    if (tabs[activeTab].method.type === "function") {
+                      sendFunctionRequest();
+                    } else {
+                      sendRequest();
+                    }
                   }}
                 >
                   {loading ? <Spinner animation="border" size="sm" /> : "Send"}
