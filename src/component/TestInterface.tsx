@@ -196,7 +196,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             };
           });
           localActiveEnv.classes.push({
-            name: "Serverless Functions",
+            name: "Genezio Functions",
             ast: {
               methods: [...mappedFunctions],
               types: [...serverlessFunctionsTypes],
@@ -285,7 +285,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             requestType: "GET",
           }));
           mappedClasses.push({
-            name: "Serverless Functions",
+            name: "Genezio Functions",
             methods: [...mappedFunctions],
             types: [...serverlessFunctionsTypes],
             ast: {
@@ -318,7 +318,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
           })[0];
 
           let response;
-          if (currentClass && currentClass.name === "Serverless Functions") {
+          if (currentClass && currentClass.name === "Genezio Functions") {
             response = await props.axios.getFunctionLogs(
               tabs[activeTab]?.method?.id ?? "",
               startTime,
@@ -559,15 +559,18 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     const body = params.find((param: any) => param.name === "body");
     const url = params.find((param: any) => param.name === "url");
 
-    const requestType = tabs[activeTab].method.requestType;
+    let requestType = tabs[activeTab].method.requestType;
 
+    if (requestType === "GET" && body?.value) {
+      requestType = "POST";
+    }
     setLoading(true);
     const copyTabs = [...tabs];
     const startTime: number = new Date().getTime();
     try {
       const response = await fetch(url?.value, {
         keepalive: true,
-        method: requestType === "GET" && body?.value ? "POST" : "GET",
+        method: requestType,
         headers: headers?.value,
         body: JSON.stringify(body?.value),
       });
