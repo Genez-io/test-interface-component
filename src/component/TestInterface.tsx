@@ -192,7 +192,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
               ...functionItem,
               type: "function",
               returnType: "",
-              params: serverlessFunctionsParams,
+              params: JSON.parse(JSON.stringify(serverlessFunctionsParams)),
               requestType: "GET",
             };
           });
@@ -276,13 +276,12 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             version: res.version,
           },
         }));
-
         if (resFunctions.functions && resFunctions.functions.length > 0) {
           const mappedFunctions = resFunctions.functions.map((functionItem: any) => ({
             ...functionItem,
             type: "function",
             returnType: "",
-            params: serverlessFunctionsParams,
+            params: JSON.parse(JSON.stringify(serverlessFunctionsParams)),
             requestType: "GET",
           }));
           mappedClasses.push({
