@@ -146,6 +146,7 @@ export const Parameters: React.FC<ParametersProps> = ({
         setElem(mockData, method.name, methodData);
       }
     }
+
     setAstData(mockData);
     return mockData;
   };

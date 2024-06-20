@@ -72,6 +72,7 @@ export interface Param {
 }
 
 export interface Method {
+  id?: string;
   cloudUrl?: string;
   requestType?: string;
   name: string;
@@ -137,32 +138,6 @@ export const colourStyles: StylesConfig<dropdownOption> = {
   singleValue: (styles, { data }) => ({ ...styles }),
   menuPortal: (styles) => ({ ...styles, zIndex: 9999 }),
 };
-
-export const serverlessFunctionsParams = [
-  {
-    name: "url",
-    type: {
-      type: "StringLiteral",
-    },
-    optional: false,
-  },
-  {
-    name: "headers",
-    type: {
-      type: "CustomNodeLiteral",
-      rawValue: "Headers",
-    },
-    optional: false,
-  },
-  {
-    name: "body",
-    type: {
-      type: "CustomNodeLiteral",
-      rawValue: "Body",
-    },
-    optional: false,
-  },
-];
 
 export const serverlessFunctionsTypes = [
   {

@@ -16,7 +16,6 @@ import { TestInterfaceModal } from "./types/TestInterfaceModal";
 import { LeftCard } from "./types/LeftCard";
 import {
   ClassType,
-  FunctionType,
   Method,
   Param,
   Project,
@@ -24,17 +23,17 @@ import {
   dropdownOption,
   environmentOptions,
   isJsonString,
-  serverlessFunctionsParams,
   serverlessFunctionsTypes,
 } from "./types/Utils";
 import { CollaboratorDetails } from "./types/CollaborationModels";
-import { getCurrentCollaboratorDetails, getLogs, getProjectById } from "./types/ApiAxios";
+import { getCurrentCollaboratorDetails, getFunctionLogs, getLogs, getProjectById } from "./types/ApiAxios";
 
 export interface TestInterfaceProps {
   axios: {
     getProjectById: typeof getProjectById;
     getLogs: typeof getLogs;
     getCurrentCollaboratorDetails: typeof getCurrentCollaboratorDetails;
+    getFunctionLogs: typeof getFunctionLogs;
   };
   statusBar: typeof StatusBar;
   // statusBar: any;
@@ -146,6 +145,31 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   }, [activeEnv, environment]);
 
   useEffect(() => {
+    const serverlessFunctionsParams = [
+      {
+        name: "url",
+        type: {
+          type: "StringLiteral",
+        },
+        optional: false,
+      },
+      {
+        name: "headers",
+        type: {
+          type: "CustomNodeLiteral",
+          rawValue: "Headers",
+        },
+        optional: false,
+      },
+      {
+        name: "body",
+        type: {
+          type: "CustomNodeLiteral",
+          rawValue: "Body",
+        },
+        optional: false,
+      },
+    ];
     const runAsyncProd = async () => {
       setClasses([]);
       setLoadingRefresh(true);
@@ -162,17 +186,17 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
         const localActiveEnv = res.data.project.projectEnvs.find((env: any) => env.id === envId);
         const functions = [...localActiveEnv.functions];
         if (functions && functions.length > 0) {
-          const mappedFunctions = functions.map((functionItem: any) => ({
-            ...functionItem,
-            type: "function",
-            returnType: "",
-            params: serverlessFunctionsParams,
-            requestType: "GET",
-          }));
+          const mappedFunctions = functions.map((functionItem: any) => {
+            return {
+              ...functionItem,
+              type: "function",
+              returnType: "",
+              params: serverlessFunctionsParams,
+              requestType: "GET",
+            };
+          });
           localActiveEnv.classes.push({
             name: "Serverless Functions",
-            methods: [...mappedFunctions],
-            types: [...serverlessFunctionsTypes],
             ast: {
               methods: [...mappedFunctions],
               types: [...serverlessFunctionsTypes],
@@ -271,7 +295,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             },
           });
         }
-        console.log(mappedClasses);
         syncTabs(storageTabs, mappedClasses);
         setClasses(mappedClasses);
         setTabs(storageTabs);
@@ -290,15 +313,29 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     if (startTime) {
       const intervalId = setInterval(() => {
         const runAsync = async () => {
-          const response = await props.axios.getLogs(
-            classes?.filter((classObj) => {
-              return classObj?.name === tabs[activeTab]?.className;
-            })[0]?.id,
-            startTime,
-            new Date().getTime() + 2 * 60 * 60 * 1000,
-            "",
-            "",
-          );
+          const currentClass = classes?.filter((classObj) => {
+            return classObj?.name === tabs[activeTab]?.className;
+          })[0];
+
+          let response;
+          if (currentClass && currentClass.name === "Serverless Functions") {
+            response = await props.axios.getFunctionLogs(
+              tabs[activeTab]?.method?.id ?? "",
+              startTime,
+              new Date().getTime() + 2 * 60 * 60 * 1000,
+              "",
+              "",
+            );
+          } else {
+            response = await props.axios.getLogs(
+              currentClass.id,
+              startTime,
+              new Date().getTime() + 2 * 60 * 60 * 1000,
+              "",
+              "",
+            );
+          }
+
           if (response?.data?.status === "ok") {
             setLogs((prevLogs: any) => {
               const newLogs = response?.data?.logs?.Events.filter((el: any) => {
@@ -488,7 +525,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   };
 
   const sendFunctionRequest = async () => {
-    const methodName = tabs[activeTab].className + "." + tabs[activeTab].method.name;
     const params = tabs[activeTab].method.params.map((param: Param) => {
       if (param.value === "true")
         return {
@@ -531,9 +567,9 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     try {
       const response = await fetch(url?.value, {
         keepalive: true,
-        method: requestType,
+        method: requestType === "GET" && body?.value ? "POST" : "GET",
         headers: headers?.value,
-        body: requestType === "GET" ? undefined : JSON.stringify(body?.value),
+        body: JSON.stringify(body?.value),
       });
 
       copyTabs[activeTab].status = response.status;
@@ -549,7 +585,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       setPretty(props.isJsonString(stringResponse));
       copyTabs[activeTab].response = stringResponse;
     } catch (error) {
-      console.log(error);
       if (environment?.value === "Local") {
         copyTabs[activeTab].response = "Error: " + error;
         copyTabs[activeTab].status = 503;
@@ -608,7 +643,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   };
 
   const addTab = (className: string, method: Method) => {
-    console.log("method in add tab", method);
     const copyTabs = [...tabs];
     copyTabs.push({
       tab: method.name,
@@ -622,7 +656,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     setTabs(copyTabs);
     setActiveTab(copyTabs.length - 1);
 
-    console.log("fifth local storage set items");
     localStorage.setItem(project.name, JSON.stringify({ activeTab: copyTabs.length - 1, tabs: copyTabs }));
   };
 
