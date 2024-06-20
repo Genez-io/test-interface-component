@@ -23,15 +23,18 @@ import {
   dropdownOption,
   environmentOptions,
   isJsonString,
+  serverlessFunctionsTypes,
+  syncTabs,
 } from "./types/Utils";
 import { CollaboratorDetails } from "./types/CollaborationModels";
-import { getCurrentCollaboratorDetails, getLogs, getProjectById } from "./types/ApiAxios";
+import { getCurrentCollaboratorDetails, getFunctionLogs, getLogs, getProjectById } from "./types/ApiAxios";
 
 export interface TestInterfaceProps {
   axios: {
     getProjectById: typeof getProjectById;
     getLogs: typeof getLogs;
     getCurrentCollaboratorDetails: typeof getCurrentCollaboratorDetails;
+    getFunctionLogs: typeof getFunctionLogs;
   };
   statusBar: typeof StatusBar;
   // statusBar: any;
@@ -143,6 +146,31 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
   }, [activeEnv, environment]);
 
   useEffect(() => {
+    const serverlessFunctionsParams = [
+      {
+        name: "url",
+        type: {
+          type: "StringLiteral",
+        },
+        optional: false,
+      },
+      {
+        name: "headers",
+        type: {
+          type: "CustomNodeLiteral",
+          rawValue: "Headers",
+        },
+        optional: false,
+      },
+      {
+        name: "body",
+        type: {
+          type: "CustomNodeLiteral",
+          rawValue: "Body",
+        },
+        optional: false,
+      },
+    ];
     const runAsyncProd = async () => {
       setClasses([]);
       setLoadingRefresh(true);
@@ -157,7 +185,27 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
           ? JSON.parse(storage)
           : { tabs: [], activeTab: -1 };
         const localActiveEnv = res.data.project.projectEnvs.find((env: any) => env.id === envId);
-        syncTabs(storageTabs, localActiveEnv.classes);
+        const functions = [...localActiveEnv.functions];
+        if (functions && functions.length > 0) {
+          const mappedFunctions = functions.map((functionItem: any) => {
+            return {
+              ...functionItem,
+              type: "function",
+              returnType: "",
+              params: serverlessFunctionsParams,
+              requestType: "GET",
+            };
+          });
+          localActiveEnv.classes.push({
+            name: "Genezio Functions",
+            ast: {
+              methods: [...mappedFunctions],
+              types: [...serverlessFunctionsTypes],
+              version: "2",
+            },
+          });
+        }
+        syncTabs(storageTabs, localActiveEnv.classes, project, activeTab);
         setTabs(storageTabs);
         setActiveTab(storageActiveTab);
         setActiveEnv(localActiveEnv);
@@ -192,6 +240,19 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             cache: "no-cache",
           },
         );
+        const responseFunctions = await fetch(
+          workspaceUrl ? `${workspaceUrl}/get-functions` : `${localUrl}${tpmPort}/get-functions`,
+          {
+            keepalive: true,
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            mode: "cors",
+            cache: "no-cache",
+          },
+        );
+        const resFunctions = await responseFunctions.json();
         const res = await response.json();
         if (cameFromProduction && res.name !== project.name) {
           setConnected(false);
@@ -215,7 +276,27 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             version: res.version,
           },
         }));
-        syncTabs(storageTabs, mappedClasses);
+
+        if (resFunctions.functions && resFunctions.functions.length > 0) {
+          const mappedFunctions = resFunctions.functions.map((functionItem: any) => ({
+            ...functionItem,
+            type: "function",
+            returnType: "",
+            params: serverlessFunctionsParams,
+            requestType: "GET",
+          }));
+          mappedClasses.push({
+            name: "Genezio Functions",
+            methods: [...mappedFunctions],
+            types: [...serverlessFunctionsTypes],
+            ast: {
+              methods: [...mappedFunctions],
+              types: [...serverlessFunctionsTypes],
+              version: res.version,
+            },
+          });
+        }
+        syncTabs(storageTabs, mappedClasses, project, activeTab);
         setClasses(mappedClasses);
         setTabs(storageTabs);
         setActiveTab(storageActiveTab);
@@ -233,15 +314,29 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     if (startTime) {
       const intervalId = setInterval(() => {
         const runAsync = async () => {
-          const response = await props.axios.getLogs(
-            classes?.filter((classObj) => {
-              return classObj?.name === tabs[activeTab]?.className;
-            })[0]?.id,
-            startTime,
-            new Date().getTime() + 2 * 60 * 60 * 1000,
-            "",
-            "",
-          );
+          const currentClass = classes?.filter((classObj) => {
+            return classObj?.name === tabs[activeTab]?.className;
+          })[0];
+
+          let response;
+          if (currentClass && currentClass.name === "Genezio Functions") {
+            response = await props.axios.getFunctionLogs(
+              tabs[activeTab]?.method?.id ?? "",
+              startTime,
+              new Date().getTime() + 2 * 60 * 60 * 1000,
+              "",
+              "",
+            );
+          } else {
+            response = await props.axios.getLogs(
+              currentClass.id,
+              startTime,
+              new Date().getTime() + 2 * 60 * 60 * 1000,
+              "",
+              "",
+            );
+          }
+
           if (response?.data?.status === "ok") {
             setLogs((prevLogs: any) => {
               const newLogs = response?.data?.logs?.Events.filter((el: any) => {
@@ -288,41 +383,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
 
     window.addEventListener("keydown", handleKeyPress);
   }, []);
-
-  const syncTabs = (storageTabs: TabType[], classes: ClassType[]) => {
-    storageTabs.forEach((tab: TabType) => {
-      const classItem = classes.find((x: ClassType) => x.name === tab.className);
-      if (classItem) {
-        const method = classItem.ast.methods.find((x: Method) => x.name === tab.method.name);
-        if (method) {
-          // check for added params in method
-          for (let param of method.params) {
-            if (!tab.method.params.find((x: Param) => x.name === param.name)) {
-              tab.method.params.push({
-                name: param.name,
-                type: param.type,
-                value: "",
-              });
-            }
-          }
-          // check for removed params in method
-          for (let param of tab.method.params) {
-            if (!method.params.find((x: Param) => x.name === param.name)) {
-              tab.method.params.splice(tab.method.params.indexOf(param), 1);
-            }
-          }
-          // sort params to match function prototype
-          tab.method.params.sort((a: Param, b: Param) => {
-            return (
-              method.params.findIndex((x: Param) => x.name === a.name) -
-              method.params.findIndex((x: Param) => x.name === b.name)
-            );
-          });
-        }
-      }
-    });
-    localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: storageTabs }));
-  };
 
   const getWorkspaceUrl = (): string | undefined => {
     let workspaceUrl: string | undefined;
@@ -431,6 +491,88 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     setLoading(false);
   };
 
+  const sendFunctionRequest = async () => {
+    const params = tabs[activeTab].method.params.map((param: Param) => {
+      if (param.value === "true")
+        return {
+          value: true,
+          name: param.name,
+        };
+      if (param.value === "false")
+        return {
+          value: false,
+          name: param.name,
+        };
+      if (isNaN(Number(param.value))) {
+        try {
+          return {
+            value: JSON.parse(param.value ? param.value : ""),
+            name: param.name,
+          };
+        } catch (error) {
+          return {
+            value: param.value,
+            name: param.name,
+          };
+        }
+      } else {
+        return {
+          value: Number(param.value),
+          name: param.name,
+        };
+      }
+    });
+    const headers = params.find((param: any) => param.name === "headers");
+    const body = params.find((param: any) => param.name === "body");
+    const url = params.find((param: any) => param.name === "url");
+
+    let requestType = tabs[activeTab].method.requestType;
+
+    if (requestType === "GET" && body?.value) {
+      requestType = "POST";
+    }
+    setLoading(true);
+    const copyTabs = [...tabs];
+    const startTime: number = new Date().getTime();
+    try {
+      const response = await fetch(url?.value, {
+        keepalive: true,
+        method: requestType,
+        headers: headers?.value,
+        body: JSON.stringify(body?.value),
+      });
+
+      copyTabs[activeTab].status = response.status;
+      const responseText = await response.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (error) {
+        data = responseText;
+      }
+
+      const stringResponse: string = JSON.stringify(data, undefined, 4);
+      setPretty(props.isJsonString(stringResponse));
+      copyTabs[activeTab].response = stringResponse;
+    } catch (error) {
+      if (environment?.value === "Local") {
+        copyTabs[activeTab].response = "Error: " + error;
+        copyTabs[activeTab].status = 503;
+        setConnected(false);
+        setPort(null);
+      } else {
+        copyTabs[activeTab].response = "Error: " + error;
+        copyTabs[activeTab].status = 500;
+      }
+    }
+    const endTime: number = new Date().getTime();
+    copyTabs[activeTab].time = endTime - startTime;
+    setTabs(copyTabs);
+    localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: copyTabs }));
+
+    setLoading(false);
+  };
+
   const updateMethod = (method: Method, className: string) => {
     const index = tabs.findIndex((x: TabType) => x.className === className && x.method.name === method.name);
     if (index !== -1) {
@@ -461,6 +603,13 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       }
     });
     localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs }));
+  };
+
+  const updateFunctionRequestType = (requestType: string) => {
+    if (tabs[activeTab].method.type === "function") {
+      tabs[activeTab].method.requestType = requestType;
+      localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs }));
+    }
   };
 
   const addTab = (className: string, method: Method) => {
@@ -587,6 +736,8 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                   environment={environment?.value || "Local"}
                   url={activeTab === -1 ? "" : getUrl()}
                   updatePort={setPort}
+                  tabs={tabs}
+                  activeTab={activeTab}
                 />
               </Col>
               <Col className="d-flex justify-content-center" lg={2}>
@@ -601,7 +752,11 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                     setLogsLoading(true);
                     setDataTabs("Response");
                     setReqClass(tabs[activeTab].className);
-                    sendRequest();
+                    if (tabs[activeTab].method.type === "function") {
+                      sendFunctionRequest();
+                    } else {
+                      sendRequest();
+                    }
                   }}
                 >
                   {loading ? <Spinner animation="border" size="sm" /> : "Send"}
@@ -643,6 +798,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                   projectName={project?.name}
                   loadingRefresh={loadingRefresh}
                   updateParam={updateParam}
+                  updateRequestType={updateFunctionRequestType}
                 />
                 {/* <!-- /Parameters --> */}
               </Panel>
@@ -657,6 +813,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                     <Col lg={3} style={{ paddingLeft: "0" }} className="pb-3 pt-1">
                       {dataTabsOptions.map((option, idx) => (
                         <span
+                          key={idx}
                           onClick={() => setDataTabs(option)}
                           className="border-primary"
                           style={{

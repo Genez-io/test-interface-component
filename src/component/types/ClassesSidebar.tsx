@@ -11,7 +11,6 @@ export const ClassesSidebar: React.FC<{
   updateMethod: (m: Method, name: string) => any;
 }> = ({ classes, updateMethod, className, functionName }) => {
   const allNodeIds = classes?.map((classItem) => classItem?.name); // Get all node IDs
-
   return (
     <span id="treeview3" className="tree">
       <TreeView

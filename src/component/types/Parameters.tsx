@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Row, Col, Alert } from "react-bootstrap";
 import { Parameter } from "./Parameter";
-import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles } from "./Utils";
+import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles, headersValue } from "./Utils";
 import { faker } from "@faker-js/faker";
 import { CopyButton } from "./CopyButton";
 
@@ -14,6 +14,7 @@ interface ParametersProps {
   url: string;
   isLocalEnviroment: boolean;
   projectName: string;
+  updateRequestType: any;
 }
 
 export enum AstNodeType {
@@ -66,9 +67,10 @@ export const Parameters: React.FC<ParametersProps> = ({
   url,
   isLocalEnviroment,
   projectName,
+  updateRequestType,
 }) => {
   const currentClass = tabs[activeTab];
-  const filteredClass = classes?.filter((x: any) => x.name === currentClass?.className)[0];
+  const filteredClass = classes?.filter((c: any) => c.name === currentClass?.className)[0];
   const isFullAST = filteredClass?.ast.version === "2" ? true : false;
   const classTypes: any = React.useRef({});
 
@@ -97,7 +99,6 @@ export const Parameters: React.FC<ParametersProps> = ({
     const classTypesLocal: any = {};
     // prevent the function to be called multiple times
     setRun(run + 1);
-
     for (var u = 0; u < classes?.length; u++) {
       const eachClass = classes[u];
 
@@ -106,9 +107,7 @@ export const Parameters: React.FC<ParametersProps> = ({
         classTypesLocal[elem.name] = elem;
       }
     }
-
     classTypes.current = classTypesLocal;
-
     const mockData: any = {};
 
     for (var z = 0; z < classes?.length; z++) {
@@ -119,8 +118,25 @@ export const Parameters: React.FC<ParametersProps> = ({
         const methodData: { [paramName: string]: { value: any; label: string } } = {};
         for (var j = 0; j < method.params?.length; j++) {
           const param: any = method.params[j];
-          const { value, label } = mapTypeToOptions("", param.name, param.type);
+          if (method.type === "function") {
+            if (param.name === "headers") {
+              methodData["headers"] = {
+                value: headersValue,
+                label: "headers",
+              };
+              setElem(mockData, method.name, methodData);
+              continue;
+            } else if (param.name === "url") {
+              methodData["url"] = {
+                value: method.cloudUrl ?? url,
+                label: "url",
+              };
+              setElem(mockData, method.name, methodData);
+              continue;
+            }
+          }
 
+          const { value, label } = mapTypeToOptions("", param.name, param.type);
           if (typeof value === "number") {
             methodData[param.name] = { value: value.toString(), label };
           } else {
@@ -130,6 +146,7 @@ export const Parameters: React.FC<ParametersProps> = ({
         setElem(mockData, method.name, methodData);
       }
     }
+
     setAstData(mockData);
     return mockData;
   };
@@ -340,6 +357,9 @@ export const Parameters: React.FC<ParametersProps> = ({
                   <Parameter
                     isFullAST={isFullAST}
                     setAstData={setAstData}
+                    tabs={tabs}
+                    activeTab={activeTab}
+                    updateRequestType={updateRequestType}
                     astData={astData}
                     methodName={tabs[activeTab]?.method?.name && tabs[activeTab]?.method?.name}
                     name={param.name}

@@ -41,6 +41,17 @@ export const getLogs = async (classId: string, startTime: any, endTime: any, sea
     params: { startTime, endTime, searchTerm, nextToken },
   });
 
+export const getFunctionLogs = async (
+  classId: string,
+  startTime: any,
+  endTime: any,
+  searchTerm: string,
+  nextToken?: any,
+) =>
+  await instance.get(`/functions/${classId}/logs`, {
+    params: { startTime, endTime, searchTerm, nextToken },
+  });
+
 export const changeClassStatus = async (classId: string, status: any) =>
   await instance.post(`/classes/${classId}/change-status/${status}`);
 

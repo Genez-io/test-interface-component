@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { TestInterface } from "./TestInterface";
-import { getProjectById, getLogs, getCurrentCollaboratorDetails } from "./types/ApiAxios";
+import { getProjectById, getLogs, getCurrentCollaboratorDetails, getFunctionLogs } from "./types/ApiAxios";
 import { Parameters } from "./types/Parameters";
 import { StatusBar } from "./types/StatusBar";
 import { GenezioSpinner } from "./types/GenezioSpinner";
@@ -9,11 +9,13 @@ import { environmentOptions, isJsonString } from "./types/Utils";
 import { LeftCard } from "./types/LeftCard";
 
 const port = parseInt(window.location.port);
+
 const props = {
   axios: {
     getProjectById: getProjectById,
     getLogs: getLogs,
     getCurrentCollaboratorDetails: getCurrentCollaboratorDetails,
+    getFunctionLogs: getFunctionLogs,
   },
   statusBar: StatusBar,
   genezioSpinner: GenezioSpinner,

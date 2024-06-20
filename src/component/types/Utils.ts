@@ -45,6 +45,25 @@ export const typeOptions: readonly dropdownOption[] = [
   },
 ];
 
+export const requestTypeOptions: readonly dropdownOption[] = [
+  {
+    value: "GET",
+    label: "GET",
+  },
+  {
+    value: "POST",
+    label: "POST",
+  },
+  {
+    value: "PUT",
+    label: "PUT",
+  },
+  {
+    value: "DELETE",
+    label: "DELETE",
+  },
+];
+
 export interface Param {
   name: string;
   type: string | dropdownOption;
@@ -53,6 +72,9 @@ export interface Param {
 }
 
 export interface Method {
+  id?: string;
+  cloudUrl?: string;
+  requestType?: string;
   name: string;
   type: string;
   params: Param[];
@@ -111,6 +133,55 @@ export const colourStyles: StylesConfig<dropdownOption> = {
   menuPortal: (styles) => ({ ...styles, zIndex: 9999 }),
 };
 
+export const serverlessFunctionsTypes = [
+  {
+    name: "Headers",
+    type: "StructLiteral",
+    path: ".Functions/Headers",
+    typeLiteral: {
+      type: "TypeLiteral",
+      properties: [
+        {
+          name: "content-type",
+          optional: false,
+          type: {
+            type: "StringLiteral",
+          },
+        },
+        {
+          name: "connection",
+          optional: false,
+          type: {
+            type: "StringLiteral",
+          },
+        },
+      ],
+    },
+  },
+  {
+    name: "Body",
+    type: "StructLiteral",
+    path: ".Functions/Body",
+    typeLiteral: {
+      type: "TypeLiteral",
+      properties: [
+        {
+          name: "text",
+          optional: false,
+          type: {
+            type: "StringLiteral",
+          },
+        },
+      ],
+    },
+  },
+];
+
+export const headersValue = {
+  "content-type": "application/json",
+  connection: "keep-alive",
+};
+
 export const mapTypeToOptions = (type: string): dropdownOption => {
   if (!type) {
     return { value: typeOption.Primitive, label: typeOption.Primitive };
@@ -129,4 +200,39 @@ export const mapTypeToOptions = (type: string): dropdownOption => {
     return { value: typeOption.Primitive, label: typeOption.Primitive };
   }
   return { value: typeOption.Object, label: typeOption.Object };
+};
+
+export const syncTabs = (storageTabs: TabType[], classes: ClassType[], project: any, activeTab: number) => {
+  storageTabs.forEach((tab: TabType) => {
+    const classItem = classes.find((x: ClassType) => x.name === tab.className);
+    if (classItem) {
+      const method = classItem.ast.methods.find((x: Method) => x.name === tab.method.name);
+      if (method) {
+        // check for added params in method
+        for (let param of method.params) {
+          if (!tab.method.params.find((x: Param) => x.name === param.name)) {
+            tab.method.params.push({
+              name: param.name,
+              type: param.type,
+              value: "",
+            });
+          }
+        }
+        // check for removed params in method
+        for (let param of tab.method.params) {
+          if (!method.params.find((x: Param) => x.name === param.name)) {
+            tab.method.params.splice(tab.method.params.indexOf(param), 1);
+          }
+        }
+        // sort params to match function prototype
+        tab.method.params.sort((a: Param, b: Param) => {
+          return (
+            method.params.findIndex((x: Param) => x.name === a.name) -
+            method.params.findIndex((x: Param) => x.name === b.name)
+          );
+        });
+      }
+    }
+  });
+  localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: storageTabs }));
 };
