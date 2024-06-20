@@ -317,7 +317,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             return classObj?.name === tabs[activeTab]?.className;
           })[0];
 
-          let response;
+          let response: any;
           if (currentClass && currentClass.name === "Genezio Functions") {
             response = await props.axios.getFunctionLogs(
               tabs[activeTab]?.method?.id ?? "",
