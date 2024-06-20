@@ -24,6 +24,7 @@ import {
   environmentOptions,
   isJsonString,
   serverlessFunctionsTypes,
+  syncTabs,
 } from "./types/Utils";
 import { CollaboratorDetails } from "./types/CollaborationModels";
 import { getCurrentCollaboratorDetails, getFunctionLogs, getLogs, getProjectById } from "./types/ApiAxios";
@@ -204,7 +205,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             },
           });
         }
-        syncTabs(storageTabs, localActiveEnv.classes);
+        syncTabs(storageTabs, localActiveEnv.classes, project, activeTab);
         setTabs(storageTabs);
         setActiveTab(storageActiveTab);
         setActiveEnv(localActiveEnv);
@@ -295,7 +296,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
             },
           });
         }
-        syncTabs(storageTabs, mappedClasses);
+        syncTabs(storageTabs, mappedClasses, project, activeTab);
         setClasses(mappedClasses);
         setTabs(storageTabs);
         setActiveTab(storageActiveTab);
@@ -382,40 +383,6 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
 
     window.addEventListener("keydown", handleKeyPress);
   }, []);
-  const syncTabs = (storageTabs: TabType[], classes: ClassType[]) => {
-    storageTabs.forEach((tab: TabType) => {
-      const classItem = classes.find((x: ClassType) => x.name === tab.className);
-      if (classItem) {
-        const method = classItem.ast.methods.find((x: Method) => x.name === tab.method.name);
-        if (method) {
-          // check for added params in method
-          for (let param of method.params) {
-            if (!tab.method.params.find((x: Param) => x.name === param.name)) {
-              tab.method.params.push({
-                name: param.name,
-                type: param.type,
-                value: "",
-              });
-            }
-          }
-          // check for removed params in method
-          for (let param of tab.method.params) {
-            if (!method.params.find((x: Param) => x.name === param.name)) {
-              tab.method.params.splice(tab.method.params.indexOf(param), 1);
-            }
-          }
-          // sort params to match function prototype
-          tab.method.params.sort((a: Param, b: Param) => {
-            return (
-              method.params.findIndex((x: Param) => x.name === a.name) -
-              method.params.findIndex((x: Param) => x.name === b.name)
-            );
-          });
-        }
-      }
-    });
-    localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: storageTabs }));
-  };
 
   const getWorkspaceUrl = (): string | undefined => {
     let workspaceUrl: string | undefined;

@@ -201,3 +201,38 @@ export const mapTypeToOptions = (type: string): dropdownOption => {
   }
   return { value: typeOption.Object, label: typeOption.Object };
 };
+
+export const syncTabs = (storageTabs: TabType[], classes: ClassType[], project: any, activeTab: number) => {
+  storageTabs.forEach((tab: TabType) => {
+    const classItem = classes.find((x: ClassType) => x.name === tab.className);
+    if (classItem) {
+      const method = classItem.ast.methods.find((x: Method) => x.name === tab.method.name);
+      if (method) {
+        // check for added params in method
+        for (let param of method.params) {
+          if (!tab.method.params.find((x: Param) => x.name === param.name)) {
+            tab.method.params.push({
+              name: param.name,
+              type: param.type,
+              value: "",
+            });
+          }
+        }
+        // check for removed params in method
+        for (let param of tab.method.params) {
+          if (!method.params.find((x: Param) => x.name === param.name)) {
+            tab.method.params.splice(tab.method.params.indexOf(param), 1);
+          }
+        }
+        // sort params to match function prototype
+        tab.method.params.sort((a: Param, b: Param) => {
+          return (
+            method.params.findIndex((x: Param) => x.name === a.name) -
+            method.params.findIndex((x: Param) => x.name === b.name)
+          );
+        });
+      }
+    }
+  });
+  localStorage.setItem(project.name, JSON.stringify({ activeTab, tabs: storageTabs }));
+};
