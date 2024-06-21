@@ -26,7 +26,9 @@ export const StatusBar: React.FC<{
           <Row>
             <Col lg={environment === "Local" ? 7 : 12}>
               {tabs[activeTab]?.method.type === "function" ? (
-                <></>
+                <div>
+                  Send requests to <strong>{tabs[activeTab]?.method.cloudUrl}</strong>
+                </div>
               ) : url ? (
                 <div>
                   Requests will be sent to <strong>{url}</strong>

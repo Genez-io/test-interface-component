@@ -525,11 +525,8 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
     const body = params.find((param: any) => param.name === "body");
     const url = params.find((param: any) => param.name === "url");
 
-    let requestType = tabs[activeTab].method.requestType;
+    const requestType = tabs[activeTab].method.requestType;
 
-    if (requestType === "GET" && body?.value) {
-      requestType = "POST";
-    }
     setLoading(true);
     const copyTabs = [...tabs];
     const startTime: number = new Date().getTime();
@@ -538,7 +535,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
         keepalive: true,
         method: requestType,
         headers: headers?.value,
-        body: JSON.stringify(body?.value),
+        body: requestType === "GET" ? undefined : JSON.stringify(body?.value),
       });
 
       copyTabs[activeTab].status = response.status;
