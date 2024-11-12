@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Row, Col, Alert } from "react-bootstrap";
+import { Row, Col, Alert } from "../Components";
 import { Parameter } from "./Parameter";
 import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles, headersValue } from "./Utils";
 import { faker } from "@faker-js/faker";
@@ -296,7 +296,7 @@ export const Parameters: React.FC<ParametersProps> = ({
       <div className="mt-4 mb-4 overflow-auto" style={{ padding: "0 15px", height: "75%" }}>
         {tabs[activeTab]?.method?.type === "http" ? (
           <>
-            <Alert variant="warning">
+            <Alert>
               <p className="text-muted m-0">
                 <strong>http</strong> methods are disabled on test interface. We recommend calling it from Postman.
               </p>

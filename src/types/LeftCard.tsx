@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Col, Card, Row } from "react-bootstrap";
 import GenezioSpinner from "./GenezioSpinner";
 import { ClassesSidebar } from "./ClassesSidebar";
 import Select from "react-select";
 import { colourStyles } from "./Utils";
+import { Card, Col, Row } from "../Components";
 
 interface LeftCardProps {
   environmentOptions: any;
@@ -36,10 +36,10 @@ export const LeftCard: React.FC<LeftCardProps> = ({
       <Card style={{ height: "85vh" }}>
         <div className="mx-4 mt-4 mb-4 h-100">
           <Row>
-            <Col lg={10}>
+            <Col>
               <h5 className="d-inline">My Workspace</h5>
             </Col>
-            <Col>
+            <Col style={{ marginLeft: "auto" }}>
               <div className="text-center i-hover" onClick={setRefresh}>
                 <i className="fa fa-undo d-inline"></i>
               </div>
@@ -47,10 +47,10 @@ export const LeftCard: React.FC<LeftCardProps> = ({
           </Row>
           <hr style={{ borderColor: "black" }}></hr>
           <Row>
-            <Col lg={5} className="d-flex align-items-center">
+            <Col xs={5} className="d-flex align-items-center">
               <h5 className="d-inline pt-2">Environment</h5>
             </Col>
-            <Col lg={7}>
+            <Col xs={7}>
               <div className="SelectBox w-100">
                 <Select
                   isMulti={false}

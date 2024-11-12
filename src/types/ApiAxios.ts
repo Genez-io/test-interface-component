@@ -1,22 +1,22 @@
-import axios from "axios";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios, { AxiosError, AxiosResponse } from "axios";
 
-// const instance = axios.create({ baseURL: process.env.REACT_APP_API_BASE_URL });
-const instance = axios.create({ baseURL: "https://dev.api.genez.io" });
+const instance = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL });
 
 instance.interceptors.request.use(async (config) => {
   const token = localStorage.getItem("apiToken");
   config.headers.Authorization = token ? `Bearer ${token}` : "";
   config.headers["Content-Type"] = "application/json";
-  config.headers["Accept-Version"] = `genezio-webapp/${"$npm_package_version"}`;
+  config.headers["Accept-Version"] = `genezio-webapp/${import.meta.env.VITE_APP_VERSION}`;
   return config;
 });
 
 instance.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
-    if (error.response.status === 401) {
+  (error: AxiosError) => {
+    if (error.response?.status === 401) {
       localStorage.removeItem("apiToken");
       localStorage.removeItem("user");
       window.location.href = "/auth/login";
@@ -25,20 +25,99 @@ instance.interceptors.response.use(
   },
 );
 
-export const getProjectsForUser = async (index: number, limit: number) =>
-  await instance.get(`/projects?startIndex=${index}&projectsLimit=${limit}`);
+export type Status<T = object> = StatusError | StatusOk<T>;
+
+export type StatusOk<T = object> = { status: "ok" } & T;
+export type StatusError = {
+  status: "error";
+  error: {
+    code: number;
+    message: string;
+  };
+};
+
+export interface ProjectEnv {
+  id: string;
+  name: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  region: string;
+  createdAt: number;
+  updatedAt: number;
+  cloudProvider: string;
+  projectEnvs: ProjectEnv[];
+  role: string;
+  stack: string[];
+}
+
+export const getProjectsForUser = async (index: number, limit: number): Promise<Project[]> => {
+  const response: AxiosResponse<StatusOk<{ projects: Project[] }>> = await instance.get(
+    `/projects?startIndex=${index}&projectsLimit=${limit}`,
+  );
+
+  return response.data.projects;
+};
 
 export const getProjectById = async (projectId: string) => await instance.get(`/projects/${projectId}`);
 
 export const deleteProjectById = async (projectId: string) => await instance.delete(`/projects/${projectId}`);
 
+export const deleteStage = async (projectId: string, stage: string) =>
+  await instance.delete(`/projects/${projectId}/stages/${stage}`);
+
 export const getClassById = async (classId: string) => await instance.get(`/classes/${classId}`);
 
-export const getProjectRepositories = async (projectId: string) => await instance.get(`/github/${projectId}`);
+export const getAllLogs = async (
+  projectId: any,
+  envId: any,
+  startTime: any,
+  endTime: any,
+  searchTerm?: string,
+  logLevel?: string,
+  httpMethod?: string,
+  httpStatus?: string,
+  url?: string,
+  operationId?: string,
+  backendIds?: string,
+  nextToken?: any,
+  limit?: any,
+) =>
+  await instance.get(`/projects/${projectId}/logs`, {
+    params: {
+      envId,
+      startTime,
+      endTime,
+      searchTerm,
+      logLevel,
+      httpMethod,
+      httpStatus,
+      url,
+      operationId,
+      backendIds,
+      nextToken,
+      limit,
+    },
+  });
 
-export const getLogs = async (classId: string, startTime: any, endTime: any, searchTerm: string, nextToken?: any) =>
+export const getLogs = async (
+  classId: string,
+  startTime: any,
+  endTime: any,
+  searchTerm?: string,
+  nextToken?: any,
+  limit?: any,
+) =>
   await instance.get(`/classes/${classId}/logs`, {
-    params: { startTime, endTime, searchTerm, nextToken },
+    params: {
+      startTime,
+      endTime,
+      searchTerm,
+      nextToken,
+      limit,
+    },
   });
 
 export const getFunctionLogs = async (
@@ -46,14 +125,35 @@ export const getFunctionLogs = async (
   startTime: any,
   endTime: any,
   searchTerm: string,
+  logLevel?: string,
+  httpMethod?: string,
+  httpStatus?: string,
+  url?: string,
+  operationId?: string,
+  instanceId?: string,
+  backendIds?: string,
   nextToken?: any,
+  limit?: any,
 ) =>
   await instance.get(`/functions/${classId}/logs`, {
-    params: { startTime, endTime, searchTerm, nextToken },
+    params: {
+      startTime,
+      endTime,
+      searchTerm,
+      logLevel,
+      httpMethod,
+      httpStatus,
+      url,
+      operationId,
+      instanceId,
+      backendIds,
+      nextToken,
+      limit,
+    },
   });
 
-export const changeClassStatus = async (classId: string, status: any) =>
-  await instance.post(`/classes/${classId}/change-status/${status}`);
+export const changeClassStatus = async (classId: string, status: any, isFunction: any) =>
+  await instance.post(`/${isFunction ? "functions" : "classes"}/${classId}/change-status/${status}`);
 
 export const getAccessTokens = async () => await instance.get(`/access-tokens`);
 
@@ -61,7 +161,7 @@ export const deleteAccessToken = async (tokenId: string) => await instance.delet
 
 export const createAccessToken = async (name: string) => await instance.post(`/access-tokens`, { tokenName: name });
 
-export const getStripeSubscriptionLink = async (subscriptionPlan: string) =>
+export const getCheckoutLink = async (subscriptionPlan: string) =>
   await instance.get(`/subscription/get-checkout/${subscriptionPlan}`);
 
 export const getStripeCustomerPortalLink = async () => await instance.get(`/subscription/customer-portal`);
@@ -73,7 +173,7 @@ export const getUserInformation = async () => await instance.get(`/users/user`);
 export const getSubscriptionPlans = async () => await instance.get(`/plans`);
 
 export const getFrontendByProjectId = async (projectId: string, envId: string) =>
-  await instance.get(`/frontend/${projectId}/${envId}`);
+  await instance.get(`/frontend/${envId}`);
 
 export const deleteFrontendByDomain = async (domain: string) => await instance.delete(`/frontend/${domain}`);
 
@@ -91,17 +191,40 @@ export const requestCustomDomain = async (genezioDomain: string, customDomain: s
 export const restartFrontendDomainCron = async (domain: string) =>
   await instance.get(`/frontend/restart-cron-job/${domain}`);
 
-// Environment Variables
-export const getProjectEnv = async (projectId: string, envId: string) =>
-  await instance.get(`/projects/${projectId}/${envId}/environment-variables`);
+export const deleteSubdomain = async (subdomain: string) => await instance.delete(`/frontend/${subdomain}`);
 
-export const createProjectEnv = async (projectId: string, envId: string, environmentVariables: any) =>
-  await instance.post(`/projects/${projectId}/${envId}/environment-variables`, {
-    environmentVariables,
-  });
+// Environment Variables
+export interface EnvVariable {
+  id: string;
+  name: string;
+  type: string;
+  lastAcessedAt: string;
+}
+export interface EnvVariableGetResponse {
+  status: string;
+  environmentVariables: EnvVariable[];
+}
+
+export const getProjectEnv = async (projectId: string, envId: string) => {
+  const envResponse: AxiosResponse<EnvVariableGetResponse> = await instance.get(
+    `/projects/${projectId}/${envId}/environment-variables`,
+  );
+  return envResponse;
+};
+
+export const createProjectEnv = async (projectId: string, envId: string, environmentVariables: any) => {
+  const envResponse: AxiosResponse<{ status: string }> = await instance.post(
+    `/projects/${projectId}/${envId}/environment-variables`,
+    {
+      environmentVariables,
+    },
+  );
+
+  return envResponse;
+};
 
 export const deleteProjectEnv = async (projectId: string, envId: string, environmentVariableId: any) => {
-  await instance.delete(`/projects/${projectId}/${envId}/environment-variables/${environmentVariableId}`);
+  return await instance.delete(`/projects/${projectId}/${envId}/environment-variables/${environmentVariableId}`);
 };
 
 // Project Integrations
@@ -127,14 +250,62 @@ export const createUpstashDatabase = async (databaseInfo: any) =>
 
 export const getUpstashDatabases = async () => await instance.get("/integrations/upstash/databases");
 
-export const addProjectIntegration = async (projectId: string, envId: string, payload: any) => {
+export const addProjectIntegration = async (projectId: string, envId: string, payload: any) =>
   await instance.post(`/projects/${projectId}/${envId}/integrations`, payload);
-};
 
-export const getUserRepositories = async () => await instance.get("/github/repositories");
+export const getUserRepositories = async (filter = false) =>
+  await instance.get(`/github/repositories${filter === true ? "?filter=true" : ""}`);
 
-export const connectUserToGithub = async (installationId?: string) =>
-  await instance.get(`/integrations/github/callback?code=${installationId}`);
+export const deployNewProjectGithub = async (
+  name: string,
+  region: string,
+  repositoryUrl: string,
+  privateRepo: boolean,
+  basePath: string,
+  envs: any,
+  repoName: string,
+) =>
+  await instance.post("/github/repository", {
+    name,
+    region,
+    repositoryUrl,
+    private: privateRepo,
+    basePath,
+    envs,
+    repositoryName: repoName,
+  });
+
+export const getRepositoryDetails = async (repoId: number, basePath: string) =>
+  await instance.get(`/github/repositories/${repoId}?basePath=${basePath}`);
+export const getRepositoryDetailsByUrl = async (repoUrl: string, basePath: string) =>
+  await instance.get(`/github/repositories/details?url=${repoUrl}&basePath=${basePath}`);
+
+export const getRepositoryTree = async (repoId: number) => await instance.get(`/github/repositories/${repoId}/tree`);
+
+export const linkRepository = async (
+  framework: string,
+  repositoryId: number,
+  basePath: string,
+  projectConfiguration: any,
+  envs: any,
+) =>
+  await instance.post(`/github/link-repository`, {
+    framework,
+    repositoryId,
+    basePath,
+    projectConfiguration,
+    envs,
+  });
+
+export const getLinkedRepositories = async (projectId: any) =>
+  await instance.get(`/projects/${projectId}/repositories`);
+
+export const deleteLinkedRepository = async (repoId: string) => await instance.delete(`/github/repositories/${repoId}`);
+
+export const getJobId = async (repoId: string) => await instance.get(`/github/checks/${repoId}`);
+
+export const connectUserToGithub = async (codeId?: string, installationId?: string) =>
+  await instance.get(`/integrations/github/callback?code=${codeId}&installation_id=${installationId}`);
 
 export const getTemplates = async () => await instance.get("/github/templates");
 
@@ -207,13 +378,30 @@ export const getAuthEmailTemplate = async (envId: string) => await instance.get(
 
 // DATABASES
 
-export const getAllDatabases = async () => await instance.get("/databases");
+export interface Database {
+  id: string;
+  name: string;
+  region: string;
+  type: "postgres-neon" | "mongo-atlas";
+}
+
+export const getAllDatabases = async (): Promise<Database[]> => {
+  const response: AxiosResponse<StatusOk<{ databases: Database[] }>> = await instance.get("/databases");
+
+  return response.data.databases;
+};
 
 export const getDatabaseConnectionURL = async (databaseId: string) => await instance.get(`/databases/${databaseId}`);
 
 export const deleteDatabase = async (databaseId: string) => await instance.delete(`/databases/${databaseId}`);
 
-export const createDatabase = async (databaseInfo: any) => await instance.post("/databases", { ...databaseInfo });
+export const createDatabase = async (databaseInfo: { name: string; type: string; region: string }) => {
+  if (databaseInfo.type === "postgres-neon") {
+    databaseInfo.region = `aws-${databaseInfo.region}`;
+  }
+
+  await instance.post("/databases", databaseInfo);
+};
 
 export const resetDatabasePassword = async (databaseId: string) =>
   await instance.post(`/databases/${databaseId}/reset-password`);
@@ -226,3 +414,48 @@ export const linkDatabaseToProject = async (projectId: string, envId: string, da
 
 export const unlinkDatabaseFromProject = async (projectId: string, envId: string, databaseId: string) =>
   await instance.delete(`/projects/${projectId}/${envId}/databases/${databaseId}`);
+
+export const getPresignedURLForProjectCode = async (projectName: string, region: string, stage: string) => {
+  const token = localStorage.getItem("apiToken") || "";
+
+  const response = await axios({
+    method: "POST",
+    url: `${import.meta.env.VITE_API_BASE_URL}/core/get-project-code-url`,
+    data: {
+      projectName: projectName,
+      region: region,
+      stage: stage,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Accept-Version": `genezio-webapp/${import.meta.env.VITE_VERSION}`,
+    },
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+  });
+
+  return response.data.presignedURL;
+};
+
+export const getPresignedURLForProjectCodeUpload = async (projectName: string, region: string, stage: string) =>
+  await instance.post("/core/create-project-code-url", { projectName, region, stage });
+
+export const getAllDeployments = async (envId: string) => await instance.get(`/core/deployments/${envId}`);
+
+export const getDeploymentDetails = async (deploymentId: string) =>
+  await instance.get(`/core/deployment/${deploymentId}`);
+
+export const deployUsingBuildMachine = async (projectEnvID: string) =>
+  await instance.post("/core/deployment/build-machine", { projectEnvID });
+
+export const getAllMetrics = async (startTime: any, endTime: any, projectId: string) =>
+  await instance.get("/metrics", {
+    params: {
+      startTime,
+      endTime,
+      projectId,
+    },
+  });
+
+export const commitUsingBuildMachine = async (projectEnvID: string, commitMessage: string) =>
+  await instance.post("/github/commit", { projectEnvID, commitMessage });

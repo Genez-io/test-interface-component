@@ -66,45 +66,7 @@
     display: none !important;
   }
 }
-.optiondots .btn {
-  display: block !important;
-  width: 2.5rem !important;
-  height: 2.5rem !important;
-  line-height: 2.5rem !important;
-  text-align: center !important;
-  font-size: 18px !important;
-  border-radius: 50px !important;
-  border: 1px solid $border !important;
-  margin-right: 5px !important;
-  padding: 0;
-  color: #000;
-}
-.dark-theme,
-.transparent-theme {
-  .optiondots .btn {
-    color: $white !important;
-  }
-}
-.apexchart1 {
-  margin: 0 auto !important;
-  .apexcharts-legend {
-    display: none !important;
-  }
-}
-.main-contact-star,
-.option-dots {
-  .dropdown-toggle::after {
-    display: none;
-  }
-}
-.option-dots.dropdown-toggle::after {
-  display: none;
-}
-.todo-widget-header {
-  .dropdown-toggle::after {
-    display: none;
-  }
-}
+
 #button61 {
   .dropdown-toggle::after {
     display: none;
@@ -1108,45 +1070,6 @@
     width: 80px;
   }
 }
-.card.customs-cards {
-  margin-bottom: 0px !important;
-  border-bottom: 1px solid #e9edf4 !important;
-}
-.profile-tabs {
-  padding-left: 1.25rem !important;
-  padding-right: 1.25rem !important;
-}
-.profile-cover__info,
-.profile-tab .main-nav-line .nav-item a.active {
-  color: var(--primary-bg-color) !important;
-  padding: 15px;
-  background-color: transparent !important;
-}
-.profile-tab.tab-menu-heading .main-nav-line .nav-link {
-  position: relative;
-  padding: 4px 20px !important;
-}
-.sidebar .tabs-menu .nav-item .active {
-  background: var(--primary-bg-color);
-  color: #fff;
-  border: 1px solid var(--primary-bg-color);
-}
-.sidebar .tabs-menu .nav-item a {
-  padding: 8px 8px;
-  font-size: 12px;
-  display: inline-block;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  border: 1px solid #ebeaf1;
-  font-weight: 500;
-  background: transparent;
-  color: $default-color;
-  margin: 0 2px;
-}
-.header-icon {
-  line-height: 1.8 !important;
-  font-size: 1.3rem !important;
-}
 
 @media (min-width: 992px) {
 }
@@ -1724,10 +1647,7 @@
     }
   }
 }
-.btn-primary:not(:disabled):not(.disabled):active:focus,
-.btn-primary:not(:disabled):not(.disabled).active:focus {
-  box-shadow: none;
-}
+
 .msl-input-wrp {
   .msl-input:before {
     color: $white !important;

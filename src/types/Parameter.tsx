@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Form } from "react-bootstrap";
+import { Row, Col } from "../Components";
 import Select from "react-select";
 import Editor from "@monaco-editor/react";
 import { requestTypeOptions, typeOptions } from "./Utils";
 import { useMonaco } from "@monaco-editor/react";
+import { Form } from "react-bootstrap";
 
 export const Parameter: React.FC<{
   name: string;

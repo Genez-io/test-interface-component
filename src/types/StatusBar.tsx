@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Row, Form, Button } from "react-bootstrap";
+import { Col, Row, Button } from "../Components";
+import { Form } from "react-bootstrap";
 
 export const StatusBar: React.FC<{
   environment: string;
@@ -59,15 +60,15 @@ export const StatusBar: React.FC<{
           className="w-100"
         >
           <Row>
-            <Col lg={5}>
+            <Col className="col-lg-5">
               <Row>
-                <Col lg={4} className="d-flex align-items-center">
+                <Col className="d-flex align-items-center col-lg-4">
                   <div>Enter port:</div>
                 </Col>
-                <Col lg={4} style={{ paddingTop: "2px" }}>
+                <Col className="col-lg-4 me-3 me-lg-0" style={{ paddingTop: "2px" }}>
                   <Form.Control
                     type="text"
-                    className="form-control"
+                    className="form-control "
                     placeholder="Port"
                     value={value}
                     onChange={(v) => setValue(v.target.value)}
@@ -82,7 +83,7 @@ export const StatusBar: React.FC<{
                 </Col>
               </Row>
             </Col>
-            <Col lg={7} className="d-flex align-items-center justify-content-end">
+            <Col className="d-flex align-items-center justify-content-end col-lg-7">
               {!value ? (
                 <div style={{ paddingRight: "10px" }}>
                   Couldn't connect to port {port ? port : 8083}! Provide a valid port and try again!
@@ -91,7 +92,9 @@ export const StatusBar: React.FC<{
                 <div style={{ paddingRight: "10px" }}>
                   <Button
                     size="sm"
-                    variant="outline-primary"
+                    variant="purple200"
+                    className="mt-2 mb-2 mt-lg-0 mb-lg-0"
+                    noIconFill={true}
                     onClick={() => {
                       updatePort(value);
                       setValue("");

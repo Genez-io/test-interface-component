@@ -196,5 +196,13 @@
   "prettier": {
     "tabWidth": 2,
     "printWidth": 120
+  },
+  "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@react-spring/web": "^9.7.5",
+    "file-type": "^19.6.0",
+    "jszip": "^3.10.1",
+    "react-hot-toast": "^2.4.1",
+    "react-loading-skeleton": "^3.5.0"
   }
 }

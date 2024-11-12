@@ -3,7 +3,8 @@ import "./index.scss";
 import "font-awesome/css/font-awesome.min.css";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import { Row, Col, Card, Breadcrumb, Button, Spinner, Alert } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
+import { Row, Col, Card, Button, Alert } from "./Components";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
@@ -18,7 +19,6 @@ import {
   ClassType,
   Method,
   Param,
-  Project,
   TabType,
   dropdownOption,
   environmentOptions,
@@ -45,6 +45,11 @@ export interface TestInterfaceProps {
   projectId?: string;
   envId?: string;
   port?: number;
+}
+
+interface Project {
+  name: string;
+  region: string;
 }
 
 export const TestInterface = (props: TestInterfaceProps) => {
@@ -720,10 +725,10 @@ export const TestInterface = (props: TestInterfaceProps) => {
         {/* <!-- /Left Card (Classes Sidebar) --> */}
         {/* <!-- Right Card (Tabs and Calling Functions) --> */}
         <Col xl={9} md={12}>
-          <Card style={{ height: "85vh" }}>
+          <Card style={{ height: "85vh", display: "flex", flexDirection: "column" }}>
             {/* <!-- Status Bar and Calling Button --> */}
             <Row>
-              <Col lg={10}>
+              <Col className="col-lg-10">
                 <props.statusBar
                   success={connected}
                   port={port}
@@ -734,10 +739,14 @@ export const TestInterface = (props: TestInterfaceProps) => {
                   activeTab={activeTab}
                 />
               </Col>
-              <Col className="d-flex justify-content-center" lg={2}>
+              <Col className="d-flex justify-content-center col-lg-2">
                 <Button
                   ref={sendButtonRef}
-                  className="btn me-2 btn-primary mx-2 mt-4 mb-4 w-75 "
+                  variant="darkPurple700"
+                  textVariant="black300"
+                  hoverTextVariant="white"
+                  hoverVariant="purple700"
+                  className="me-2 mx-2 mt-4 mb-4 w-75 "
                   disabled={!connected || activeTab === -1}
                   onClick={() => {
                     environment?.value === "Production" &&
@@ -854,18 +863,18 @@ export const TestInterface = (props: TestInterfaceProps) => {
                   {dataTabs === "Response" && (
                     <Row>
                       <Button
-                        variant="light"
+                        variant={pretty ? "purple700" : "grey700"}
+                        hoverVariant="purple700"
                         onClick={() => setPretty(true)}
                         disabled={activeTab === -1 || !props.isJsonString(tabs[activeTab].response)}
-                        active={pretty}
                       >
                         Pretty
                       </Button>
                       <Button
-                        variant="light"
+                        variant={!pretty ? "purple700" : "grey700"}
+                        hoverVariant="purple700"
                         onClick={() => setPretty(false)}
                         disabled={activeTab === -1 || tabs[activeTab].response === ""}
-                        active={!pretty}
                       >
                         Raw
                       </Button>
