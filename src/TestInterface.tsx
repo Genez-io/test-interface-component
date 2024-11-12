@@ -11,7 +11,7 @@ import moment from "moment";
 
 import { Parameters } from "./types/Parameters";
 import { StatusBar } from "./types/StatusBar";
-import { GenezioSpinner } from "./types/GenezioSpinner";
+import GenezioSpinner from "./types/GenezioSpinner";
 import { TestInterfaceModal } from "./types/TestInterfaceModal";
 import { LeftCard } from "./types/LeftCard";
 import {
@@ -37,8 +37,6 @@ export interface TestInterfaceProps {
     getFunctionLogs: typeof getFunctionLogs;
   };
   statusBar: typeof StatusBar;
-  // statusBar: any;
-  genezioSpinner: typeof GenezioSpinner;
   testInterfaceModal: typeof TestInterfaceModal;
   environmentOptions: typeof environmentOptions;
   isJsonString: typeof isJsonString;
@@ -49,7 +47,7 @@ export interface TestInterfaceProps {
   port?: number;
 }
 
-export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterfaceProps) => {
+export const TestInterface = (props: TestInterfaceProps) => {
   // Messages Types For Logs
   const MESSAGES_TYPES = ["START", "ALL", "ERROR2", "REPORT", "INFO", "DEBUG", "WARNING", "END"];
   // const searchParams = useSearchParams()[0];
@@ -702,7 +700,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
       <Row>
         {/* <!-- Left Card (Classes Sidebar) --> */}
         {cameFromProduction && !environment.label ? (
-          <props.genezioSpinner />
+          <GenezioSpinner />
         ) : (
           <props.leftCard
             environmentOptions={currentEnvironmentOptions}
@@ -878,7 +876,7 @@ export const TestInterface: React.FC<TestInterfaceProps> = (props: TestInterface
                       {dataTabs === "Response" ? (
                         <div className="pt-4 pb-2 w-100">
                           {loading ? (
-                            <props.genezioSpinner />
+                            <GenezioSpinner />
                           ) : pretty && activeTab !== -1 && props.isJsonString(tabs[activeTab].response) ? (
                             <ReactJson
                               src={JSON.parse(tabs[activeTab].response)}

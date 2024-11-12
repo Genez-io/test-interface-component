@@ -3,7 +3,7 @@ import { TestInterface } from "./TestInterface";
 import { getProjectById, getLogs, getCurrentCollaboratorDetails, getFunctionLogs } from "./types/ApiAxios";
 import { Parameters } from "./types/Parameters";
 import { StatusBar } from "./types/StatusBar";
-import { GenezioSpinner } from "./types/GenezioSpinner";
+import GenezioSpinner from "./types/GenezioSpinner";
 import { TestInterfaceModal } from "./types/TestInterfaceModal";
 import { environmentOptions, isJsonString } from "./types/Utils";
 import { LeftCard } from "./types/LeftCard";
@@ -34,7 +34,6 @@ root.render(
   <TestInterface
     axios={props.axios}
     statusBar={props.statusBar}
-    genezioSpinner={props.genezioSpinner}
     testInterfaceModal={props.testInterfaceModal}
     environmentOptions={props.environmentOptions}
     isJsonString={props.isJsonString}

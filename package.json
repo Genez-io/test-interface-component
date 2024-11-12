@@ -12,8 +12,14 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/test-interface-component.es.js",
-      "require": "./dist/test-interface-component.umd.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/test-interface-component.es.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/test-interface-component.umd.js"
+      }
     },
     "./dist/style.css": "./dist/style.css"
   },
@@ -94,8 +100,8 @@
     "@vitejs/plugin-react": "^4.2.1",
     "apexcharts": "^3.46.0",
     "autoprefixer": "^10.4.17",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
-    "browser-sync": "^2.27.10",
     "chart.js": "^4.4.1",
     "chokidar": "^3.6.0",
     "depcheck": "^1.4.7",

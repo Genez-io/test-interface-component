@@ -6,7 +6,6 @@ export { CopyButton } from "./types/CopyButton";
 export { Parameters } from "./types/Parameters";
 export { Parameter } from "./types/Parameter";
 export { StatusBar } from "./types/StatusBar";
-export { GenezioSpinner } from "./types/GenezioSpinner";
 export { TestInterfaceModal } from "./types/TestInterfaceModal";
 export { ClassesSidebar } from "./types/ClassesSidebar";
 export { LeftCard } from "./types/LeftCard";
