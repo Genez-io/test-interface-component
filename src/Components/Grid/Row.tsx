@@ -6,6 +6,8 @@ const Row = styled.div`
   flex-wrap: wrap;
   margin-left: -15px;
   margin-right: -15px;
+  width: 100%;
+  position: relative;
 `;
 
 export default Row;

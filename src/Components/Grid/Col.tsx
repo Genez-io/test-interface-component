@@ -23,6 +23,9 @@ const Col = styled.div.attrs<ColProps>(({ className }) => ({
   ${({ md }) => md && `@media (min-width: 768px) { flex: 0 0 ${(md / 12) * 100}%; max-width: ${(md / 12) * 100}%; }`}
   ${({ lg }) => lg && `@media (min-width: 992px) { flex: 0 0 ${(lg / 12) * 100}%; max-width: ${(lg / 12) * 100}%; }`}
   ${({ xl }) => xl && `@media (min-width: 1200px) { flex: 0 0 ${(xl / 12) * 100}%; max-width: ${(xl / 12) * 100}%; }`}
+  
+  width: 100%;
+  position: relative;
 `;
 
 export default Col;

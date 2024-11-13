@@ -1,7 +1,7 @@
 export type { TestInterfaceProps } from "./TestInterface";
 export { TestInterface } from "./TestInterface";
 export { typeOptions, mapTypeToOptions, colourStyles, environmentOptions, isJsonString } from "./types/Utils";
-export type { dropdownOption, typeOption, Param, Method, ClassType, Project, TabType } from "./types/Utils";
+export type { dropdownOption, typeOption, Param, Method, ClassType, TabType } from "./types/Utils";
 export { CopyButton } from "./types/CopyButton";
 export { Parameters } from "./types/Parameters";
 export { Parameter } from "./types/Parameter";
@@ -10,5 +10,4 @@ export { TestInterfaceModal } from "./types/TestInterfaceModal";
 export { ClassesSidebar } from "./types/ClassesSidebar";
 export { LeftCard } from "./types/LeftCard";
 export type { CollaboratorDetails } from "./types/CollaborationModels";
-import "./index.scss";
-import "./App.css";
+import "./styles/TestInterface.module.css";

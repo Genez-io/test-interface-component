@@ -14,7 +14,6 @@ export const ClassesSidebar: React.FC<{
   return (
     <span id="treeview3" className="tree">
       <TreeView
-        aria-label="file system navigator"
         defaultCollapseIcon={<RemoveCircleOutlineIcon />}
         defaultExpandIcon={<AddCircleOutlineIcon />}
         defaultExpanded={allNodeIds}

@@ -10,7 +10,6 @@ import GenezioLogo from "./GenezioLogo";
 import Alert from "./Alert";
 import Text from "./Text";
 import Modal from "./Modal";
-import Select from "./Select";
 import Dropdown from "./Dropdown";
 import Switch from "./Switch";
 import Anchor from "./Anchor";
@@ -28,7 +27,6 @@ export {
   Alert,
   Text,
   Modal,
-  Select,
   Dropdown,
   Switch,
   Anchor,

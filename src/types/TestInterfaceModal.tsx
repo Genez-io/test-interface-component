@@ -1,5 +1,8 @@
 import React from "react";
-import { Modal, Button } from "../Components";
+import { Modal, Button, Text } from "../Components";
+import styles from "../styles/TestInterface.module.css";
+import { Icon } from "@iconify/react";
+import { BtnClose, ButtonContinueModal, DivModal, HeaderModal, IconModal, PModal } from "../styles/TestInterfaceModal";
 
 interface TestInterfaceModalProps {
   modal: boolean;
@@ -10,33 +13,39 @@ interface TestInterfaceModalProps {
 export const TestInterfaceModal: React.FC<TestInterfaceModalProps> = ({ modal, name, onHide }) => {
   return (
     <Modal isOpen={modal} onClose={onHide}>
-      <Button variant="purple200" className="btn btn-close" onClick={() => onHide()}>
-        x
-      </Button>
-      <div className="tx-center ps-2 pe-2">
+      <BtnClose>
+        <Button variant="purple700" onClick={() => onHide()}>
+          x
+        </Button>
+      </BtnClose>
+      <DivModal>
         {" "}
-        <i className="icon icon ion-ios-close-circle-outline tx-100 tx-danger lh-1 mg-t-20 d-inline-block"></i>{" "}
-        <h4 className="tx-danger mg-b-20">Oops! Looks like you have a different project opened on port 8083.</h4>{" "}
-        <p className="mg-b-20 mg-x-20">
-          If you have project "{name}" open on another port, please close this modal, enter that port and click
-          "Connect"
-        </p>
-        <p className="mg-b-20 mg-x-20">
-          If you want to test the project running on port 8083, clik the link provided in your terminal, or click{" "}
-          <a style={{ color: "#6F42C1" }} href={`http://localhost:5173/test-interface/local?port=8083`}>
-            here
-          </a>
-        </p>
-        <Button
-          variant="purple200"
-          aria-label="Close"
-          className="btn ripple btn-danger pd-x-25"
-          type="button"
-          onClick={() => onHide()}
-        >
-          Continue
-        </Button>{" "}
-      </div>
+        <IconModal>
+          <Icon icon="ion:ios-close-circle-outline"></Icon>{" "}
+        </IconModal>
+        <HeaderModal>
+          <Text as={"h4"}>Oops! Looks like you have a different project opened on port 8083.</Text>{" "}
+        </HeaderModal>
+        <PModal>
+          <Text as={"p"}>
+            If you have project "{name}" open on another port, please close this modal, enter that port and click
+            "Connect"
+          </Text>
+        </PModal>
+        <PModal>
+          <Text as={"p"}>
+            If you want to test the project running on port 8083, clik the link provided in your terminal, or click{" "}
+            <a style={{ color: "#6F42C1" }} href={`http://localhost:5173/test-interface/local?port=8083`}>
+              here
+            </a>
+          </Text>
+        </PModal>
+        <ButtonContinueModal>
+          <Button variant="purple700" type="button" onClick={() => onHide()}>
+            Continue
+          </Button>{" "}
+        </ButtonContinueModal>
+      </DivModal>
     </Modal>
   );
 };

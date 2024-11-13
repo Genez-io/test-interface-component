@@ -4,7 +4,8 @@ import GenezioSpinner from "./GenezioSpinner";
 import { ClassesSidebar } from "./ClassesSidebar";
 import Select from "react-select";
 import { colourStyles } from "./Utils";
-import { Card, Col, Row } from "../Components";
+import { Card, Col, Row, Text } from "../Components";
+import { Icon } from "@iconify/react";
 
 interface LeftCardProps {
   environmentOptions: any;
@@ -32,26 +33,30 @@ export const LeftCard: React.FC<LeftCardProps> = ({
   setEnvironment,
 }) => {
   return (
-    <Col className="col-xl-3 col-md-12">
+    <Col xl={3} md={12}>
       <Card style={{ height: "85vh" }}>
         <div className="mx-4 mt-4 mb-4 h-100">
           <Row>
-            <Col>
-              <h5 className="d-inline">My Workspace</h5>
+            <Col xs={10}>
+              <Text as={"h5"} className="d-inline">
+                My Workspace
+              </Text>
             </Col>
-            <Col style={{ marginLeft: "auto" }}>
+            <Col xs={1} style={{ marginLeft: "auto" }} className="p-0">
               <div className="text-center i-hover" onClick={setRefresh}>
-                <i className="fa fa-undo d-inline"></i>
+                <Icon icon="fa:undo" className="d-inline" />
               </div>
             </Col>
           </Row>
           <hr style={{ borderColor: "black" }}></hr>
           <Row>
             <Col xs={5} className="d-flex align-items-center">
-              <h5 className="d-inline pt-2">Environment</h5>
+              <Text as={"h5"} className="d-inline pt-2">
+                Environment
+              </Text>
             </Col>
             <Col xs={7}>
-              <div className="SelectBox w-100">
+              <div className="w-100" style={{ padding: "5px 8px" }}>
                 <Select
                   isMulti={false}
                   defaultValue={environmentOptions[0]}
