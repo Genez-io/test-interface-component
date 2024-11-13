@@ -32,7 +32,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
   setEnvironment,
 }) => {
   return (
-    <Col md={12} xl={3} lg={12}>
+    <Col className="col-xl-3 col-md-12">
       <Card style={{ height: "85vh" }}>
         <div className="mx-4 mt-4 mb-4 h-100">
           <Row>

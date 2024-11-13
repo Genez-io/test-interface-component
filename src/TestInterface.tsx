@@ -724,7 +724,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
         )}
         {/* <!-- /Left Card (Classes Sidebar) --> */}
         {/* <!-- Right Card (Tabs and Calling Functions) --> */}
-        <Col xl={9} md={12}>
+        <Col className="col-xl-9 col-md-12">
           <Card style={{ height: "85vh", display: "flex", flexDirection: "column" }}>
             {/* <!-- Status Bar and Calling Button --> */}
             <Row>

@@ -130,10 +130,15 @@ export const Parameter: React.FC<{
 
   return (
     <Row>
-      <Col lg={2} className="d-flex border-bottom px-4 border-muted">
-        <div className="border-start py-3 px-4">{name}</div>
+      <Col sm={3} className="d-flex border-bottom px-4 border-muted w-100">
+        <div className="border-start py-3 px-4 w-100" style={{ wordWrap: "break-word" }}>
+          {name}
+        </div>
       </Col>
-      <Col lg={isFunctionUrl() ? 7 : isFullAST ? 10 : 7} className="pt-2 pb-2 border-bottom border-start border-muted">
+      <Col
+        sm={isFunctionUrl() ? 6 : isFullAST ? 9 : 6}
+        className="pt-2 pb-2 border-bottom border-start border-mute0d w-100"
+      >
         {(isFullAST && type === "Primitive") || (!isFullAST && type.value === "Primitive") ? (
           <Form.Control
             type="text"

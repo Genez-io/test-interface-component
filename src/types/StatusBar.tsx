@@ -25,7 +25,7 @@ export const StatusBar: React.FC<{
           className="w-100 pt-2 pb-2"
         >
           <Row>
-            <Col lg={environment === "Local" ? 7 : 12}>
+            <Col className={environment === "Local" ? "col-lg-7" : "col-lg-12"}>
               {tabs[activeTab]?.method.type === "function" ? (
                 <div>
                   Send requests to <strong>{tabs[activeTab]?.method.cloudUrl}</strong>
@@ -39,7 +39,7 @@ export const StatusBar: React.FC<{
               )}
             </Col>
             {environment === "Local" && (
-              <Col lg={5} className="d-flex align-items-center justify-content-end">
+              <Col lg={5} className="d-flex align-items-center justify-content-end col-lg-5">
                 <div style={{ paddingRight: "10px", color: "#62C353" }}>
                   Successfully connected to port {port ? port : 8083}
                 </div>
