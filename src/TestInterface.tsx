@@ -747,7 +747,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
                     hoverTextVariant="white"
                     hoverVariant="purple700"
                     className="mr-2 mx-2 mt-4 mb-4 w-75 "
-                    disabled={!connected || activeTab === -1}
+                    disabled={!connected || activeTab === -1 || tabs[activeTab].method.type === "http"}
                     onClick={() => {
                       environment?.value === "Production" &&
                         setStartTime(startTime === "" ? new Date().getTime() : startTime);
