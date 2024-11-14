@@ -10,4 +10,3 @@ export { TestInterfaceModal } from "./types/TestInterfaceModal";
 export { ClassesSidebar } from "./types/ClassesSidebar";
 export { LeftCard } from "./types/LeftCard";
 export type { CollaboratorDetails } from "./types/CollaborationModels";
-import "./styles/TestInterface.module.css";

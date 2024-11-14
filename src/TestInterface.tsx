@@ -1,6 +1,3 @@
-import "./App.css";
-import "./index.scss";
-import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Spinner } from "react-bootstrap";
 import { Row, Col, Card, Button, Alert, Text } from "./Components";
