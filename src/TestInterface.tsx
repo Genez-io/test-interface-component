@@ -980,10 +980,14 @@ export const TestInterface = (props: TestInterfaceProps) => {
                                   <thead>
                                     <tr>
                                       <th className="text-left">
-                                        <span className="tabletitle">Timestamp</span>
+                                        <Text as={"span"} className="tabletitle" fontSize="14">
+                                          Timestamp
+                                        </Text>
                                       </th>
                                       <th className="text-left">
-                                        <span className="tabletitle">Message</span>
+                                        <Text as={"span"} className="tabletitle" fontSize="14">
+                                          Message
+                                        </Text>
                                       </th>
                                     </tr>
                                   </thead>
@@ -996,16 +1000,20 @@ export const TestInterface = (props: TestInterfaceProps) => {
                                       .map((elem: any, key: GLint64) => {
                                         return (
                                           <tr key={key}>
-                                            <td
+                                            <Text
+                                              as={"td"}
+                                              fontSize="14"
                                               style={{
                                                 borderBottom: "1px solid #6F42C1",
                                               }}
                                               className="text-left text-nowrap"
                                             >
                                               {moment.unix(elem.Timestamp / 1000).format("YYYY-MM-DD HH:mm:ss.SSS")}
-                                            </td>
+                                            </Text>
 
-                                            <td
+                                            <Text
+                                              as={"td"}
+                                              fontSize="14"
                                               className="text-left"
                                               style={{
                                                 width: "100%",
@@ -1029,7 +1037,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
                                                 }
                                                 return word;
                                               })}
-                                            </td>
+                                            </Text>
                                           </tr>
                                         );
                                       })}

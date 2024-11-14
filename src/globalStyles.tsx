@@ -525,6 +525,9 @@ const GlobalStyles = createGlobalStyle`
   /* Text */
   .text-center { text-align: center}
   .text-muted { color: #6c757d; }
+  .text-left { text-align: left; }
+  .text-right { text-align: right; }
+
 
   /* Overflow */
     .overflow-hidden { overflow: hidden; }
@@ -541,6 +544,27 @@ const GlobalStyles = createGlobalStyle`
     .border-primary {
     border-color: #6f42c1 !important;
     }
+    .borderless {
+        border: none !important;
+    }
+
+    /* Scrollbar */
+
+    ::-webkit-scrollbar {
+        height: 4px;
+    -webkit-transition: background .3s;
+    transition: background .3s;
+    width: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+    background: #1cd5ae33;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+    }
+
   /* Font */
 .fw-bold {
     font-weight: 700;
@@ -754,6 +778,7 @@ input {
     font-size: inherit;
     line-height: inherit;
 }
+
 
 /* Panels */
 
@@ -1047,6 +1072,99 @@ input {
     // opacity: .95;
   }
 }
+
+/* Table */ 
+
+.table {
+    border: 1px solid #ededf5;
+    color: #22252f;
+    margin-bottom: 1rem;
+    width: 100%!important;
+    vertical-align: top;
+    border-collapse: collapse;
+    caption-side: bottom;
+}
+
+.table >thead {
+    vertical-align: bottom;
+
+}
+
+thead {
+    border: 0 #ededf5;
+}
+
+.table thead th {
+    border-bottom-width: 1px;
+    border-top-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    padding: 10px 15px;
+    text-transform: capitalize;    
+}
+
+.table th {
+    border-top: 1px solid #f0f0f8;
+    padding: .75rem;
+    vertical-align: middle;
+}
+
+th {
+text-align: inherit;
+}
+
+.table>:not(:last-child)>:last-child>* {
+border-bottom-color: #ededf5;
+}
+
+.table>:not(:first-child) {
+border-top: 1px solid #ededf5!important;
+}
+
+.table>tbody {
+ vertical-align: inherit;
+}
+
+tbody {
+ border: 0 #ededf5;
+}
+
+.table tbody tr {
+    background-color: #ffffff80;
+}
+
+tr {
+border: 0 #ededf5;
+}
+
+.table td {
+    border-top: 1px solid #f0f0f8;
+    padding: .75rem;
+    vertical-align: middle;
+    font-size: 13px;
+    line-height: 1.462;
+    padding: 9px 15px;
+}
+
+.table>:not(caption)>*>* {
+    background-color: #0000;
+    border-bottom-width: 1px;
+    box-shadow: inset 0 0 0 9999px #0000;
+    padding: .5rem;
+}
+
+.text-nowrap {
+ white-space: nowrap !important; 
+}
+
+td {
+border: 0 #ededf5;
+}
+
+
+
+
 
 
 
