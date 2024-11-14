@@ -19,8 +19,14 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
 
   return (
     <button
-      style={{ background: "transparent", outline: "none", border: "none", height: "15px" }}
-      className="btn-svg mx-4 d-flex align-items-center justify-content-center"
+      style={{
+        background: "transparent",
+        outline: "none",
+        border: "none",
+        height: "15px",
+        cursor: `${copied ? "default" : "pointer"}`,
+      }}
+      className="mx-4 d-flex align-items-center justify-content-center"
       onClick={copyToClipboard}
     >
       {copied ? (

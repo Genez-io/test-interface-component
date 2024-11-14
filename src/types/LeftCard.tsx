@@ -72,7 +72,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
             </Col>
           </Row>
           <hr style={{ borderColor: "black" }}></hr>
-          <div style={{ height: "68vh", overflow: "auto", bottom: 0, top: 0 }}>
+          <div style={{ height: "68vh", overflow: "auto", bottom: 0, top: 0, marginLeft: "-1.5rem" }}>
             {loadingRefresh ? (
               <GenezioSpinner />
             ) : (

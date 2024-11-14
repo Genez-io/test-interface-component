@@ -1,5 +1,5 @@
 import React from "react";
-import { TreeView, TreeItem } from "@mui/x-tree-view";
+import { TreeItem, SimpleTreeView } from "@mui/x-tree-view";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Method, ClassType } from "./Utils";
@@ -13,17 +13,19 @@ export const ClassesSidebar: React.FC<{
   const allNodeIds = classes?.map((classItem) => classItem?.name); // Get all node IDs
   return (
     <span id="treeview3" className="tree">
-      <TreeView
-        defaultCollapseIcon={<RemoveCircleOutlineIcon />}
-        defaultExpandIcon={<AddCircleOutlineIcon />}
-        defaultExpanded={allNodeIds}
+      <SimpleTreeView
+        slots={{
+          collapseIcon: RemoveCircleOutlineIcon,
+          expandIcon: AddCircleOutlineIcon,
+        }}
+        defaultExpandedItems={allNodeIds}
       >
         {classes.map((classItem) => (
-          <TreeItem nodeId={classItem.name} key={classItem.name} label={classItem.name} className="text-dark">
+          <TreeItem itemId={classItem.name} key={classItem.name} label={classItem.name} className="text-dark">
             {classItem.ast.methods.map((method) => {
               return (
                 <TreeItem
-                  nodeId={classItem.name + method.name}
+                  itemId={classItem.name + method.name}
                   key={classItem.name + method.name}
                   label={method.name}
                   onClick={() => updateMethod(method, classItem.name)}
@@ -35,7 +37,7 @@ export const ClassesSidebar: React.FC<{
             })}
           </TreeItem>
         ))}
-      </TreeView>
+      </SimpleTreeView>
     </span>
   );
 };

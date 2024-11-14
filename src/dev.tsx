@@ -8,8 +8,7 @@ import { TestInterfaceModal } from "./types/TestInterfaceModal";
 import { environmentOptions, isJsonString } from "./types/Utils";
 import { LeftCard } from "./types/LeftCard";
 
-// const port = parseInt(window.location.port);
-const port = 8083;
+const port = parseInt(window.location.port);
 
 const props = {
   axios: {

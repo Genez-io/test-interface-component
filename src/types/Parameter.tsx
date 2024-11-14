@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "../Components";
+import { Row, Col, Text } from "../Components";
 import Select from "react-select";
 import Editor from "@monaco-editor/react";
 import { requestTypeOptions, typeOptions } from "./Utils";
 import { useMonaco } from "@monaco-editor/react";
-import { Form } from "react-bootstrap";
 
 export const Parameter: React.FC<{
   name: string;
@@ -130,21 +129,17 @@ export const Parameter: React.FC<{
 
   return (
     <Row>
-      <Col sm={3} className="d-flex border-bottom px-4 border-muted w-100">
-        <div className="border-start py-3 px-4 w-100" style={{ wordWrap: "break-word" }}>
+      <Col sm={3} className="d-flex border-bottom px-4 w-100">
+        <Text as={"div"} className="border-left py-3 px-4 w-100" fontSize="14" style={{ wordWrap: "break-word" }}>
           {name}
-        </div>
+        </Text>
       </Col>
-      <Col
-        sm={isFunctionUrl() ? 6 : isFullAST ? 9 : 6}
-        className="pt-2 pb-2 border-bottom border-start border-mute0d w-100"
-      >
+      <Col sm={isFunctionUrl() ? 6 : isFullAST ? 9 : 6} className="pt-2 pb-2 border-bottom border-left w-100">
         {(isFullAST && type === "Primitive") || (!isFullAST && type.value === "Primitive") ? (
-          <Form.Control
+          <input
             type="text"
             className="form-control"
             placeholder="Value"
-            as="input"
             value={value}
             onChange={(v: any) => {
               if (isFullAST) {
@@ -203,7 +198,7 @@ export const Parameter: React.FC<{
       </Col>
 
       {!isFullAST && (
-        <Col lg={3} className="d-flex align-items-center border-bottom border-start border-muted">
+        <Col lg={3} className="d-flex align-items-center border-bottom border-left">
           <div className="SelectBox w-100">
             <Select
               defaultValue={typeOptions[0]}
@@ -222,7 +217,7 @@ export const Parameter: React.FC<{
         </Col>
       )}
       {isFunctionUrl() && (
-        <Col lg={3} className="d-flex align-items-center border-bottom border-start border-muted">
+        <Col lg={3} className="d-flex align-items-center border-bottom border-left">
           <div className="SelectBox w-100">
             <Select
               defaultValue={

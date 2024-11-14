@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Button } from "../Components";
+import { Col, Row, Button, Text } from "../Components";
 import { Form } from "react-bootstrap";
 
 export const StatusBar: React.FC<{
@@ -14,7 +14,7 @@ export const StatusBar: React.FC<{
   const [value, setValue] = React.useState<any>("");
 
   return (
-    <div className="mx-4 mt-4 mb-4 w-lg-100">
+    <div className="mx-lg-4 mx-0 px-4 px-lg-0 mt-4 mb-4 w-100">
       {success ? (
         <div
           style={{
@@ -25,24 +25,24 @@ export const StatusBar: React.FC<{
           className="w-100 pt-2 pb-2"
         >
           <Row>
-            <Col className={environment === "Local" ? "col-lg-7" : "col-lg-12"}>
+            <Col lg={environment === "Local" ? 7 : 12}>
               {tabs[activeTab]?.method.type === "function" ? (
-                <div>
+                <Text as={"div"} fontSize="14">
                   Send requests to <strong>{tabs[activeTab]?.method.cloudUrl}</strong>
-                </div>
+                </Text>
               ) : url ? (
-                <div>
+                <Text as={"span"} fontSize="14">
                   Requests will be sent to <strong>{url}</strong>
-                </div>
+                </Text>
               ) : (
-                "Choose a function"
+                <Text as={"div"}>Choose a function</Text>
               )}
             </Col>
             {environment === "Local" && (
-              <Col lg={5} className="d-flex align-items-center justify-content-end col-lg-5">
-                <div style={{ paddingRight: "10px", color: "#62C353" }}>
+              <Col lg={5} className="d-flex align-items-center justify-content-end">
+                <Text as={"div"} style={{ paddingRight: "10px", color: "#62C353" }} fontSize="14">
                   Successfully connected to port {port ? port : 8083}
-                </div>
+                </Text>
               </Col>
             )}
           </Row>
@@ -60,19 +60,20 @@ export const StatusBar: React.FC<{
           className="w-100"
         >
           <Row>
-            <Col className="col-lg-5">
+            <Col lg={5}>
               <Row>
-                <Col className="d-flex align-items-center col-lg-4">
-                  <div>Enter port:</div>
+                <Col lg={4} className="d-flex align-items-center">
+                  <Text as={"div"} style={{ color: "#C35353" }} fontSize="14">
+                    Enter port:
+                  </Text>
                 </Col>
-                <Col className="col-lg-4 me-3 me-lg-0" style={{ paddingTop: "2px" }}>
-                  <Form.Control
+                <Col lg={4} className="mr-3 mr-lg-0" style={{ paddingTop: "2px" }}>
+                  <input
                     type="text"
-                    className="form-control "
+                    className="form-control form-control-sm"
                     placeholder="Port"
                     value={value}
                     onChange={(v) => setValue(v.target.value)}
-                    size="sm"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         updatePort(value);
@@ -83,16 +84,16 @@ export const StatusBar: React.FC<{
                 </Col>
               </Row>
             </Col>
-            <Col className="d-flex align-items-center justify-content-end col-lg-7">
+            <Col lg={7} className="d-flex align-items-center justify-content-end">
               {!value ? (
-                <div style={{ paddingRight: "10px" }}>
+                <Text as={"div"} style={{ paddingRight: "10px", color: "#C35353" }} fontSize="14">
                   Couldn't connect to port {port ? port : 8083}! Provide a valid port and try again!
-                </div>
+                </Text>
               ) : (
                 <div style={{ paddingRight: "10px" }}>
                   <Button
                     size="sm"
-                    variant="purple200"
+                    variant="purple500"
                     className="mt-2 mb-2 mt-lg-0 mb-lg-0"
                     noIconFill={true}
                     onClick={() => {

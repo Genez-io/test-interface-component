@@ -3,7 +3,7 @@ import "./index.scss";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Spinner } from "react-bootstrap";
-import { Row, Col, Card, Button, Alert } from "./Components";
+import { Row, Col, Card, Button, Alert, Text } from "./Components";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
@@ -727,11 +727,11 @@ export const TestInterface = (props: TestInterfaceProps) => {
           )}
           {/* <!-- /Left Card (Classes Sidebar) --> */}
           {/* <!-- Right Card (Tabs and Calling Functions) --> */}
-          <Col className="col-xl-9 col-md-12">
+          <Col xl={9} md={12}>
             <Card style={{ height: "85vh", display: "flex", flexDirection: "column" }}>
               {/* <!-- Status Bar and Calling Button --> */}
               <Row>
-                <Col className="col-lg-10">
+                <Col lg={10}>
                   <props.statusBar
                     success={connected}
                     port={port}
@@ -742,14 +742,14 @@ export const TestInterface = (props: TestInterfaceProps) => {
                     activeTab={activeTab}
                   />
                 </Col>
-                <Col className="d-flex justify-content-center col-lg-2">
+                <Col lg={2} className="d-flex justify-content-center">
                   <Button
                     ref={sendButtonRef}
                     variant="darkPurple700"
                     textVariant="black300"
                     hoverTextVariant="white"
                     hoverVariant="purple700"
-                    className="me-2 mx-2 mt-4 mb-4 w-75 "
+                    className="mr-2 mx-2 mt-4 mb-4 w-75 "
                     disabled={!connected || activeTab === -1}
                     onClick={() => {
                       environment?.value === "Production" &&
@@ -814,57 +814,63 @@ export const TestInterface = (props: TestInterfaceProps) => {
                 </PanelResizeHandle>
                 {/* <!-- Lower Panel (Response) --> */}
                 <Panel maxSize={100}>
-                  <div className="ps-5 pe-5 h-100">
+                  <div className="pl-5 pr-5 h-100">
                     <Row>
                       <Col lg={3} style={{ paddingLeft: "0" }} className="pb-3 pt-1">
                         {dataTabsOptions.map((option, idx) => (
-                          <span
+                          <Text
+                            as={"span"}
                             key={idx}
                             onClick={() => setDataTabs(option)}
-                            className="border-primary"
+                            className="border-primary p-1"
                             style={{
                               borderBottom: dataTabs === option ? "2px solid" : "none",
                               fontWeight: 600,
                               fontSize: 14,
                               color: "#666666",
                               marginLeft: idx !== 0 ? "10px" : "0",
-                              padding: "0 5px 0 5px",
                               cursor: "pointer",
                             }}
                           >
                             {option}
-                          </span>
+                          </Text>
                         ))}
                       </Col>
                       <Col lg={9} className="d-flex align-items-center justify-content-end pb-3 pt-1">
                         {activeTab !== -1 && tabs[activeTab].response && (
                           <div>
-                            <span>Time: </span>
-                            <span
+                            <Text as={"span"} fontSize="14">
+                              Time:{" "}
+                            </Text>
+                            <Text
+                              as={"span"}
+                              fontSize="14"
                               style={{
                                 color: "#62C353",
                                 fontWeight: 500,
-                                fontSize: 14,
                               }}
                             >
                               {tabs[activeTab].time}ms
-                            </span>
-                            <span className="ms-4">Status: </span>
-                            <span
+                            </Text>
+                            <Text as={"span"} fontSize="14" className="ml-4">
+                              Status:{" "}
+                            </Text>
+                            <Text
+                              as={"span"}
+                              fontSize="14"
                               style={{
                                 color: "#62C353",
                                 fontWeight: 500,
-                                fontSize: 14,
                               }}
                             >
                               {tabs[activeTab].status}
-                            </span>
+                            </Text>
                           </div>
                         )}
                       </Col>
                     </Row>
                     {dataTabs === "Response" && (
-                      <Row>
+                      <Row className="mt-2">
                         <Button
                           variant={pretty ? "purple700" : "grey700"}
                           hoverVariant="purple700"
@@ -886,7 +892,12 @@ export const TestInterface = (props: TestInterfaceProps) => {
                     <Row className="h-100 overflow-auto mb-10">
                       <Col lg={12} className="p-0" style={{ marginBottom: "100px" }}>
                         {dataTabs === "Response" ? (
-                          <div className="pt-4 pb-2 w-100">
+                          <div
+                            className="pt-4 pb-2 w-100"
+                            style={{
+                              fontSize: "14px",
+                            }}
+                          >
                             {loading ? (
                               <GenezioSpinner />
                             ) : pretty && activeTab !== -1 && props.isJsonString(tabs[activeTab].response) ? (

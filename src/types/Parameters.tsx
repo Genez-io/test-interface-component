@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Row, Col, Alert } from "../Components";
+import { Row, Col, Alert, Text } from "../Components";
 import { Parameter } from "./Parameter";
 import { mapTypeToOptions as mapInputTypeToOptions, typeOption, colourStyles, headersValue } from "./Utils";
 import { faker } from "@faker-js/faker";
@@ -292,25 +292,27 @@ export const Parameters: React.FC<ParametersProps> = ({
 
   return (
     <>
-      <h6 className="mx-4">Parameters</h6>
+      <Text as={"h6"} className="mx-4" fontSize="14">
+        Parameters
+      </Text>
       <div className="mt-4 mb-4 overflow-auto" style={{ padding: "0 15px", height: "75%" }}>
         {tabs[activeTab]?.method?.type === "http" ? (
           <>
-            <Alert>
-              <p className="text-muted m-0">
+            <Alert className="mt-0">
+              <Text as={"p"} className="text-muted m-0" fontSize="14">
                 <strong>http</strong> methods are disabled on test interface. We recommend calling it from Postman.
-              </p>
+              </Text>
             </Alert>
 
             <div className="d-flex align-items-center mb-2">
-              <h6 className="m-0">
+              <Text as={"h6"} className="m-0" fontSize="14">
                 Test Url:{" "}
                 <span className="text-muted">
                   {isLocalEnviroment
                     ? url + "/" + tabs[activeTab].method.name
                     : url.replace(/\/+$/, "") + "/" + tabs[activeTab]?.className + "/" + tabs[activeTab].method.name}
                 </span>{" "}
-              </h6>
+              </Text>
               <CopyButton
                 text={
                   isLocalEnviroment
@@ -323,17 +325,21 @@ export const Parameters: React.FC<ParametersProps> = ({
         ) : (
           <>
             <Row>
-              <Col className="border-bottom border-top border-muted px-4 col-sm-3">
-                <div className="border-start py-2 px-4">NAME</div>
+              <Col sm={3} className="border-bottom border-top  px-4">
+                <Text as={"div"} className="border-left py-2 px-4" fontSize="14">
+                  <Text as={"div"}>NAME</Text>
+                </Text>
               </Col>
-              {isFullAST ? (
-                <Col className="pt-2 pb-2 border-bottom border-start border-top border-muted col-sm-9">VALUE</Col>
-              ) : (
-                <Col className="pt-2 pb-2 border-bottom border-start border-top border-muted col-sm-6">VALUE</Col>
-              )}
+              <Col sm={isFullAST ? 9 : 6} className="pt-2 pb-2 border-bottom border-left border-top">
+                <Text as={"div"} fontSize="14">
+                  VALUE
+                </Text>
+              </Col>
               {!isFullAST && (
-                <Col lg={3} className="pt-2 pb-2 border-bottom border-start border-top border-muted col-sm-3">
-                  TYPE
+                <Col sm={3} className="pt-2 pb-2 border-bottom border-left border-top">
+                  <Text as={"div"} fontSize="14">
+                    TYPE
+                  </Text>
                 </Col>
               )}
             </Row>
@@ -396,8 +402,6 @@ export const Parameters: React.FC<ParametersProps> = ({
               })}
           </>
         )}
-
-        <div className="mt-10"></div>
       </div>
     </>
   );
