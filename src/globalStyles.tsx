@@ -629,6 +629,10 @@ padding: 5px 8px;
     width: 75%;
 }
 
+.w-85 {
+    width: 85%;
+}
+
 /* Height */
 
 .h-100 {

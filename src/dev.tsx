@@ -3,7 +3,6 @@ import { TestInterface } from "./TestInterface";
 import { getProjectById, getLogs, getCurrentCollaboratorDetails, getFunctionLogs } from "./types/ApiAxios";
 import { Parameters } from "./types/Parameters";
 import { StatusBar } from "./types/StatusBar";
-import GenezioSpinner from "./types/GenezioSpinner";
 import { TestInterfaceModal } from "./types/TestInterfaceModal";
 import { environmentOptions, isJsonString } from "./types/Utils";
 import { LeftCard } from "./types/LeftCard";
@@ -18,7 +17,6 @@ const props = {
     getFunctionLogs: getFunctionLogs,
   },
   statusBar: StatusBar,
-  genezioSpinner: GenezioSpinner,
   testInterfaceModal: TestInterfaceModal,
   environmentOptions: environmentOptions,
   isJsonString: isJsonString,
