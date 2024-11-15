@@ -8,7 +8,6 @@ import moment from "moment";
 
 import { Parameters } from "./types/Parameters";
 import { StatusBar } from "./types/StatusBar";
-import GenezioSpinner from "./types/GenezioSpinner";
 import { TestInterfaceModal } from "./types/TestInterfaceModal";
 import { LeftCard } from "./types/LeftCard";
 import {
@@ -26,6 +25,7 @@ import { CollaboratorDetails } from "./types/CollaborationModels";
 import { getCurrentCollaboratorDetails, getFunctionLogs, getLogs, getProjectById } from "./types/ApiAxios";
 import { ThemeProviderWithToggle } from "./contexts/ThemeContext";
 import GlobalStyles from "./globalStyles";
+import Skeleton from "react-loading-skeleton";
 
 export interface TestInterfaceProps {
   axios: {
@@ -705,7 +705,11 @@ export const TestInterface = (props: TestInterfaceProps) => {
         <Row>
           {/* <!-- Left Card (Classes Sidebar) --> */}
           {cameFromProduction && !environment.label ? (
-            <GenezioSpinner />
+            <Col xl={3} md={12}>
+              <Card style={{ height: "85vh" }}>
+                <Skeleton count={6} className="w-85 mx-4 my-3" height={"35px"} />
+              </Card>
+            </Col>
           ) : (
             <props.leftCard
               environmentOptions={currentEnvironmentOptions}
@@ -896,7 +900,9 @@ export const TestInterface = (props: TestInterfaceProps) => {
                             }}
                           >
                             {loading ? (
-                              <GenezioSpinner />
+                              <Col>
+                                <Skeleton count={1} className="w-85 mx-4 my-2" height={"25px"} />
+                              </Col>
                             ) : pretty && activeTab !== -1 && props.isJsonString(tabs[activeTab].response) ? (
                               <ReactJson
                                 src={JSON.parse(tabs[activeTab].response)}

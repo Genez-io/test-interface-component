@@ -1,11 +1,11 @@
 import React from "react";
 
-import GenezioSpinner from "./GenezioSpinner";
 import { ClassesSidebar } from "./ClassesSidebar";
 import Select from "react-select";
 import { colourStyles } from "./Utils";
 import { Card, Col, Row, Text } from "../Components";
 import { Icon } from "@iconify/react";
+import Skeleton from "react-loading-skeleton";
 
 interface LeftCardProps {
   environmentOptions: any;
@@ -74,7 +74,9 @@ export const LeftCard: React.FC<LeftCardProps> = ({
           <hr style={{ borderColor: "black" }}></hr>
           <div style={{ height: "68vh", overflow: "auto", bottom: 0, top: 0, marginLeft: "-1.5rem" }}>
             {loadingRefresh ? (
-              <GenezioSpinner />
+              <Col>
+                <Skeleton count={6} className="w-85 mx-4 my-3" height={"30px"} />
+              </Col>
             ) : (
               <ClassesSidebar
                 classes={classes}
