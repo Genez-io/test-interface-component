@@ -6,6 +6,7 @@ import { colourStyles } from "./Utils";
 import { Card, Col, Row, Text } from "../Components";
 import { Icon } from "@iconify/react";
 import Skeleton from "react-loading-skeleton";
+import { useTheme } from "styled-components";
 
 interface LeftCardProps {
   environmentOptions: any;
@@ -32,6 +33,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
   setRefresh,
   setEnvironment,
 }) => {
+  const theme = useTheme();
   return (
     <Col xl={3} md={12}>
       <Card style={{ height: "85vh" }}>
@@ -44,7 +46,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
             </Col>
             <Col xs={1} style={{ marginLeft: "auto" }} className="p-0">
               <div className="text-center i-hover" onClick={setRefresh}>
-                <Icon icon="fa:undo" className="d-inline" />
+                <Icon icon="fa:undo" className="d-inline" style={{ color: theme.colors.white }} />
               </div>
             </Col>
           </Row>
@@ -66,7 +68,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
                   classNamePrefix="selectform"
                   value={environment}
                   isDisabled={projectId === "local"}
-                  styles={colourStyles}
+                  styles={colourStyles(theme)}
                 />
               </div>
             </Col>

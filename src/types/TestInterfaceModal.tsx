@@ -11,9 +11,6 @@ interface TestInterfaceModalProps {
 export const TestInterfaceModal: React.FC<TestInterfaceModalProps> = ({ modal, name, onHide }) => {
   return (
     <Modal isOpen={modal} onClose={onHide}>
-      <Button variant="purple700" onClick={() => onHide()}>
-        x
-      </Button>
       <div className="text-center pl-2 pr-2">
         {" "}
         <Icon className="icon-modal mb-3" icon="ion:ios-close-circle-outline"></Icon>{" "}
@@ -30,7 +27,7 @@ export const TestInterfaceModal: React.FC<TestInterfaceModalProps> = ({ modal, n
             here
           </a>
         </Text>
-        <Button className="btn-continue" variant="purple700" type="button" onClick={() => onHide()}>
+        <Button className="btn-continue" variant="redDeleteBtn" type="button" onClick={() => onHide()}>
           Continue
         </Button>{" "}
       </div>

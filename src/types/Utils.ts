@@ -3,6 +3,7 @@ import axios from "axios";
 import { getPresignedURLForProjectCode, getPresignedURLForProjectCodeUpload, Project } from "./ApiAxios";
 import { fileTypeFromBlob, FileTypeResult } from "file-type";
 import JSZip from "jszip";
+import { DefaultTheme, useTheme } from "styled-components";
 
 export enum typeOption {
   Primitive = "Primitive",
@@ -112,25 +113,35 @@ export const isJsonString = (s: string) => {
   return true;
 };
 
-export const colourStyles: StylesConfig<dropdownOption> = {
-  control: (styles) => ({ ...styles, backgroundColor: "white" }),
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    return {
-      ...styles,
-      backgroundColor: isDisabled ? undefined : isSelected ? "#8F6ECD" : isFocused ? "#E8E1F2" : undefined,
-      cursor: isDisabled ? "not-allowed" : "default",
+export function colourStyles(theme: DefaultTheme): StylesConfig<dropdownOption> {
+  return {
+    control: (styles) => ({ ...styles, backgroundColor: theme.colors.black300 }),
+    menu: (styles) => ({ ...styles, backgroundColor: theme.colors.black300 }),
+    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+      return {
+        ...styles,
+        color: theme.colors.white,
+        backgroundColor: isDisabled
+          ? undefined
+          : isSelected
+            ? theme.colors.purple700
+            : isFocused
+              ? "#E8E1F2"
+              : undefined,
+        cursor: isDisabled ? "not-allowed" : "default",
 
-      ":active": {
-        ...styles[":active"],
-        backgroundColor: !isDisabled ? (isSelected ? "#8F6ECD" : "white") : undefined,
-      },
-    };
-  },
-  input: (styles) => ({ ...styles }),
-  placeholder: (styles) => ({ ...styles }),
-  singleValue: (styles, { data }) => ({ ...styles }),
-  menuPortal: (styles) => ({ ...styles, zIndex: 9999 }),
-};
+        ":active": {
+          ...styles[":active"],
+          backgroundColor: !isDisabled ? (isSelected ? theme.colors.darkPurple200 : "black") : undefined,
+        },
+      };
+    },
+    input: (styles) => ({ ...styles }),
+    placeholder: (styles) => ({ ...styles }),
+    singleValue: (styles, { data }) => ({ ...styles, color: theme.colors.white }),
+    menuPortal: (styles) => ({ ...styles, zIndex: 9999 }),
+  };
+}
 
 export const serverlessFunctionsTypes = [
   {

@@ -3,6 +3,7 @@ import { TreeItem, SimpleTreeView } from "@mui/x-tree-view";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Method, ClassType } from "./Utils";
+import { useTheme } from "styled-components";
 
 export const ClassesSidebar: React.FC<{
   classes: ClassType[];
@@ -11,6 +12,7 @@ export const ClassesSidebar: React.FC<{
   updateMethod: (m: Method, name: string) => any;
 }> = ({ classes, updateMethod, className, functionName }) => {
   const allNodeIds = classes?.map((classItem) => classItem?.name); // Get all node IDs
+  const theme = useTheme();
   return (
     <span id="treeview3" className="tree">
       <SimpleTreeView
@@ -29,9 +31,9 @@ export const ClassesSidebar: React.FC<{
                   key={classItem.name + method.name}
                   label={method.name}
                   onClick={() => updateMethod(method, classItem.name)}
-                  className={
-                    className === classItem.name && functionName === method.name ? "text-primary" : "text-dark"
-                  }
+                  style={{
+                    color: `${className === classItem.name && functionName === method.name ? theme.colors.darkPurple200 : theme.colors.white}`,
+                  }}
                 />
               );
             })}

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Text } from "../Components";
 import Select from "react-select";
 import Editor from "@monaco-editor/react";
-import { requestTypeOptions, typeOptions } from "./Utils";
+import { colourStyles, requestTypeOptions, typeOptions } from "./Utils";
 import { useMonaco } from "@monaco-editor/react";
+import { useTheme } from "styled-components";
 
 export const Parameter: React.FC<{
   name: string;
   updateFunction: (name: string, value: any, type: any, isGnzContext?: boolean) => void;
   updateRequestType: (type: any) => void;
-  customStyles: any;
   valueProp: any;
   typeProp?: any;
   isFullAST: boolean;
@@ -24,7 +24,6 @@ export const Parameter: React.FC<{
   name,
   updateFunction,
   updateRequestType,
-  customStyles,
   valueProp,
   typeProp,
   isFullAST,
@@ -36,6 +35,7 @@ export const Parameter: React.FC<{
   tabs,
   activeTab,
 }) => {
+  const theme = useTheme();
   const [type, setType] = useState<any>(typeProp);
   const [requestType, setRequestType] = useState<any>(
     requestTypeOptions.find((option) => option.value === tabs[activeTab]?.method.requestType) || requestTypeOptions[0],
@@ -168,7 +168,7 @@ export const Parameter: React.FC<{
               defaultValue={
                 isFullAST ? (type === "Array" ? "[]" : formatObject(paramValue)) : type.value === "Array" ? "[]" : "{}"
               }
-              theme={localStorage.getItem("darkMode") === "true" ? "genezio-dark" : "light"}
+              theme={theme.name === "dark" ? "genezio-dark" : "light"}
               width="100%"
               value={value}
               options={{
@@ -210,7 +210,7 @@ export const Parameter: React.FC<{
               placeholder="Type"
               classNamePrefix="selectform"
               value={type}
-              styles={customStyles}
+              styles={colourStyles(theme)}
               menuPortalTarget={document.body}
             />
           </div>
@@ -232,7 +232,7 @@ export const Parameter: React.FC<{
               placeholder="Type"
               classNamePrefix="selectform"
               value={requestType}
-              styles={customStyles}
+              styles={colourStyles(theme)}
               menuPortalTarget={document.body}
             />
           </div>

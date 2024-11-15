@@ -26,6 +26,8 @@ import { getCurrentCollaboratorDetails, getFunctionLogs, getLogs, getProjectById
 import { ThemeProviderWithToggle } from "./contexts/ThemeContext";
 import GlobalStyles from "./globalStyles";
 import Skeleton from "react-loading-skeleton";
+import { ReactJsonWrapper } from "./types/ReactJsonWrapper";
+import { LogWrapper } from "./types/LogWrapper";
 
 export interface TestInterfaceProps {
   axios: {
@@ -51,8 +53,6 @@ interface Project {
 }
 
 export const TestInterface = (props: TestInterfaceProps) => {
-  // Messages Types For Logs
-  const MESSAGES_TYPES = ["START", "ALL", "ERROR2", "REPORT", "INFO", "DEBUG", "WARNING", "END"];
   // const searchParams = useSearchParams()[0];
   const searchParams = new URLSearchParams(window.location.search);
 
@@ -99,7 +99,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
   const [modal, setModal] = useState<boolean>(false);
 
   const [pretty, setPretty] = useState<boolean>(false);
-
   const [activeTab, setActiveTab] = useState<number>(-1);
   const [tabs, setTabs] = useState<TabType[]>([]);
   const [dataTabs, setDataTabs] = useState<String>("Response");
@@ -746,10 +745,9 @@ export const TestInterface = (props: TestInterfaceProps) => {
                 <Col lg={2} className="d-flex justify-content-center">
                   <Button
                     ref={sendButtonRef}
-                    variant="darkPurple700"
+                    variant="darkPurple200"
                     textVariant="black300"
-                    hoverTextVariant="white"
-                    hoverVariant="purple700"
+                    hoverVariant="grey800"
                     className="mr-2 mx-2 mt-4 mb-4 w-75 "
                     disabled={!connected || activeTab === -1 || tabs[activeTab].method.type === "http"}
                     onClick={() => {
@@ -823,7 +821,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
                             as={"span"}
                             key={idx}
                             onClick={() => setDataTabs(option)}
-                            className="border-primary p-1"
+                            className="p-1"
                             style={{
                               borderBottom: dataTabs === option ? "2px solid" : "none",
                               fontWeight: 600,
@@ -873,16 +871,18 @@ export const TestInterface = (props: TestInterfaceProps) => {
                     {dataTabs === "Response" && (
                       <Row className="mt-2">
                         <Button
-                          variant={pretty ? "purple700" : "grey700"}
-                          hoverVariant="purple700"
+                          variant={pretty ? "darkPurple100" : "grey700"}
+                          textVariant="white"
+                          hoverVariant="darkPurple100"
                           onClick={() => setPretty(true)}
                           disabled={activeTab === -1 || !props.isJsonString(tabs[activeTab].response)}
                         >
                           Pretty
                         </Button>
                         <Button
-                          variant={!pretty ? "purple700" : "grey700"}
-                          hoverVariant="purple700"
+                          variant={!pretty ? "darkPurple100" : "grey700"}
+                          textVariant="white"
+                          hoverVariant="darkPurple100"
                           onClick={() => setPretty(false)}
                           disabled={activeTab === -1 || tabs[activeTab].response === ""}
                         >
@@ -904,54 +904,15 @@ export const TestInterface = (props: TestInterfaceProps) => {
                                 <Skeleton count={1} className="w-85 mx-4 my-2" height={"25px"} />
                               </Col>
                             ) : pretty && activeTab !== -1 && props.isJsonString(tabs[activeTab].response) ? (
-                              <ReactJson
+                              <ReactJsonWrapper
                                 src={JSON.parse(tabs[activeTab].response)}
                                 displayDataTypes={true}
-                                enableClipboard={(e) => customCopyFunction(e.src)}
-                                theme={
-                                  localStorage.getItem("darkMode") === "true"
-                                    ? {
-                                        base00: "#141332",
-                                        base01: "#ddd",
-                                        base02: "#ddd",
-                                        base03: "#dbd9d9",
-                                        base04: "#B099D9",
-                                        base05: "#dbd9d9",
-                                        base06: "#dbd9d9",
-                                        base07: "#dbd9d9",
-                                        base08: "#dbd9d9",
-                                        base09: "#845ad1",
-                                        base0A: "#845ad1",
-                                        base0B: "#845ad1",
-                                        base0C: "#845ad1",
-                                        base0D: "#845ad1",
-                                        base0E: "#845ad1",
-                                        base0F: "#333",
-                                      }
-                                    : {
-                                        base00: "white",
-                                        base01: "#ddd",
-                                        base02: "#ddd",
-                                        base03: "#444",
-                                        base04: "#B099D9",
-                                        base05: "#444",
-                                        base06: "#444",
-                                        base07: "#444",
-                                        base08: "#444",
-                                        base09: "#6F42C1",
-                                        base0A: "#6F42C1",
-                                        base0B: "#6F42C1",
-                                        base0C: "#6F42C1",
-                                        base0D: "#6F42C1",
-                                        base0E: "#6F42C1",
-                                        base0F: "#333",
-                                      }
-                                }
+                                enableClipboard={(e: any) => customCopyFunction(e.src)}
                               />
                             ) : activeTab === -1 ? (
                               ""
                             ) : (
-                              tabs[activeTab].response
+                              <Text as={"span"}>{tabs[activeTab].response}</Text>
                             )}
                           </div>
                         ) : (
@@ -1014,33 +975,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
                                               {moment.unix(elem.Timestamp / 1000).format("YYYY-MM-DD HH:mm:ss.SSS")}
                                             </Text>
 
-                                            <Text
-                                              as={"td"}
-                                              fontSize="14"
-                                              className="text-left"
-                                              style={{
-                                                width: "100%",
-                                                borderBottom: "1px solid #6F42C1",
-                                                color:
-                                                  elem.Message.search("ERROR") !== -1
-                                                    ? "#f9301e"
-                                                    : elem.Message.search("WARNING") !== -1
-                                                      ? "#f9b31e"
-                                                      : elem.Message.search("INFO") !== -1
-                                                        ? "#28944F"
-                                                        : "inherit",
-                                              }}
-                                            >
-                                              {/* show {elem.Message} and make INFO, ERROR with bold  - do the split by /t and space */}
-                                              {/* regex that mathc by \t and space */}
-                                              {/* split by regex */}
-                                              {elem.Message.split(/(\t|\s|:)/).map((word: any) => {
-                                                if (MESSAGES_TYPES.includes(word)) {
-                                                  return <b key={Math.random() * 1000}>{word}</b>;
-                                                }
-                                                return word;
-                                              })}
-                                            </Text>
+                                            <LogWrapper element={elem} />
                                           </tr>
                                         );
                                       })}

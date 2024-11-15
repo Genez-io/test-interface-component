@@ -374,7 +374,6 @@ export const Parameters: React.FC<ParametersProps> = ({
                     paramValue={storedParameterValue ? storedParameterValue : currentParamData?.value}
                     updateFunction={updateParam}
                     key={param.name + tabs[activeTab].method.name}
-                    customStyles={colourStyles}
                     isPrimitive={isFullAST && checkParamInputType(currentParamData?.value).value}
                     valueProp={
                       param.value

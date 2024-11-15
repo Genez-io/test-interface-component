@@ -664,11 +664,12 @@ padding: 5px 8px;
   border-radius: 0.25rem;
   line-height: 1;
   background-image: none;
-  color: #000;
+  color: ${(props) => props.theme.colors.purple200};
 }
 
 .btn-continue {
   color: ${(props) => props.theme.colors.white};
+  background-color: ${(props) => props.theme.colors.red};
   text-align: center;
   vertical-align: middle;
   user-select: none;
@@ -738,7 +739,7 @@ h6 {
     padding: 1em 1.5em 0.4em 1.5em !important;
     margin: 0;
     line-height: 2em;
-    color: #1a1630;
+    color: ${(props) => props.theme.colors.white};
     position: relative;
     border: 1px solid #ebecf1;
     margin: 10px 0;
@@ -746,12 +747,16 @@ h6 {
     line-height: 30px;
 }
 
+.Mui-selected {
+    background-color: transparent !important;
+}
+
 /* Form */
 
 .form-control {
     padding: 0.375rem 0.75rem;
-    border: 1px solid #ededf5 !important;
-    color: #4a4a69;
+    border: 1px solid #ededf5;
+    color: ${(props) => props.theme.colors.white};
     display: block;
     width: 100%;
     height: 40px;
@@ -759,13 +764,17 @@ h6 {
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 2;
-    background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #ededf5;
     border-radius: 5px;
     transition: border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
+    background-color: ${(props) => props.theme.colors.black300};
     }
+
+  
+
+  
+  
 
 .form-control-sm {
     height: calc(1.5em + 0.5rem + 2px);
@@ -782,6 +791,16 @@ input {
     font-size: inherit;
     line-height: inherit;
 }
+
+.port-input-div input:focus {
+  outline: 1px solid #d61a1a !important;
+}
+
+.port-input-div .form-control {
+  border: 1px solid #C35353 !important;
+}
+
+
 
 
 /* Panels */
@@ -917,6 +936,7 @@ input {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      color: ${(props) => props.theme.colors.white};
 
       &.with-close {
         width: calc(100% - 45px);
@@ -1135,7 +1155,7 @@ tbody {
 }
 
 .table tbody tr {
-    background-color: #ffffff80;
+    background-color: ${(props) => props.theme.colors.black300};
 }
 
 tr {

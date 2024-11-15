@@ -15,6 +15,8 @@ export interface Theme {
     purple500: string;
     purple700: string;
     purple800: string;
+    darkPurple100: string;
+    darkPurple200: string;
     darkPurple300: string;
     darkPurple500: string;
     darkPurple700: string;
@@ -48,6 +50,8 @@ export const lightTheme: Theme = {
     purple500: "#EBD9FD", //
     purple700: "#DEBEFE",
     purple800: "#C995FC",
+    darkPurple100: "#a574fc",
+    darkPurple200: "#8040C1",
     darkPurple300: "#7730BA",
     darkPurple500: "#6D2BAB",
     darkPurple700: "#6D2BAB",
@@ -73,6 +77,7 @@ export const darkTheme: Theme = {
   name: "dark",
   background: "#111111", //
   color: "#FAFAFA", //
+
   colors: {
     inactive: "#2D2E2E",
     purple200: "#994CE0", //
@@ -80,6 +85,8 @@ export const darkTheme: Theme = {
     purple500: "#523190", //
     purple700: "#2C1950",
     purple800: "#231340",
+    darkPurple100: "#985eff",
+    darkPurple200: "#985eff",
     darkPurple300: "#7730BA",
     darkPurple500: "#6D2BAB",
     darkPurple700: "#542185", //

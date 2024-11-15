@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 const Card = styled.div`
   ${({ theme }) => {
-    console.log(theme);
     return `
       background-color: ${theme.colors.black300};
       border:1px solid ${theme.colors.grey600};

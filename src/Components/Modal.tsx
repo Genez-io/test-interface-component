@@ -40,6 +40,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.grey800};
 `;
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {

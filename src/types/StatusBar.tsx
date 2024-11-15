@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row, Button, Text } from "../Components";
-import { Form } from "react-bootstrap";
+import { useTheme } from "styled-components";
 
 export const StatusBar: React.FC<{
   environment: string;
@@ -13,6 +13,7 @@ export const StatusBar: React.FC<{
 }> = ({ environment, success, port, url, tabs, activeTab, updatePort }) => {
   const [value, setValue] = React.useState<any>("");
 
+  const theme = useTheme();
   return (
     <div className="mx-lg-4 mx-0 px-4 px-lg-0 mt-4 mb-4 w-100">
       {success ? (
@@ -67,7 +68,7 @@ export const StatusBar: React.FC<{
                     Enter port:
                   </Text>
                 </Col>
-                <Col lg={4} className="mr-3 mr-lg-0" style={{ paddingTop: "2px" }}>
+                <Col lg={4} className="mr-3 mr-lg-0 port-input-div" style={{ paddingTop: "2px" }}>
                   <input
                     type="text"
                     className="form-control form-control-sm"
@@ -94,6 +95,7 @@ export const StatusBar: React.FC<{
                   <Button
                     size="sm"
                     variant="purple500"
+                    style={{ color: `${theme.colors.white}` }}
                     className="mt-2 mb-2 mt-lg-0 mb-lg-0"
                     noIconFill={true}
                     onClick={() => {
