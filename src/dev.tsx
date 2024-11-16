@@ -21,6 +21,7 @@ const props = {
   environmentOptions: environmentOptions,
   isJsonString: isJsonString,
   leftCard: LeftCard,
+  isDarkMode: false,
   parameters: Parameters,
   projectId: "local",
   port: port,
@@ -32,6 +33,7 @@ root.render(
   <TestInterface
     axios={props.axios}
     statusBar={props.statusBar}
+    isDarkMode={props.isDarkMode}
     testInterfaceModal={props.testInterfaceModal}
     environmentOptions={props.environmentOptions}
     isJsonString={props.isJsonString}

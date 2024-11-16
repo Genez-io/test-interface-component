@@ -17,31 +17,9 @@ export const useTheme = () => {
   return context;
 };
 
-export const ThemeProviderWithToggle: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState(lightTheme);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setTheme(darkTheme);
-    } else {
-      setTheme(lightTheme);
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === darkTheme ? lightTheme : darkTheme;
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme === darkTheme ? "dark" : "light");
-  };
-  return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        toggleTheme,
-      }}
-    >
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </ThemeContext.Provider>
-  );
+export const ThemeProviderWrapper: React.FC<{ children: React.ReactNode; isDarkMode: boolean }> = ({
+  children,
+  isDarkMode,
+}) => {
+  return <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>{children}</ThemeProvider>;
 };

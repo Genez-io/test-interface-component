@@ -23,7 +23,7 @@ import {
 } from "./types/Utils";
 import { CollaboratorDetails } from "./types/CollaborationModels";
 import { getCurrentCollaboratorDetails, getFunctionLogs, getLogs, getProjectById } from "./types/ApiAxios";
-import { ThemeProviderWithToggle } from "./contexts/ThemeContext";
+import { ThemeProviderWrapper } from "./contexts/ThemeContext";
 import GlobalStyles from "./globalStyles";
 import Skeleton from "react-loading-skeleton";
 import { ReactJsonWrapper } from "./types/ReactJsonWrapper";
@@ -42,6 +42,7 @@ export interface TestInterfaceProps {
   isJsonString: typeof isJsonString;
   leftCard: typeof LeftCard;
   parameters: typeof Parameters;
+  isDarkMode: boolean;
   projectId?: string;
   envId?: string;
   port?: number;
@@ -693,7 +694,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
   };
 
   return (
-    <ThemeProviderWithToggle>
+    <ThemeProviderWrapper isDarkMode={props.isDarkMode}>
       <GlobalStyles />
       <div className="pt-3 pb-3 pl-3 pr-3">
         {/* <!-- Modal --> */}
@@ -1000,6 +1001,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
         </Row>
         {/* <!-- /Main Content --> */}
       </div>
-    </ThemeProviderWithToggle>
+    </ThemeProviderWrapper>
   );
 };
