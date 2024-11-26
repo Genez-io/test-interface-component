@@ -558,11 +558,11 @@ const GlobalStyles = createGlobalStyle`
     }
 
     ::-webkit-scrollbar-thumb {
-    background: #1cd5ae33;
+    background: #939393;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-    background: #adb5bd;
+    background: #c5c4c4;
     }
 
   /* Font */

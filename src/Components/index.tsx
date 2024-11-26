@@ -13,6 +13,7 @@ import Modal from "./Modal";
 import Dropdown from "./Dropdown";
 import Switch from "./Switch";
 import Anchor from "./Anchor";
+import ThemeSwitch from "./ThemeSwitch";
 
 export {
   Button,
@@ -30,4 +31,5 @@ export {
   Dropdown,
   Switch,
   Anchor,
+  ThemeSwitch,
 };

@@ -872,18 +872,18 @@ export const TestInterface = (props: TestInterfaceProps) => {
                     {dataTabs === "Response" && (
                       <Row className="mt-2">
                         <Button
-                          variant={pretty ? "darkPurple100" : "grey700"}
+                          variant={pretty ? "purple700" : "grey700"}
+                          hoverVariant="purple700"
                           textVariant="white"
-                          hoverVariant="darkPurple100"
                           onClick={() => setPretty(true)}
                           disabled={activeTab === -1 || !props.isJsonString(tabs[activeTab].response)}
                         >
                           Pretty
                         </Button>
                         <Button
-                          variant={!pretty ? "darkPurple100" : "grey700"}
+                          variant={!pretty ? "purple700" : "grey700"}
+                          hoverVariant="purple700"
                           textVariant="white"
-                          hoverVariant="darkPurple100"
                           onClick={() => setPretty(false)}
                           disabled={activeTab === -1 || tabs[activeTab].response === ""}
                         >
