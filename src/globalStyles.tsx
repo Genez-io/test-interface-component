@@ -537,10 +537,10 @@ const GlobalStyles = createGlobalStyle`
 
 
     /* Border */
-    .border-bottom { border-bottom: 1px solid #ededf5 !important; }
-    .border-top { border-top: 1px solid #ededf5 !important; }
-    .border-left { border-left: 1px solid #ededf5 !important; }
-    .border-right { border-right: 1px solid #ededf5 !important; }
+    .border-bottom { border-bottom: 1px solid ${(props) => props.theme.colors.grey700} !important; }
+    .border-top { border-top: 1px solid ${(props) => props.theme.colors.grey700} !important; }
+    .border-left { border-left: 1px solid ${(props) => props.theme.colors.grey700} !important; }
+    .border-right { border-right: 1px solid ${(props) => props.theme.colors.grey00} !important; }
     .border-primary {
     border-color: #6f42c1 !important;
     }
@@ -741,7 +741,7 @@ h6 {
     line-height: 2em;
     color: ${(props) => props.theme.colors.white};
     position: relative;
-    border: 1px solid #ebecf1;
+    border: 1px solid ${(props) => props.theme.colors.grey700};
     margin: 10px 0;
     border-radius: 5px;
     line-height: 30px;
@@ -759,7 +759,7 @@ h6 {
 
 .form-control {
     padding: 0.375rem 0.75rem;
-    border: 1px solid #ededf5;
+    border: 1px solid ${(props) => props.theme.colors.grey700};
     color: ${(props) => props.theme.colors.white};
     display: block;
     width: 100%;
@@ -794,6 +794,10 @@ input {
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
+}
+
+input:focus {
+  outline: 1px solid ${(props) => props.theme.colors.grey600} !important;
 }
 
 .port-input-div input:focus {
