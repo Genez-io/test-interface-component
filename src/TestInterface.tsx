@@ -706,7 +706,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
           {/* <!-- Left Card (Classes Sidebar) --> */}
           {cameFromProduction && !environment.label ? (
             <Col xl={3} md={12}>
-              <Card style={{ height: "85vh" }}>
+              <Card style={{ height: "85vh" }} className="border cardBackground">
                 <Skeleton count={6} className="w-85 mx-4 my-3" height={"35px"} />
               </Card>
             </Col>
@@ -729,7 +729,10 @@ export const TestInterface = (props: TestInterfaceProps) => {
           {/* <!-- /Left Card (Classes Sidebar) --> */}
           {/* <!-- Right Card (Tabs and Calling Functions) --> */}
           <Col xl={9} md={12}>
-            <Card style={{ height: "85vh", display: "flex", flexDirection: "column" }}>
+            <Card
+              style={{ height: "85vh", display: "flex", flexDirection: "column" }}
+              className="border cardBackground"
+            >
               {/* <!-- Status Bar and Calling Button --> */}
               <Row>
                 <Col lg={10}>

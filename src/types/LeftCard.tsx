@@ -36,7 +36,7 @@ export const LeftCard: React.FC<LeftCardProps> = ({
   const theme = useTheme();
   return (
     <Col xl={3} md={12}>
-      <Card style={{ height: "85vh", overflow: "hidden" }}>
+      <Card style={{ height: "85vh", overflow: "hidden" }} className="border cardBackground">
         <div className="mx-4 mt-4 mb-4 h-100">
           <Row>
             <Col xs={10}>

@@ -751,6 +751,10 @@ h6 {
     background-color: transparent !important;
 }
 
+.MuiTreeItem-label {
+  font-size: 14px !important;
+}
+
 /* Form */
 
 .form-control {
@@ -1184,6 +1188,21 @@ border: 0 #ededf5;
 
 td {
 border: 0 #ededf5;
+}
+
+
+.shadow { 
+    box-shadow: 0 4px 8px rgba(217, 217, 217, 0.05),
+                0 4px 16px rgba(115, 115, 115, 0.1);
+}
+
+/* Border */
+.border{
+    border: 1px solid  ${(props) => props.theme.colors.grey700};
+}
+
+.cardBackground {
+    background-color: ${(props) => props.theme.colors.black300};
 }
 
 
