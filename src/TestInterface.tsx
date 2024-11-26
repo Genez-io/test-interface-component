@@ -749,9 +749,8 @@ export const TestInterface = (props: TestInterfaceProps) => {
                 <Col lg={2} className="d-flex justify-content-center">
                   <Button
                     ref={sendButtonRef}
-                    variant="darkPurple200"
-                    textVariant="black300"
-                    hoverVariant="grey800"
+                    variant="darkPurple300"
+                    style={{ justifyContent: "center" }}
                     className="mr-2 mx-2 mt-4 mb-4 w-75 "
                     disabled={!connected || activeTab === -1 || tabs[activeTab].method.type === "http"}
                     onClick={() => {
@@ -876,8 +875,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
                       <Row className="mt-2">
                         <Button
                           variant={pretty ? "purple700" : "grey700"}
-                          hoverVariant="purple700"
-                          textVariant="white"
                           onClick={() => setPretty(true)}
                           disabled={activeTab === -1 || !props.isJsonString(tabs[activeTab].response)}
                         >
@@ -885,8 +882,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
                         </Button>
                         <Button
                           variant={!pretty ? "purple700" : "grey700"}
-                          hoverVariant="purple700"
-                          textVariant="white"
                           onClick={() => setPretty(false)}
                           disabled={activeTab === -1 || tabs[activeTab].response === ""}
                         >

@@ -736,7 +736,7 @@ h6 {
 }
 
 .tree li {
-    padding: 1em 1.5em 0.4em 1.5em !important;
+    padding: 0.4em 1.5em 0.4em 1.5em !important;
     margin: 0;
     line-height: 2em;
     color: ${(props) => props.theme.colors.white};
