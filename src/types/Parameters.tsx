@@ -325,20 +325,20 @@ export const Parameters: React.FC<ParametersProps> = ({
         ) : (
           <>
             <Row>
-              <Col sm={3} className="border-bottom border-top  px-4">
+              <Col sm={2} className="border-bottom border-top  px-4">
                 <Text as={"div"} className="border-left py-2 px-4" fontSize="14">
-                  <Text as={"div"}>NAME</Text>
+                  <Text as={"div"}>Name</Text>
                 </Text>
               </Col>
-              <Col sm={isFullAST ? 9 : 6} className="pt-2 pb-2 border-bottom border-left border-top">
+              <Col sm={isFullAST ? 10 : 7} className="pt-2 pb-2 border-bottom border-left border-top">
                 <Text as={"div"} fontSize="14">
-                  VALUE
+                  Value
                 </Text>
               </Col>
               {!isFullAST && (
                 <Col sm={3} className="pt-2 pb-2 border-bottom border-left border-top">
                   <Text as={"div"} fontSize="14">
-                    TYPE
+                    Type
                   </Text>
                 </Col>
               )}

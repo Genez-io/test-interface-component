@@ -736,7 +736,7 @@ h6 {
 }
 
 .tree li {
-    padding: 0.4em 1.5em 0.4em 1.5em !important;
+    padding: 0.4em 1em 0.4em 1em !important;
     margin: 0;
     line-height: 2em;
     color: ${(props) => props.theme.colors.white};
@@ -753,6 +753,10 @@ h6 {
 
 .MuiTreeItem-label {
   font-size: 14px !important;
+}
+
+.no-icon-tree-item .MuiTreeItem-content .MuiTreeItem-iconContainer {
+  display: none !important;
 }
 
 /* Form */

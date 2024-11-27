@@ -4,6 +4,7 @@ import { getPresignedURLForProjectCode, getPresignedURLForProjectCodeUpload, Pro
 import { fileTypeFromBlob, FileTypeResult } from "file-type";
 import JSZip from "jszip";
 import { DefaultTheme, useTheme } from "styled-components";
+import { Option } from "src/Components/Select";
 
 export enum typeOption {
   Primitive = "Primitive",
@@ -35,7 +36,7 @@ export const environmentOptions: dropdownOption[] = [
   },
 ];
 
-export const typeOptions: readonly dropdownOption[] = [
+export const typeOptions: Option[] = [
   {
     value: "Primitive",
     label: "Primitive",
@@ -50,7 +51,7 @@ export const typeOptions: readonly dropdownOption[] = [
   },
 ];
 
-export const requestTypeOptions: readonly dropdownOption[] = [
+export const requestTypeOptions: Option[] = [
   {
     value: "GET",
     label: "GET",

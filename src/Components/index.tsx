@@ -14,6 +14,7 @@ import Dropdown from "./Dropdown";
 import Switch from "./Switch";
 import Anchor from "./Anchor";
 import ThemeSwitch from "./ThemeSwitch";
+import Select from "./Select";
 
 export {
   Button,
@@ -31,5 +32,6 @@ export {
   Dropdown,
   Switch,
   Anchor,
+  Select,
   ThemeSwitch,
 };

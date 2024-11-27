@@ -27,6 +27,7 @@ export const ClassesSidebar: React.FC<{
             {classItem.ast.methods.map((method) => {
               return (
                 <TreeItem
+                  className="no-icon-tree-item"
                   itemId={classItem.name + method.name}
                   key={classItem.name + method.name}
                   label={method.name}

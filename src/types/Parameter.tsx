@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Text } from "../Components";
-import Select from "react-select";
+import React, { useState, useEffect, useRef } from "react";
+import { Row, Col, Text, Select } from "../Components";
 import Editor from "@monaco-editor/react";
 import { colourStyles, requestTypeOptions, typeOptions } from "./Utils";
 import { useMonaco } from "@monaco-editor/react";
 import { useTheme } from "styled-components";
+import { Option } from "src/Components/Select";
+import { editor } from "monaco-editor";
 
 export const Parameter: React.FC<{
   name: string;
@@ -62,14 +63,18 @@ export const Parameter: React.FC<{
     updateFunction(name, value, type, isGnzContext);
   }, [isGnzContext, type, value]);
 
-  const handleEditorDidMount = (editor: any, monaco: any) => {
+  const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor, monaco: any) => {
     const container = document.getElementById(`container-${name}`);
     editor.onDidContentSizeChange(() => {
-      const contentHeight = Math.min(1000, editor.getContentHeight());
+      const contentHeight = editor.getContentHeight();
       if (container) {
         container.style.height = `${contentHeight}px`;
         editor.layout();
       }
+      const numberOfLines = contentHeight / 19;
+      editor.updateOptions({
+        lineNumbersMinChars: Math.max(Math.floor(Math.log10(numberOfLines)) + 2, 2),
+      });
     });
   };
 
@@ -129,12 +134,12 @@ export const Parameter: React.FC<{
 
   return (
     <Row>
-      <Col sm={3} className="d-flex border-bottom px-4 w-100">
+      <Col sm={2} className="d-flex border-bottom px-4 w-100">
         <Text as={"div"} className="border-left py-3 px-4 w-100" fontSize="14" style={{ wordWrap: "break-word" }}>
           {name}
         </Text>
       </Col>
-      <Col sm={isFunctionUrl() ? 6 : isFullAST ? 9 : 6} className="pt-2 pb-2 border-bottom border-left w-100">
+      <Col sm={isFunctionUrl() ? 7 : isFullAST ? 10 : 7} className="pt-2 pb-2 border-bottom border-left w-100">
         {(isFullAST && type === "Primitive") || (!isFullAST && type.value === "Primitive") ? (
           <input
             type="text"
@@ -178,6 +183,9 @@ export const Parameter: React.FC<{
                 tabSize: 2,
                 scrollBeyondLastLine: false,
                 showFoldingControls: "always",
+                scrollbar: {
+                  alwaysConsumeMouseWheel: false,
+                },
               }}
               onChange={(v: any) => {
                 if (isFullAST) {
@@ -210,7 +218,6 @@ export const Parameter: React.FC<{
               placeholder="Type"
               classNamePrefix="selectform"
               value={type}
-              styles={colourStyles(theme)}
               menuPortalTarget={document.body}
             />
           </div>
@@ -226,13 +233,12 @@ export const Parameter: React.FC<{
               }
               onChange={(t) => {
                 setRequestType(t);
-                updateRequestType(t.value);
+                updateRequestType((t as Option).value);
               }}
               options={requestTypeOptions}
               placeholder="Type"
               classNamePrefix="selectform"
               value={requestType}
-              styles={colourStyles(theme)}
               menuPortalTarget={document.body}
             />
           </div>

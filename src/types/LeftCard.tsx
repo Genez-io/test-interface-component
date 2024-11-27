@@ -1,9 +1,8 @@
 import React from "react";
 
 import { ClassesSidebar } from "./ClassesSidebar";
-import Select from "react-select";
 import { colourStyles } from "./Utils";
-import { Card, Col, Row, Text } from "../Components";
+import { Card, Col, Row, Select, Text } from "../Components";
 import { Icon } from "@iconify/react";
 import Skeleton from "react-loading-skeleton";
 import { useTheme } from "styled-components";
@@ -64,11 +63,10 @@ export const LeftCard: React.FC<LeftCardProps> = ({
                   defaultValue={environmentOptions[0]}
                   onChange={(e) => setEnvironment(e)}
                   options={environmentOptions}
-                  placeholder="Type"
+                  placeholder="Select..."
                   classNamePrefix="selectform"
                   value={environment}
                   isDisabled={projectId === "local"}
-                  styles={colourStyles(theme)}
                 />
               </div>
             </Col>
