@@ -95,8 +95,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
   const [activeEnv, setActiveEnv] = useState<any>({});
   const [isCollaboratorProd, setIsCollaboratorProd] = useState<boolean>(false);
 
-  const [isCollaboratorProd, setIsCollaboratorProd] = useState<boolean>(false);
-
   const [loading, setLoading] = useState<boolean>(false);
   const [connected, setConnected] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -143,6 +141,10 @@ export const TestInterface = (props: TestInterfaceProps) => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [startTime]);
+
+  useEffect(() => {
+    fetchCurrentCollaboratorDetails();
+  }, []);
 
   useEffect(() => {
     if (cameFromProduction && activeEnv.name && !environment?.label) {
@@ -221,19 +223,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
         setActiveEnv(localActiveEnv);
         setClasses(localActiveEnv.classes);
         setConnected(true);
-
-        const collanboratorDetails = await fetchCurrentCollaboratorDetails();
-        if (localActiveEnv.name === "prod" && collanboratorDetails?.role === "collaborator") {
-          setIsCollaboratorProd(true);
-          toast.error("You are not authorized to access the test interface on stage prod.");
-
-          if (window.location.pathname !== "/dashboard") {
-            console.log("Redirecting to dashboard");
-            setTimeout(() => {
-              navigate("/dashboard");
-            }, 3000);
-          }
-        }
       } else if (res.response.data.error.code === 2 || res.response.data.error.code === 6) {
         navigate("/dashboard");
       }
@@ -723,11 +712,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
     }
   };
 
-  return isCollaboratorProd ? (
-    <>
-      <Notifications />
-    </>
-  ) : (
+  return (
     <ThemeProviderWrapper isDarkMode={props.isDarkMode}>
       <GlobalStyles />
       {!isCollaboratorProd && (
