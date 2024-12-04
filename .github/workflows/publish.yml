@@ -25,6 +25,12 @@ jobs:
           npm install --legacy-peer-deps
           npm run build
           npm publish --access=public
+      - name: Generate Dev Version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          DEV_VERSION="${CURRENT_VERSION}-dev"
+          echo "DEV_VERSION=${DEV_VERSION}" >> $GITHUB_OUTPUT
+          npm version $DEV_VERSION --no-git-tag-version
       - name: Development Build and Publish
         env:
           VITE_API_BASE_URL: "https://dev.api.genez.io"
