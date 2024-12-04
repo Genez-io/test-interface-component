@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Spinner } from "react-bootstrap";
 import { Row, Col, Card, Button, Alert, Text } from "./Components";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
 
@@ -94,6 +93,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
 
   const [classes, setClasses] = useState<ClassType[]>([]);
   const [activeEnv, setActiveEnv] = useState<any>({});
+  const [isCollaboratorProd, setIsCollaboratorProd] = useState<boolean>(false);
 
   const [isCollaboratorProd, setIsCollaboratorProd] = useState<boolean>(false);
 
@@ -143,10 +143,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [startTime]);
-
-  useEffect(() => {
-    fetchCurrentCollaboratorDetails();
-  }, []);
 
   useEffect(() => {
     if (cameFromProduction && activeEnv.name && !environment?.label) {
@@ -225,6 +221,19 @@ export const TestInterface = (props: TestInterfaceProps) => {
         setActiveEnv(localActiveEnv);
         setClasses(localActiveEnv.classes);
         setConnected(true);
+
+        const collanboratorDetails = await fetchCurrentCollaboratorDetails();
+        if (localActiveEnv.name === "prod" && collanboratorDetails?.role === "collaborator") {
+          setIsCollaboratorProd(true);
+          toast.error("You are not authorized to access the test interface on stage prod.");
+
+          if (window.location.pathname !== "/dashboard") {
+            console.log("Redirecting to dashboard");
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 3000);
+          }
+        }
       } else if (res.response.data.error.code === 2 || res.response.data.error.code === 6) {
         navigate("/dashboard");
       }
@@ -709,11 +718,16 @@ export const TestInterface = (props: TestInterfaceProps) => {
 
       if (res.status === 200 && res.data.status === "ok") {
         setCurrentCollaboratorDetails(res.data);
+        return res.data;
       }
     }
   };
 
-  return (
+  return isCollaboratorProd ? (
+    <>
+      <Notifications />
+    </>
+  ) : (
     <ThemeProviderWrapper isDarkMode={props.isDarkMode}>
       <GlobalStyles />
       {!isCollaboratorProd && (
