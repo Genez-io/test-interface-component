@@ -21,14 +21,14 @@ import {
   syncTabs,
 } from "./types/Utils";
 import { CollaboratorDetails } from "./types/CollaborationModels";
-import { getCurrentCollaboratorDetails, getFunctionLogs, getAllLogs, getProjectById } from "./types/ApiAxios";
+import { getAllLogs, getCurrentCollaboratorDetails, getFunctionLogs, getProjectById } from "./types/ApiAxios";
 import { ThemeProviderWrapper } from "./contexts/ThemeContext";
 import GlobalStyles from "./globalStyles";
 import Skeleton from "react-loading-skeleton";
 import { ReactJsonWrapper } from "./types/ReactJsonWrapper";
 import { LogWrapper } from "./types/LogWrapper";
-import Notifications from "./Components/Notifications";
 import toast from "react-hot-toast";
+import Notifications from "./Components/Notifications";
 
 export interface TestInterfaceProps {
   axios: {
@@ -95,6 +95,8 @@ export const TestInterface = (props: TestInterfaceProps) => {
   const [activeEnv, setActiveEnv] = useState<any>({});
   const [isCollaboratorProd, setIsCollaboratorProd] = useState<boolean>(false);
 
+  const [isCollaboratorProd, setIsCollaboratorProd] = useState<boolean>(false);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [connected, setConnected] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -115,6 +117,19 @@ export const TestInterface = (props: TestInterfaceProps) => {
   );
 
   const sendButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (activeEnv.name === "prod" && currentCollaboratorDetails?.role === "collaborator") {
+      setIsCollaboratorProd(true);
+      toast.error("You are not authorized to access the test interface on stage prod.");
+      if (window.location.pathname !== "/dashboard") {
+        console.log("Redirecting to dashboard");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 3000);
+      }
+    }
+  }, [activeEnv, currentCollaboratorDetails]);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -715,309 +730,312 @@ export const TestInterface = (props: TestInterfaceProps) => {
   ) : (
     <ThemeProviderWrapper isDarkMode={props.isDarkMode}>
       <GlobalStyles />
-      <div className="pt-3 pb-3 pl-3 pr-3">
-        {/* <!-- Modal --> */}
-        <props.testInterfaceModal modal={modal} name={project?.name} onHide={() => setModal(false)} />
-        {/* <!-- /Modal --> */}
+      {!isCollaboratorProd && (
+        <div className="pt-3 pb-3 pl-3 pr-3">
+          {/* <!-- Modal --> */}
+          <props.testInterfaceModal modal={modal} name={project?.name} onHide={() => setModal(false)} />
+          {/* <!-- /Modal --> */}
 
-        {/* <!-- Main Content --> */}
-        <Row>
-          {/* <!-- Left Card (Classes Sidebar) --> */}
-          {cameFromProduction && !environment.label ? (
-            <Col xl={3} md={12}>
-              <Card style={{ height: "85vh" }} className="border cardBackground">
-                <Skeleton count={6} className="w-85 mx-4 my-3" height={"35px"} />
-              </Card>
-            </Col>
-          ) : (
-            <props.leftCard
-              environmentOptions={currentEnvironmentOptions}
-              environment={environment}
-              projectId={projectId}
-              classes={classes}
-              updateMethod={updateMethod}
-              activeTab={activeTab}
-              tabs={tabs}
-              loadingRefresh={loadingRefresh}
-              setRefresh={() => setRefresh(!refresh)}
-              setEnvironment={(t: any) => {
-                setEnvironment(t ?? { value: "Local", label: "Local" });
-              }}
-            />
-          )}
-          {/* <!-- /Left Card (Classes Sidebar) --> */}
-          {/* <!-- Right Card (Tabs and Calling Functions) --> */}
-          <Col xl={9} md={12}>
-            <Card
-              style={{ height: "85vh", display: "flex", flexDirection: "column" }}
-              className="border cardBackground"
-            >
-              {/* <!-- Status Bar and Calling Button --> */}
-              <Row>
-                <Col lg={10}>
-                  <props.statusBar
-                    success={connected}
-                    port={port}
-                    environment={environment?.value || "Local"}
-                    url={activeTab === -1 ? "" : getUrl()}
-                    updatePort={setPort}
-                    tabs={tabs}
-                    activeTab={activeTab}
-                  />
-                </Col>
-                <Col lg={2} className="d-flex justify-content-center">
-                  <Button
-                    ref={sendButtonRef}
-                    variant="darkPurple300"
-                    style={{ justifyContent: "center" }}
-                    className="mr-2 mx-2 mt-4 mb-4 w-75 "
-                    disabled={!connected || activeTab === -1 || tabs[activeTab].method.type === "http"}
-                    onClick={() => {
-                      environment?.value === "Production" &&
-                        setStartTime(startTime === "" ? new Date().getTime() : startTime);
-                      setReqTab(tabs[activeTab].tab);
-                      setLogsLoading(true);
-                      setDataTabs("Response");
-                      setReqClass(tabs[activeTab].className);
-                      if (tabs[activeTab].method.type === "function") {
-                        sendFunctionRequest();
-                      } else {
-                        sendRequest();
-                      }
-                    }}
-                  >
-                    {loading ? <Spinner animation="border" size="sm" /> : "Send"}
-                  </Button>
-                </Col>
-              </Row>
-              {/* <!-- /Status Bar and Calling Button --> */}
-
-              {/* <!-- Resizable Pannels --> */}
-              <PanelGroup direction="vertical">
-                {/* <!-- Upper Panel (Tabs and Parameters) --> */}
-                <Panel maxSize={90} defaultSize={60}>
-                  {/* <!-- Tabs --> */}
-                  <div className="mb-4" style={{ height: "30px" }}>
-                    <Tabs
-                      active={activeTab}
-                      onTabSwitch={(index: number) => {
-                        setActiveTab(index);
-                        localStorage.setItem(project.name, JSON.stringify({ activeTab: index, tabs }));
+          {/* <!-- Main Content --> */}
+          <Row>
+            {/* <!-- Left Card (Classes Sidebar) --> */}
+            {cameFromProduction && !environment.label ? (
+              <Col xl={3} md={12}>
+                <Card style={{ height: "85vh" }} className="border cardBackground">
+                  <Skeleton count={6} className="w-85 mx-4 my-3" height={"35px"} />
+                </Card>
+              </Col>
+            ) : (
+              <props.leftCard
+                environmentOptions={currentEnvironmentOptions}
+                environment={environment}
+                projectId={projectId}
+                classes={classes}
+                updateMethod={updateMethod}
+                activeTab={activeTab}
+                tabs={tabs}
+                loadingRefresh={loadingRefresh}
+                setRefresh={() => setRefresh(!refresh)}
+                setEnvironment={(t: any) => {
+                  setEnvironment(t ?? { value: "Local", label: "Local" });
+                }}
+              />
+            )}
+            {/* <!-- /Left Card (Classes Sidebar) --> */}
+            {/* <!-- Right Card (Tabs and Calling Functions) --> */}
+            <Col xl={9} md={12}>
+              <Card
+                style={{ height: "85vh", display: "flex", flexDirection: "column" }}
+                className="border cardBackground"
+              >
+                {/* <!-- Status Bar and Calling Button --> */}
+                <Row>
+                  <Col lg={10}>
+                    <props.statusBar
+                      success={connected}
+                      port={port}
+                      environment={environment?.value || "Local"}
+                      url={activeTab === -1 ? "" : getUrl()}
+                      updatePort={setPort}
+                      tabs={tabs}
+                      activeTab={activeTab}
+                    />
+                  </Col>
+                  <Col lg={2} className="d-flex justify-content-center">
+                    <Button
+                      ref={sendButtonRef}
+                      variant="darkPurple300"
+                      style={{ justifyContent: "center" }}
+                      className="mr-2 mx-2 mt-4 mb-4 w-75 "
+                      disabled={!connected || activeTab === -1 || tabs[activeTab].method.type === "http"}
+                      onClick={() => {
+                        environment?.value === "Production" &&
+                          setStartTime(startTime === "" ? new Date().getTime() : startTime);
+                        setReqTab(tabs[activeTab].tab);
+                        setLogsLoading(true);
+                        setDataTabs("Response");
+                        setReqClass(tabs[activeTab].className);
+                        if (tabs[activeTab].method.type === "function") {
+                          sendFunctionRequest();
+                        } else {
+                          sendRequest();
+                        }
                       }}
-                      onTabClose={(index: number) => closeTab(index)}
-                      onTabPositionChange={(a: number, b: number) => dragTabs(a, b)}
-                      draggable
                     >
-                      {tabs.map((tab: TabType, index: number) => (
-                        <Tab title={handleTabTitle(tab)} key={index} showClose></Tab>
-                      ))}
-                    </Tabs>
-                  </div>
-                  {/* <!-- /Tabs --> */}
+                      {loading ? <Spinner animation="border" size="sm" /> : "Send"}
+                    </Button>
+                  </Col>
+                </Row>
+                {/* <!-- /Status Bar and Calling Button --> */}
 
-                  {/* <!-- Parameters --> */}
-                  <props.parameters
-                    classes={classes}
-                    activeTab={activeTab}
-                    tabs={tabs}
-                    url={activeTab === -1 ? "" : getUrl()}
-                    isLocalEnviroment={environment?.value === "Local" ? true : false}
-                    projectName={project?.name}
-                    loadingRefresh={loadingRefresh}
-                    updateParam={updateParam}
-                    updateRequestType={updateFunctionRequestType}
-                  />
-                  {/* <!-- /Parameters --> */}
-                </Panel>
-                {/* <!-- /Upper Panel (Tabs and Parameters) --> */}
-                <PanelResizeHandle>
-                  <hr style={{ borderColor: "black", borderWidth: "0.5px" }} />
-                </PanelResizeHandle>
-                {/* <!-- Lower Panel (Response) --> */}
-                <Panel maxSize={100}>
-                  <div className="pl-5 pr-5 h-100">
-                    <Row>
-                      <Col lg={3} style={{ paddingLeft: "0" }} className="pb-3 pt-1">
-                        {dataTabsOptions.map((option, idx) => (
-                          <Text
-                            as={"span"}
-                            key={idx}
-                            onClick={() => setDataTabs(option)}
-                            className="p-1"
-                            style={{
-                              borderBottom: dataTabs === option ? "2px solid" : "none",
-                              fontWeight: 600,
-                              fontSize: 14,
-                              color: "#666666",
-                              marginLeft: idx !== 0 ? "10px" : "0",
-                              cursor: "pointer",
-                            }}
-                          >
-                            {option}
-                          </Text>
+                {/* <!-- Resizable Pannels --> */}
+                <PanelGroup direction="vertical">
+                  {/* <!-- Upper Panel (Tabs and Parameters) --> */}
+                  <Panel maxSize={90} defaultSize={60}>
+                    {/* <!-- Tabs --> */}
+                    <div className="mb-4" style={{ height: "30px" }}>
+                      <Tabs
+                        active={activeTab}
+                        onTabSwitch={(index: number) => {
+                          setActiveTab(index);
+                          localStorage.setItem(project.name, JSON.stringify({ activeTab: index, tabs }));
+                        }}
+                        onTabClose={(index: number) => closeTab(index)}
+                        onTabPositionChange={(a: number, b: number) => dragTabs(a, b)}
+                        draggable
+                      >
+                        {tabs.map((tab: TabType, index: number) => (
+                          <Tab title={handleTabTitle(tab)} key={index} showClose></Tab>
                         ))}
-                      </Col>
-                      <Col lg={9} className="d-flex align-items-center justify-content-end pb-3 pt-1">
-                        {activeTab !== -1 && tabs[activeTab].response && (
-                          <div>
-                            <Text as={"span"} fontSize="14">
-                              Time:{" "}
-                            </Text>
-                            <Text
-                              as={"span"}
-                              fontSize="14"
-                              style={{
-                                color: "#62C353",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {tabs[activeTab].time}ms
-                            </Text>
-                            <Text as={"span"} fontSize="14" className="ml-4">
-                              Status:{" "}
-                            </Text>
-                            <Text
-                              as={"span"}
-                              fontSize="14"
-                              style={{
-                                color: "#62C353",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {tabs[activeTab].status}
-                            </Text>
-                          </div>
-                        )}
-                      </Col>
-                    </Row>
-                    {dataTabs === "Response" && (
-                      <Row className="mt-2">
-                        <Button
-                          variant={pretty ? "purple700" : "grey700"}
-                          onClick={() => setPretty(true)}
-                          disabled={activeTab === -1 || !props.isJsonString(tabs[activeTab].response)}
-                        >
-                          Pretty
-                        </Button>
-                        <Button
-                          variant={!pretty ? "purple700" : "grey700"}
-                          onClick={() => setPretty(false)}
-                          disabled={activeTab === -1 || tabs[activeTab].response === ""}
-                        >
-                          Raw
-                        </Button>
-                      </Row>
-                    )}
-                    <Row className="h-100 overflow-auto mb-10">
-                      <Col lg={12} className="p-0" style={{ marginBottom: "100px" }}>
-                        {dataTabs === "Response" ? (
-                          <div
-                            className="pt-4 pb-2 w-100"
-                            style={{
-                              fontSize: "14px",
-                            }}
-                          >
-                            {loading ? (
-                              <Col>
-                                <Skeleton count={1} className="w-85 mx-4 my-2" height={"25px"} />
-                              </Col>
-                            ) : pretty && activeTab !== -1 && props.isJsonString(tabs[activeTab].response) ? (
-                              <ReactJsonWrapper
-                                src={JSON.parse(tabs[activeTab].response)}
-                                displayDataTypes={true}
-                                enableClipboard={(e: any) => customCopyFunction(e.src)}
-                              />
-                            ) : activeTab === -1 ? (
-                              ""
-                            ) : (
-                              <Text as={"span"}>{tabs[activeTab].response}</Text>
-                            )}
-                          </div>
-                        ) : (
-                          <>
-                            {logs
-                              .filter((log: any) => log?.classes === currentClass?.className)
-                              .filter((item: any) => item.tab === tabs[activeTab]?.tab).length !== 0 &&
-                              logsLoading && <Alert>Getting logs in progress, it might take up to 10 seconds.</Alert>}
-                            <div
-                              className="table-responsive"
-                              style={{
-                                overflow: "initial",
-                              }}
-                            >
-                              {/* TODO: FILTER by active class */}
-                              {logs
-                                .filter((log: any) => log?.classes === currentClass?.className)
-                                .filter((item: any) => item.tab === tabs[activeTab]?.tab).length === 0 ||
-                              environment?.value === "Local" ? (
-                                <Alert>
-                                  {environment?.value === "Local"
-                                    ? "You can see the logs in the CLI."
-                                    : logsLoading !== true
-                                      ? "There are no logs."
-                                      : "Getting logs in progress, it might take up to 10 seconds."}
-                                </Alert>
-                              ) : (
-                                <table style={{ border: "none" }} className="table borderless mb-0">
-                                  <thead>
-                                    <tr>
-                                      <th className="text-left">
-                                        <Text as={"span"} className="tabletitle" fontSize="14">
-                                          Timestamp
-                                        </Text>
-                                      </th>
-                                      <th className="text-left">
-                                        <Text as={"span"} className="tabletitle" fontSize="14">
-                                          Message
-                                        </Text>
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {/* TODO: create Log component */}
-                                    {logs
-                                      .filter((log: any) => log?.classes === currentClass?.className)
-                                      .filter((item: any) => item.tab === tabs[activeTab]?.tab)
-                                      .reverse()
-                                      .map((elem: any, key: GLint64) => {
-                                        return (
-                                          <tr key={key}>
-                                            <Text
-                                              as={"td"}
-                                              fontSize="14"
-                                              style={{
-                                                borderBottom: "1px solid #6F42C1",
-                                              }}
-                                              className="text-left text-nowrap"
-                                            >
-                                              {moment.unix(elem.Timestamp / 1000).format("YYYY-MM-DD HH:mm:ss.SSS")}
-                                            </Text>
+                      </Tabs>
+                    </div>
+                    {/* <!-- /Tabs --> */}
 
-                                            <LogWrapper element={elem} />
-                                          </tr>
-                                        );
-                                      })}
-                                  </tbody>
-                                </table>
+                    {/* <!-- Parameters --> */}
+                    <props.parameters
+                      classes={classes}
+                      activeTab={activeTab}
+                      tabs={tabs}
+                      url={activeTab === -1 ? "" : getUrl()}
+                      isLocalEnviroment={environment?.value === "Local" ? true : false}
+                      projectName={project?.name}
+                      loadingRefresh={loadingRefresh}
+                      updateParam={updateParam}
+                      updateRequestType={updateFunctionRequestType}
+                    />
+                    {/* <!-- /Parameters --> */}
+                  </Panel>
+                  {/* <!-- /Upper Panel (Tabs and Parameters) --> */}
+                  <PanelResizeHandle>
+                    <hr style={{ borderColor: "black", borderWidth: "0.5px" }} />
+                  </PanelResizeHandle>
+                  {/* <!-- Lower Panel (Response) --> */}
+                  <Panel maxSize={100}>
+                    <div className="pl-5 pr-5 h-100">
+                      <Row>
+                        <Col lg={3} style={{ paddingLeft: "0" }} className="pb-3 pt-1">
+                          {dataTabsOptions.map((option, idx) => (
+                            <Text
+                              as={"span"}
+                              key={idx}
+                              onClick={() => setDataTabs(option)}
+                              className="p-1"
+                              style={{
+                                borderBottom: dataTabs === option ? "2px solid" : "none",
+                                fontWeight: 600,
+                                fontSize: 14,
+                                color: "#666666",
+                                marginLeft: idx !== 0 ? "10px" : "0",
+                                cursor: "pointer",
+                              }}
+                            >
+                              {option}
+                            </Text>
+                          ))}
+                        </Col>
+                        <Col lg={9} className="d-flex align-items-center justify-content-end pb-3 pt-1">
+                          {activeTab !== -1 && tabs[activeTab].response && (
+                            <div>
+                              <Text as={"span"} fontSize="14">
+                                Time:{" "}
+                              </Text>
+                              <Text
+                                as={"span"}
+                                fontSize="14"
+                                style={{
+                                  color: "#62C353",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {tabs[activeTab].time}ms
+                              </Text>
+                              <Text as={"span"} fontSize="14" className="ml-4">
+                                Status:{" "}
+                              </Text>
+                              <Text
+                                as={"span"}
+                                fontSize="14"
+                                style={{
+                                  color: "#62C353",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {tabs[activeTab].status}
+                              </Text>
+                            </div>
+                          )}
+                        </Col>
+                      </Row>
+                      {dataTabs === "Response" && (
+                        <Row className="mt-2">
+                          <Button
+                            variant={pretty ? "purple700" : "grey700"}
+                            onClick={() => setPretty(true)}
+                            disabled={activeTab === -1 || !props.isJsonString(tabs[activeTab].response)}
+                          >
+                            Pretty
+                          </Button>
+                          <Button
+                            variant={!pretty ? "purple700" : "grey700"}
+                            onClick={() => setPretty(false)}
+                            disabled={activeTab === -1 || tabs[activeTab].response === ""}
+                          >
+                            Raw
+                          </Button>
+                        </Row>
+                      )}
+                      <Row className="h-100 overflow-auto mb-10">
+                        <Col lg={12} className="p-0" style={{ marginBottom: "100px" }}>
+                          {dataTabs === "Response" ? (
+                            <div
+                              className="pt-4 pb-2 w-100"
+                              style={{
+                                fontSize: "14px",
+                              }}
+                            >
+                              {loading ? (
+                                <Col>
+                                  <Skeleton count={1} className="w-85 mx-4 my-2" height={"25px"} />
+                                </Col>
+                              ) : pretty && activeTab !== -1 && props.isJsonString(tabs[activeTab].response) ? (
+                                <ReactJsonWrapper
+                                  src={JSON.parse(tabs[activeTab].response)}
+                                  displayDataTypes={true}
+                                  enableClipboard={(e: any) => customCopyFunction(e.src)}
+                                />
+                              ) : activeTab === -1 ? (
+                                ""
+                              ) : (
+                                <Text as={"span"}>{tabs[activeTab].response}</Text>
                               )}
                             </div>
-                          </>
-                        )}
+                          ) : (
+                            <>
+                              {logs
+                                .filter((log: any) => log?.classes === currentClass?.className)
+                                .filter((item: any) => item.tab === tabs[activeTab]?.tab).length !== 0 &&
+                                logsLoading && <Alert>Getting logs in progress, it might take up to 10 seconds.</Alert>}
+                              <div
+                                className="table-responsive"
+                                style={{
+                                  overflow: "initial",
+                                }}
+                              >
+                                {/* TODO: FILTER by active class */}
+                                {logs
+                                  .filter((log: any) => log?.classes === currentClass?.className)
+                                  .filter((item: any) => item.tab === tabs[activeTab]?.tab).length === 0 ||
+                                environment?.value === "Local" ? (
+                                  <Alert>
+                                    {environment?.value === "Local"
+                                      ? "You can see the logs in the CLI."
+                                      : logsLoading !== true
+                                        ? "There are no logs."
+                                        : "Getting logs in progress, it might take up to 10 seconds."}
+                                  </Alert>
+                                ) : (
+                                  <table style={{ border: "none" }} className="table borderless mb-0">
+                                    <thead>
+                                      <tr>
+                                        <th className="text-left">
+                                          <Text as={"span"} className="tabletitle" fontSize="14">
+                                            Timestamp
+                                          </Text>
+                                        </th>
+                                        <th className="text-left">
+                                          <Text as={"span"} className="tabletitle" fontSize="14">
+                                            Message
+                                          </Text>
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {/* TODO: create Log component */}
+                                      {logs
+                                        .filter((log: any) => log?.classes === currentClass?.className)
+                                        .filter((item: any) => item.tab === tabs[activeTab]?.tab)
+                                        .reverse()
+                                        .map((elem: any, key: GLint64) => {
+                                          return (
+                                            <tr key={key}>
+                                              <Text
+                                                as={"td"}
+                                                fontSize="14"
+                                                style={{
+                                                  borderBottom: "1px solid #6F42C1",
+                                                }}
+                                                className="text-left text-nowrap"
+                                              >
+                                                {moment.unix(elem.Timestamp / 1000).format("YYYY-MM-DD HH:mm:ss.SSS")}
+                                              </Text>
 
-                        <div className="mt-10"></div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Panel>
-                {/* <!-- /Lower Panel (Response) --> */}
-              </PanelGroup>
-              {/* <!-- /Resizable Panels --> */}
-            </Card>
-          </Col>
-          {/* <!-- /Right Card --> */}
-        </Row>
-        {/* <!-- /Main Content --> */}
-      </div>
+                                              <LogWrapper element={elem} />
+                                            </tr>
+                                          );
+                                        })}
+                                    </tbody>
+                                  </table>
+                                )}
+                              </div>
+                            </>
+                          )}
+
+                          <div className="mt-10"></div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Panel>
+                  {/* <!-- /Lower Panel (Response) --> */}
+                </PanelGroup>
+                {/* <!-- /Resizable Panels --> */}
+              </Card>
+            </Col>
+            {/* <!-- /Right Card --> */}
+          </Row>
+          {/* <!-- /Main Content --> */}
+        </div>
+      )}
+      <Notifications />
     </ThemeProviderWrapper>
   );
 };

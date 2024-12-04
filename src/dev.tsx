@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { TestInterface } from "./TestInterface";
-import { getProjectById, getAllLogs, getCurrentCollaboratorDetails, getFunctionLogs } from "./types/ApiAxios";
+import { getProjectById, getCurrentCollaboratorDetails, getFunctionLogs, getAllLogs } from "./types/ApiAxios";
 import { Parameters } from "./types/Parameters";
 import { StatusBar } from "./types/StatusBar";
 import { TestInterfaceModal } from "./types/TestInterfaceModal";
