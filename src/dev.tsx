@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { TestInterface } from "./TestInterface";
-import { getProjectById, getLogs, getCurrentCollaboratorDetails, getFunctionLogs } from "./types/ApiAxios";
+import { getProjectById, getCurrentCollaboratorDetails, getFunctionLogs, getAllLogs } from "./types/ApiAxios";
 import { Parameters } from "./types/Parameters";
 import { StatusBar } from "./types/StatusBar";
 import { TestInterfaceModal } from "./types/TestInterfaceModal";
@@ -12,7 +12,7 @@ const port = parseInt(window.location.port);
 const props = {
   axios: {
     getProjectById: getProjectById,
-    getLogs: getLogs,
+    getAllLogs: getAllLogs,
     getCurrentCollaboratorDetails: getCurrentCollaboratorDetails,
     getFunctionLogs: getFunctionLogs,
   },

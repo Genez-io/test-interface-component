@@ -7,7 +7,7 @@ instance.interceptors.request.use(async (config) => {
   const token = localStorage.getItem("apiToken");
   config.headers.Authorization = token ? `Bearer ${token}` : "";
   config.headers["Content-Type"] = "application/json";
-  config.headers["Accept-Version"] = `genezio-webapp/${import.meta.env.VITE_APP_VERSION}`;
+  config.headers["Accept-Version"] = `genezio-webapp/${import.meta.env.VITE_VERSION}`;
   return config;
 });
 
