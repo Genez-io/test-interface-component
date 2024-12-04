@@ -21,7 +21,7 @@ import {
   syncTabs,
 } from "./types/Utils";
 import { CollaboratorDetails } from "./types/CollaborationModels";
-import { getCurrentCollaboratorDetails, getFunctionLogs, getLogs, getProjectById } from "./types/ApiAxios";
+import { getCurrentCollaboratorDetails, getFunctionLogs, getAllLogs, getProjectById } from "./types/ApiAxios";
 import { ThemeProviderWrapper } from "./contexts/ThemeContext";
 import GlobalStyles from "./globalStyles";
 import Skeleton from "react-loading-skeleton";
@@ -33,7 +33,7 @@ import toast from "react-hot-toast";
 export interface TestInterfaceProps {
   axios: {
     getProjectById: typeof getProjectById;
-    getLogs: typeof getLogs;
+    getAllLogs: typeof getAllLogs;
     getCurrentCollaboratorDetails: typeof getCurrentCollaboratorDetails;
     getFunctionLogs: typeof getFunctionLogs;
   };
@@ -335,12 +335,19 @@ export const TestInterface = (props: TestInterfaceProps) => {
               "",
             );
           } else {
-            response = await props.axios.getLogs(
-              currentClass.id,
+            const backendIds = `${currentClass.id}`;
+            response = await props.axios.getAllLogs(
+              projectId ?? "",
+              envId ?? "",
               startTime,
               new Date().getTime() + 2 * 60 * 60 * 1000,
-              "",
-              "",
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              backendIds,
             );
           }
 
