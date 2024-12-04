@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Spinner } from "react-bootstrap";
 import { Row, Col, Card, Button, Alert, Text } from "./Components";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import ReactJson from "react-json-view";
 import Tabs, { Tab } from "react-awesome-tabs";
 import moment from "moment";
 
@@ -28,6 +27,8 @@ import GlobalStyles from "./globalStyles";
 import Skeleton from "react-loading-skeleton";
 import { ReactJsonWrapper } from "./types/ReactJsonWrapper";
 import { LogWrapper } from "./types/LogWrapper";
+import Notifications from "./Components/Notifications";
+import toast from "react-hot-toast";
 
 export interface TestInterfaceProps {
   axios: {
@@ -92,6 +93,7 @@ export const TestInterface = (props: TestInterfaceProps) => {
 
   const [classes, setClasses] = useState<ClassType[]>([]);
   const [activeEnv, setActiveEnv] = useState<any>({});
+  const [isCollaboratorProd, setIsCollaboratorProd] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [connected, setConnected] = useState<boolean>(true);
@@ -114,10 +116,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
 
   const sendButtonRef = useRef<HTMLButtonElement>(null);
 
-  if (activeEnv.name === "prod" && currentCollaboratorDetails?.role === "collaborator") {
-    navigate("/dashboard");
-  }
-
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (startTime !== "") {
@@ -130,10 +128,6 @@ export const TestInterface = (props: TestInterfaceProps) => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [startTime]);
-
-  useEffect(() => {
-    fetchCurrentCollaboratorDetails();
-  }, []);
 
   useEffect(() => {
     if (cameFromProduction && activeEnv.name && !environment?.label) {
@@ -212,6 +206,19 @@ export const TestInterface = (props: TestInterfaceProps) => {
         setActiveEnv(localActiveEnv);
         setClasses(localActiveEnv.classes);
         setConnected(true);
+
+        const collanboratorDetails = await fetchCurrentCollaboratorDetails();
+        if (localActiveEnv.name === "prod" && collanboratorDetails?.role === "collaborator") {
+          setIsCollaboratorProd(true);
+          toast.error("You are not authorized to access the test interface on stage prod.");
+
+          if (window.location.pathname !== "/dashboard") {
+            console.log("Redirecting to dashboard");
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 3000);
+          }
+        }
       } else if (res.response.data.error.code === 2 || res.response.data.error.code === 6) {
         navigate("/dashboard");
       }
@@ -689,11 +696,16 @@ export const TestInterface = (props: TestInterfaceProps) => {
 
       if (res.status === 200 && res.data.status === "ok") {
         setCurrentCollaboratorDetails(res.data);
+        return res.data;
       }
     }
   };
 
-  return (
+  return isCollaboratorProd ? (
+    <>
+      <Notifications />
+    </>
+  ) : (
     <ThemeProviderWrapper isDarkMode={props.isDarkMode}>
       <GlobalStyles />
       <div className="pt-3 pb-3 pl-3 pr-3">
