@@ -22,7 +22,7 @@ jobs:
           VITE_VERSION: "0.3.0"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npm run build
           npm publish --access=public
       - name: Generate Dev Version
@@ -37,6 +37,6 @@ jobs:
           VITE_VERSION: "0.3.0"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npm run build
           npm publish --tag dev --access=public
