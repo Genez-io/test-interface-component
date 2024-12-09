@@ -40,6 +40,7 @@ root.render(
       isJsonString={props.isJsonString}
       leftCard={props.leftCard}
       parameters={props.parameters}
+      projectId={props.projectId}
       port={props.port}
     />
     <Notifications />
