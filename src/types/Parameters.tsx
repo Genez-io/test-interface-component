@@ -322,6 +322,23 @@ export const Parameters: React.FC<ParametersProps> = ({
               />
             </div>
           </>
+        ) : tabs[activeTab]?.method?.type === "function" ? (
+          <>
+            <>
+              <Alert className="mt-0">
+                <Text as={"p"} className="text-muted m-0" fontSize="14">
+                  <strong>functions</strong> are disabled on test interface. We recommend calling it from Postman.
+                </Text>
+              </Alert>
+
+              <div className="d-flex align-items-center mb-2">
+                <Text as={"h6"} className="m-0" fontSize="14">
+                  Test Url: <span className="text-muted">{tabs[activeTab]?.method.cloudUrl}</span>{" "}
+                </Text>
+                <CopyButton text={tabs[activeTab]?.method.cloudUrl} />
+              </div>
+            </>
+          </>
         ) : (
           <>
             <Row>
